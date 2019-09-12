@@ -24,6 +24,7 @@ public class Broker {
     public Broker() {
     }
     
+    //Full constructor
     public Broker(String brokerLicense, String firstName, String lastName, 
             String dept, double commissionRate) {
             setBrokerLicense(brokerLicense);
