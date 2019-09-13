@@ -26,7 +26,11 @@ public class StockTrade {
     
     public StockTrade(String stockSymbol, double pricePerShare, int wholeShares,
             String brokerLicense, boolean taxable) {
-        
+        setStockSymbol(stockSymbol);
+        setPricePerShare(pricePerShare);
+        setWholeShares(wholeShares);
+        setBrokerLicense(brokerLicense);
+        setTaxable(taxable);
     }
 
     public void setStockSymbol(String stockSymbol) {
@@ -112,9 +116,53 @@ public class StockTrade {
     }
     
     
+    public boolean isValidStockSymbol() {
+        boolean stockSymbolValidity = true;
+        if (stockSymbol.length() == 3 || stockSymbol.length() == 4) {
+            for (int i = 0; i < stockSymbol.length(); i++) {
+                if (!Character.isLetter(stockSymbol.charAt(i)) || Character.isLowerCase(stockSymbol.charAt(i))) {
+                    return false;
+                }
+            }
+        }
+        else {
+            return false;
+        }
+        /*if (stockSymbol.length() == 4) {
+            for (int i = 0; i < 4; i++) {
+                if (!Character.isLetter(stockSymbol.charAt(i)) || Character.isLowerCase(stockSymbol.charAt(i))) {
+                    return false;
+                }
+            }
+        }
+        else {
+            return false; //could be wrong
+        }
+                */
+    return stockSymbolValidity;
+    }
     
     
+    public boolean isValidPrice() {
+        boolean priceValidity = true;
+        double maxPricePerShare = 1000.00;
+        if (pricePerShare > maxPricePerShare) {
+            return false;
+        }
+        
+    return priceValidity;    
+    }
     
+    
+    public boolean isValidWholeShares() {
+        boolean shareValidity = true;
+        int maxShares = 100000;
+        if (wholeShares > maxShares) {
+            return false;
+        }
+        
+    return shareValidity;
+    }
     
     
     
