@@ -27,11 +27,11 @@ public class Broker {
     //Full constructor
     public Broker(String brokerLicense, String firstName, String lastName, 
             String dept, double commissionRate) {
-            setBrokerLicense(brokerLicense);
-            setFirstName(firstName);
-            setLastName(lastName);
-            setDept(dept);
-            setCommissionRate(commissionRate);
+        setBrokerLicense(brokerLicense);
+        setFirstName(firstName);
+        setLastName(lastName);
+        setDept(dept);
+        setCommissionRate(commissionRate);
     }
 
     public void setBrokerLicense(String brokerLicense) {
