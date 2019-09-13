@@ -36,7 +36,6 @@ public class Broker {
 
     public void setBrokerLicense(String brokerLicense) {
         this.brokerLicense = brokerLicense;
-        System.out.println(this.brokerLicense);
     }
 
     public void setFirstName(String firstName) {
@@ -148,7 +147,7 @@ public class Broker {
         boolean deptValidity = true;
         //char[] digitArray = new char[] {'1', '2', '3'};
         String digit = "123";
-        if (dept.length() == 8) {
+        if (dept.length() == 7) {
             for (int i = 0; i < 3; i++) {
                 if (digit.indexOf(dept.charAt(i)) == -1) {
                     return false;
@@ -157,11 +156,14 @@ public class Broker {
             if (dept.charAt(3) != '-') {
                 return false;
             }
-            for (int j = 4; j < 8; j++) {
+            for (int j = 4; j < 7; j++) {
                 if (!Character.isDigit(dept.charAt(j))) {
                     return false;
                 }
             }
+        }
+        else {
+            return false;
         }
     return deptValidity;
     }
