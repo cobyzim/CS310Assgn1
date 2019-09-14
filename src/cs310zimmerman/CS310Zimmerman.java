@@ -7,6 +7,7 @@ package cs310zimmerman;
 
 
 import java.util.Scanner;
+import java.io.*;
 /**
  *
  * @author cobyz
@@ -15,8 +16,9 @@ public class CS310Zimmerman {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.FileNotFoundException
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         final String INPUT_FILENAME = "input/assn1input.txt";
         
         System.out.println("Running Test 1a:");
@@ -79,7 +81,84 @@ public class CS310Zimmerman {
         }
         System.out.println();
         
+        System.out.println("Running Test 3:");
+        try {
+           File text = new File(INPUT_FILENAME);
+           Scanner scnr = new Scanner(text); 
+           
+           while(scnr.hasNextLine()) {
+               boolean hasBrokerErrors = false;
+               boolean hasStockErrors = false;
+               String str = scnr.nextLine();
+               String[] arrOfStr = str.split(",", 7);
+               if (arrOfStr[0].equals("BROKER")) {
+                   if (arrOfStr[1].equals("ADD")) {
+                       System.out.println("ADDING BROKER");
+                   }
+                   if (arrOfStr[1].equals("DEL")) {
+                       System.out.println("DELETING BROKER");
+                   }
+                   Broker emptyBroker = new Broker();
+                   Broker filledBroker = setBrokerAttributes(emptyBroker, arrOfStr);
+                   //System.out.println(filledBroker.toString());
+                   if (!filledBroker.isValidLicense()) {
+                       System.out.println(filledBroker.toString());
+                       System.out.println("ERROR: Invalid broker license number format: " + filledBroker.getBrokerLicense());
+                       System.out.println();
+                       hasBrokerErrors = true;
+                   }
+                   if (!filledBroker.isValidDept()) {
+                       System.out.println(filledBroker.toString());
+                       System.out.println("ERROR: Invalid department number format: " + filledBroker.getDept());
+                       System.out.println();
+                       hasBrokerErrors = true;
+                   }
+                   
+                   if (!hasBrokerErrors) {
+                       displayBrokerAttributes(filledBroker);
+                   }
+                   
+               }
+               if (arrOfStr[0].equals("TRADE")) {
+                   if (arrOfStr[1].equals("BUY")) {
+                       System.out.println("BUYING STOCK");
+                   }
+                   if (arrOfStr[1].equals("SELL")) {
+                       System.out.println("SELLING STOCK");
+                   }
+                   StockTrade emptyStockTrade = new StockTrade();
+                   StockTrade filledStockTrade = setStockTradeAttributes(emptyStockTrade, arrOfStr);
+                   if (!filledStockTrade.isValidStockSymbol()) {
+                       System.out.println(filledStockTrade.toString());
+                       System.out.println("ERROR: Invalid stock symbol format: " + filledStockTrade.getStockSymbol());
+                       System.out.println();
+                       hasStockErrors = true;
+                   }
+                   if (!filledStockTrade.isValidPrice()) {
+                       System.out.println(filledStockTrade.toString());
+                       System.out.println("ERROR: Invalid stock price: " + filledStockTrade.getPricePerShare());
+                       System.out.println();
+                       hasStockErrors = true;
+                   }
+                   if (!filledStockTrade.isValidWholeShares()) {
+                       System.out.println(filledStockTrade.toString());
+                       System.out.println("ERROR: Invalid number of shares: " + filledStockTrade.getWholeShares());
+                       System.out.println();
+                       hasStockErrors = true;
+                   }
+                   
+                   if (!hasStockErrors) {
+                       displayStockTradeAttributes(filledStockTrade);
+                   }
+                   
+               }
+           }
+        }
         
+        catch (IOException error) {
+            System.out.println("Could not find file: " + INPUT_FILENAME);
+            System.exit(1);
+        }
         
         
         
@@ -156,6 +235,49 @@ public class CS310Zimmerman {
         
         
         
+    }
+    
+    public static Broker setBrokerAttributes(Broker broker, String[] brokerAttributes) {
+        broker.setBrokerLicense(brokerAttributes[2]);
+        broker.setFirstName(brokerAttributes[3]);
+        broker.setLastName(brokerAttributes[4]);
+        broker.setDept(brokerAttributes[5]);
+        broker.setCommissionRate(Double.parseDouble(brokerAttributes[6]));
+        
+    return broker;
+    }
+    
+    public static void displayBrokerAttributes(Broker broker) {
+        System.out.println(broker.getBrokerLicense());
+        System.out.println(broker.getFirstName());
+        System.out.println(broker.getLastName());
+        System.out.println(broker.getDept());
+        System.out.println(broker.getCommissionRate());
+        System.out.println();
+    }
+    
+    public static StockTrade setStockTradeAttributes(StockTrade stockTrade, String[] stockAttributes) {
+        stockTrade.setStockSymbol(stockAttributes[2]);
+        stockTrade.setPricePerShare(Double.parseDouble(stockAttributes[3]));
+        stockTrade.setWholeShares(Integer.parseInt(stockAttributes[4]));
+        stockTrade.setBrokerLicense(stockAttributes[5]);
+        if(stockAttributes[6].equals("N")) {
+            stockTrade.setTaxable(false);
+        }
+        if(stockAttributes[6].equals("Y")) {
+            stockTrade.setTaxable(true);
+        }
+        
+    return stockTrade;
+    }
+    
+    public static void displayStockTradeAttributes(StockTrade stockTrade) {
+        System.out.println(stockTrade.getStockSymbol());
+        System.out.println(stockTrade.getPricePerShare());
+        System.out.println(stockTrade.getWholeShares());
+        System.out.println(stockTrade.getBrokerLicense());
+        System.out.println(stockTrade.isTaxable());
+        System.out.println();
     }
     
 }
