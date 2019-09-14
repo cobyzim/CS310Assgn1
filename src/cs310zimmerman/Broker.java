@@ -2,17 +2,16 @@ package cs310zimmerman;
 
 
 import java.util.Objects;
-import java.util.Scanner;
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Class to define data fields and methods for broker objects which contain 
+ * broker licenses, first names, last names, department numbers, and commission
+ * rates.
  */
 
 /**
  *
- * @author cobyz
+ * @author Coby Zimmerman
  */
 public class Broker {
     private String brokerLicense;
@@ -21,10 +20,24 @@ public class Broker {
     private String dept;
     private double commissionRate;
 
+    /**
+     * Constructor with no parameters used for broker objects with no hard-
+     * coded attributes
+     */
     public Broker() {
     }
     
-    //Full constructor
+    /**
+     *
+     * @param brokerLicense - passes in brokerLicense as a string parameter
+     * @param firstName - passes in broker first name as a string parameter
+     * @param lastName - passes in broker last name as a string parameter
+     * @param dept - passes in department number as a string parameter
+     * @param commissionRate - passes in commission rate as a double parameter
+     * 
+     * Constructor with parameters used for broker objects with hard-coded 
+     * attributes
+     */
     public Broker(String brokerLicense, String firstName, String lastName, 
             String dept, double commissionRate) {
         setBrokerLicense(brokerLicense);
@@ -33,44 +46,103 @@ public class Broker {
         setDept(dept);
         setCommissionRate(commissionRate);
     }
-
+    
+    /**
+     * 
+     * @param brokerLicense - passes in brokerLicense as parameter
+     * 
+     * Setter used to set the value of brokerLicense
+     */
     public void setBrokerLicense(String brokerLicense) {
         this.brokerLicense = brokerLicense;
     }
-
+    
+    /**
+     *
+     * @param firstName - passes in first name of broker as parameter
+     * 
+     * Setter used to set the value of broker's first name
+     */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
+    /**
+     *
+     * @param lastName - passes in last name of broker as parameter
+     * 
+     * Setter used to set the value of broker's last name
+     */
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
+    /**
+     *
+     * @param dept - passes in broker's department number as parameter
+     * 
+     * Setter used to set the value of broker's department number
+     */
     public void setDept(String dept) {
         this.dept = dept;
     }
 
+    /**
+     *
+     * @param commissionRate - passes in commission rate as parameter
+     * 
+     * Setter used to set the value of commission rate for brokers
+     */
     public void setCommissionRate(double commissionRate) {
         this.commissionRate = commissionRate;
     }
     
-    
+    /**
+     *
+     * @return - returns value of broker license
+     * 
+     * Getter used to retrieve value of broker license
+     */
     public String getBrokerLicense() {
         return brokerLicense;
     }
 
+    /**
+     *
+     * @return - returns value of first name
+     * 
+     * Getter used to retrieve value of broker first name
+     */
     public String getFirstName() {
         return firstName;
     }
 
+    /**
+     *
+     * @return - returns value of last name
+     * 
+     * Getter used to retrieve value of broker last name
+     */
     public String getLastName() {
         return lastName;
     }
 
+    /**
+     *
+     * @return - returns value of department number
+     * 
+     * Getter used to retrieve value of broker department number
+     */
     public String getDept() {
         return dept;
     }
 
+    /**
+     *
+     * @return - returns value of commission rate
+     * 
+     * Getter used to retrieve value of broker commission rate
+     */
     public double getCommissionRate() {
         return commissionRate;
     }
@@ -81,6 +153,13 @@ public class Broker {
         return hash;
     }
 
+    /**
+     *
+     * @return - returns true or false
+     * 
+     * Method returning true or false depending on whether two broker objects
+     * are the same
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -109,6 +188,13 @@ public class Broker {
         return true;
     }
 
+    /**
+     *
+     * @return - returns string
+     * 
+     * Method returning a string containing the values given to all the broker
+     * data fields
+     */
     @Override
     public String toString() {
         return "Broker{" + "brokerLicense=" + this.brokerLicense + 
@@ -117,9 +203,13 @@ public class Broker {
                 + '}';
     }
     
-    Scanner scnr = new Scanner(System.in);
-    
-    
+    /**
+     *
+     * @return - returns true or false
+     * 
+     * Method that checks the validity of a broker license number and returns
+     * true if it is valid, and false if it is invalid
+     */
     public boolean isValidLicense() {
         boolean licenseValidity = true;
         if (brokerLicense.length() == 8) {
@@ -143,6 +233,13 @@ public class Broker {
     return licenseValidity;      
     }
     
+    /**
+     *
+     * @return - returns true or false
+     * 
+     * Method that checks the validity of broker department number and returns
+     * true or false based on this validity
+     */
     public boolean isValidDept() {
         boolean deptValidity = true;
         //char[] digitArray = new char[] {'1', '2', '3'};
@@ -167,19 +264,4 @@ public class Broker {
         }
     return deptValidity;
     }
-    
-    //add an if statement measuring length before doing loop to check each index
-    /* if( length is 8
-        loop (through characters (charAt))
-        if (0-2)
-        else(everything else)
-    
-       else()
-     return true or false
-    */
-    
-    //put input in a new file under file tab
-    //csv - comma separated values
-    //use while loop with hasNextLine, and then use .split to grab wanted info
-    //then us indexes in print statements to pick which ones we want
 }
