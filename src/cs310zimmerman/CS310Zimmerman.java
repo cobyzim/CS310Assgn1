@@ -1,7 +1,10 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Program to manage information regarding brokers and their stock trades.
+ * Data is read from particular files containing information on brokers and
+ * stocks, and the program determines whether this info is valid or not.
+ * Output is displayed differently based on this validity. The program can also
+ * compare broker and stock trade objects to one another and display their
+ * contents in a string.
  */
 package cs310zimmerman;
 
@@ -10,20 +13,26 @@ import java.util.Scanner;
 import java.io.*;
 /**
  *
- * @author cobyz
+ * @author Coby Zimmerman
+ * @version 1.0
  */
 public class CS310Zimmerman {
 
     /**
      * @param args the command line arguments
      * @throws java.io.FileNotFoundException
+     * 
+     * Main method that instantiates broker and stock trade objects, comparing
+     * them to one another based on their contents, and determining whether
+     * or not the information within them is valid.
      */
     public static void main(String[] args) throws FileNotFoundException {
         final String INPUT_FILENAME = "input/assn1input.txt";
         
         System.out.println("Running Test 1a:");
         System.out.println("Broker Object 1:");
-        Broker broker = new Broker("abc12345", "Coby", "Zimmerman", "123-542", 80.0);
+        Broker broker = new Broker("abc12345", "Coby", "Zimmerman", "123-542", 
+                80.0);
         System.out.println(broker.toString());
         System.out.println();
         
@@ -35,7 +44,8 @@ public class CS310Zimmerman {
         
         System.out.println("Running Test 2a:");
         System.out.println("Broker Object 2:");
-        Broker brokerTwo = new Broker("abc12345", "Coby", "Zimmerman", "123-542", 80.0);
+        Broker brokerTwo = new Broker("abc12345", "Coby", "Zimmerman", 
+                "123-542", 80.0);
         System.out.println(brokerTwo.toString());
         if (brokerTwo.equals(broker)) {
             System.out.println("The two broker objects ARE equal.");
@@ -47,7 +57,8 @@ public class CS310Zimmerman {
         
         System.out.println("Running Test 2b:");
         System.out.println("Broker Object 2:");
-        Broker brokerThree = new Broker("abc67891", "Cayden", "Zim", "dept3", 100.0);
+        Broker brokerThree = new Broker("abc67891", "Cayden", "Zim", "dept3",
+                100.0);
         System.out.println(brokerThree.toString());
         if (brokerThree.equals(broker)) {
             System.out.println("The two broker objects ARE equal.");
@@ -59,7 +70,8 @@ public class CS310Zimmerman {
         
         System.out.println("Running Test 2c:");
         System.out.println("Stock Trade Object 2:");
-        StockTrade traderTwo = new StockTrade("XXWW", 20.5, 12, "abc12345", true);
+        StockTrade traderTwo = new StockTrade("XXWW", 20.5, 12, "abc12345",
+                true);
         System.out.println(traderTwo.toString());
         if (traderTwo.equals(trader)) {
             System.out.println("The two stock trade objects ARE equal.");
@@ -71,7 +83,8 @@ public class CS310Zimmerman {
         
         System.out.println("Running Test 2d:");
         System.out.println("Stock Trade Object 3:");
-        StockTrade traderThree = new StockTrade("WXYZ", 20.5, 12, "abc12345", false);
+        StockTrade traderThree = new StockTrade("WXYZ", 20.5, 12, "abc12345",
+                false);
         System.out.println(traderThree.toString());
         if (traderThree.equals(trader)) {
             System.out.println("The two stock trade objects ARE equal.");
@@ -100,17 +113,20 @@ public class CS310Zimmerman {
                    }
                    
                    Broker emptyBroker = new Broker();
-                   Broker filledBroker = setBrokerAttributes(emptyBroker, arrOfStr);
+                   Broker filledBroker = setBrokerAttributes(emptyBroker,
+                           arrOfStr);
                    
                    if (!filledBroker.isValidLicense()) {
                        System.out.println(filledBroker.toString());
-                       System.out.println("ERROR: Invalid broker license number format: " + filledBroker.getBrokerLicense());
+                       System.out.println("ERROR: Invalid broker license number"
+                               + " format: " + filledBroker.getBrokerLicense());
                        System.out.println();
                        hasBrokerErrors = true;
                    }
                    if (!filledBroker.isValidDept()) {
                        System.out.println(filledBroker.toString());
-                       System.out.println("ERROR: Invalid department number format: " + filledBroker.getDept());
+                       System.out.println("ERROR: Invalid department number"
+                               + " format: " + filledBroker.getDept());
                        System.out.println();
                        hasBrokerErrors = true;
                    }
@@ -129,23 +145,27 @@ public class CS310Zimmerman {
                    }
                    
                    StockTrade emptyStockTrade = new StockTrade();
-                   StockTrade filledStockTrade = setStockTradeAttributes(emptyStockTrade, arrOfStr);
+                   StockTrade filledStockTrade = setStockTradeAttributes(
+                           emptyStockTrade, arrOfStr);
                    
                    if (!filledStockTrade.isValidStockSymbol()) {
                        System.out.println(filledStockTrade.toString());
-                       System.out.println("ERROR: Invalid stock symbol format: " + filledStockTrade.getStockSymbol());
+                       System.out.println("ERROR: Invalid stock symbol format:"
+                               + " " + filledStockTrade.getStockSymbol());
                        System.out.println();
                        hasStockErrors = true;
                    }
                    if (!filledStockTrade.isValidPrice()) {
                        System.out.println(filledStockTrade.toString());
-                       System.out.println("ERROR: Invalid stock price: " + filledStockTrade.getPricePerShare());
+                       System.out.println("ERROR: Invalid stock price: " + 
+                               filledStockTrade.getPricePerShare());
                        System.out.println();
                        hasStockErrors = true;
                    }
                    if (!filledStockTrade.isValidWholeShares()) {
                        System.out.println(filledStockTrade.toString());
-                       System.out.println("ERROR: Invalid number of shares: " + filledStockTrade.getWholeShares());
+                       System.out.println("ERROR: Invalid number of shares: " 
+                               + filledStockTrade.getWholeShares());
                        System.out.println();
                        hasStockErrors = true;
                    }
@@ -165,10 +185,17 @@ public class CS310Zimmerman {
     }
     
     
-    
-    
-    
-    public static Broker setBrokerAttributes(Broker broker, String[] brokerAttributes) {
+    /**
+     * 
+     * @param broker - passes in broker object as parameter
+     * @param brokerAttributes - passes in array of string values as parameter
+     * @return - returns the broker object with attributes set
+     * 
+     * Method using setters from Broker class to give empty broker object in 
+     * main values from csv file.
+     */
+    public static Broker setBrokerAttributes(Broker broker, 
+            String[] brokerAttributes) {
         broker.setBrokerLicense(brokerAttributes[2]);
         broker.setFirstName(brokerAttributes[3]);
         broker.setLastName(brokerAttributes[4]);
@@ -178,6 +205,13 @@ public class CS310Zimmerman {
     return broker;
     }
     
+    /**
+     *
+     * @param broker - passes in broker object as parameter
+     * 
+     * Method that uses getters from Broker class to display the attributes of 
+     * a valid broker object one line at a time
+     */
     public static void displayBrokerAttributes(Broker broker) {
         System.out.println(broker.getBrokerLicense());
         System.out.println(broker.getFirstName());
@@ -187,7 +221,17 @@ public class CS310Zimmerman {
         System.out.println();
     }
     
-    public static StockTrade setStockTradeAttributes(StockTrade stockTrade, String[] stockAttributes) {
+    /**
+     *
+     * @param stockTrade - passes in stockTrade object as a parameter
+     * @param stockAttributes - passes in array of string values as parameter
+     * @return - returns stockTrade object with attributes set
+     * 
+     * Method using setters from the StockTrade class to give empty stockTrade
+     * object values from csv file.
+     */
+    public static StockTrade setStockTradeAttributes(StockTrade stockTrade, 
+            String[] stockAttributes) {
         stockTrade.setStockSymbol(stockAttributes[2]);
         stockTrade.setPricePerShare(Double.parseDouble(stockAttributes[3]));
         stockTrade.setWholeShares(Integer.parseInt(stockAttributes[4]));
@@ -202,6 +246,13 @@ public class CS310Zimmerman {
     return stockTrade;
     }
     
+    /**
+     *
+     * @param stockTrade - passes in stockTrade object as parameter
+     * 
+     * Method that uses getters from StockTrade class to display attributes of
+     * valid stockTrade objects one line at a time.
+     */
     public static void displayStockTradeAttributes(StockTrade stockTrade) {
         System.out.println(stockTrade.getStockSymbol());
         System.out.println(stockTrade.getPricePerShare());
