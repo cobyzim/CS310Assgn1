@@ -98,9 +98,10 @@ public class CS310Zimmerman {
                    if (arrOfStr[1].equals("DEL")) {
                        System.out.println("DELETING BROKER");
                    }
+                   
                    Broker emptyBroker = new Broker();
                    Broker filledBroker = setBrokerAttributes(emptyBroker, arrOfStr);
-                   //System.out.println(filledBroker.toString());
+                   
                    if (!filledBroker.isValidLicense()) {
                        System.out.println(filledBroker.toString());
                        System.out.println("ERROR: Invalid broker license number format: " + filledBroker.getBrokerLicense());
@@ -126,8 +127,10 @@ public class CS310Zimmerman {
                    if (arrOfStr[1].equals("SELL")) {
                        System.out.println("SELLING STOCK");
                    }
+                   
                    StockTrade emptyStockTrade = new StockTrade();
                    StockTrade filledStockTrade = setStockTradeAttributes(emptyStockTrade, arrOfStr);
+                   
                    if (!filledStockTrade.isValidStockSymbol()) {
                        System.out.println(filledStockTrade.toString());
                        System.out.println("ERROR: Invalid stock symbol format: " + filledStockTrade.getStockSymbol());
@@ -150,7 +153,6 @@ public class CS310Zimmerman {
                    if (!hasStockErrors) {
                        displayStockTradeAttributes(filledStockTrade);
                    }
-                   
                }
            }
         }
@@ -160,82 +162,11 @@ public class CS310Zimmerman {
             System.exit(1);
         }
         
-        
-        
-        
-        
-        
-        
-        
-        /*
-        //testing license validity
-        Broker broker = new Broker("abc12345", "Coby", "Zimmerman", "123-542", 80.0);
-        Broker brokerTwo = new Broker("123abcde", "Tate", "Zimmerman", "146-1111", 90.0);
-        Broker brokerThree = new Broker("abc43cd4", "Cayden", "Zim", "dept3", 100.0);
-        
-        System.out.println(broker.toString());
-        System.out.println(brokerTwo.toString());
-        */
-        
-        /*if (brokerThree.isValidLicense()) {
-            System.out.println("License is Valid");
-        }
-        else {
-            System.out.println("License is not Valid");
-        }
-        */
-        /*
-        //testing dept validity
-        if (brokerTwo.isValidDept()) {
-            System.out.println("Dept is Valid");
-        }
-        else {
-            System.out.println("Dept is invalid");
-        }
-        */
-        
-        /*
-        StockTrade trader = new StockTrade("XXWW", 20.5, 12, "abc12345", true);
-        System.out.println(trader.toString());
-        //testing stock symbol validity
-        if (trader.isValidStockSymbol()) {
-            System.out.println("Stock Symbol is valid");
-        }
-        else {
-            System.out.println("Stock symbol is invalid");
-        }
-        */
-        
-        /*
-        StockTrade traderTwo = new StockTrade("WWX", 1000.00, 13, "abc12345", false);
-        //testing price valiidty
-        if (traderTwo.isValidPrice()) {
-            System.out.println("Price is valid");
-        }
-        else {
-            System.out.println("Price is invalid");
-        }
-        */
-        
-        /*
-        StockTrade traderThree = new StockTrade("WXWX", 1000.00, 100000, "abc12345", true);
-        //testing validity of number of shares
-        if (traderThree.isValidWholeShares()) {
-            System.out.println("Valid number of shares");
-        }
-        else {
-            System.out.println("Invalid number of shares");
-        }
-        */
-        
-        
-        
-        
-        
-        
-        
-        
     }
+    
+    
+    
+    
     
     public static Broker setBrokerAttributes(Broker broker, String[] brokerAttributes) {
         broker.setBrokerLicense(brokerAttributes[2]);
