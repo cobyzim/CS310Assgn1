@@ -19,6 +19,7 @@ public class StockTrade {
     private int wholeShares;
     private String brokerLicense;
     private boolean taxable;
+    private String[] stockTradeArray;
     
     /**
      * Constructor with no parameters used for stock trade objects with no hard-
@@ -39,6 +40,7 @@ public class StockTrade {
      * Constructor with parameters used for stock trade objects with hard-coded
      * attributes
      */
+    /*
     public StockTrade(String stockSymbol, double pricePerShare, int wholeShares,
             String brokerLicense, boolean taxable) {
         setStockSymbol(stockSymbol);
@@ -46,6 +48,16 @@ public class StockTrade {
         setWholeShares(wholeShares);
         setBrokerLicense(brokerLicense);
         setTaxable(taxable);
+    }
+    */
+    
+    public StockTrade(String[] stockTradeArray) {
+        this.stockTradeArray = stockTradeArray;
+        setStockSymbol(stockTradeArray[2]);
+        setPricePerShare(Double.parseDouble(stockTradeArray[3]));
+        setPricePerShare(Integer.parseInt(stockTradeArray[4]));
+        setBrokerLicense(stockTradeArray[5]);
+        setTaxable(Boolean.parseBoolean(stockTradeArray[6]));
     }
 
     /**
