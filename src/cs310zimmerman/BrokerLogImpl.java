@@ -74,12 +74,21 @@ public class BrokerLogImpl {
     
     public boolean isLicenseUnique(String license) {
         boolean isUnique = true;
+        boolean licenseExists = false;
         int arraySize = brokerLog.size() - 1;
         
         for (int i = 0; i < arraySize; i++) {
-            Broker brokerLogObj = brokerLog.get(i);
-            isUnique = !brokerLogObj.getBrokerLicense().equals(license);
+            if (!licenseExists) {
+                Broker brokerLogObj = brokerLog.get(i);
+                isUnique = brokerLogObj.getBrokerLicense().equals(license);
+                if (!isUnique) {
+                    licenseExists = true;
+                }
+            }
         }
-    return isUnique;
+        if (licenseExists) {
+            return false;
+        }
+        else return true;
     }
 }
