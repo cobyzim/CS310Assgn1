@@ -11,7 +11,7 @@ package cs310zimmerman;
  */
 public class StockTradeLogImpl {
     private StockTrade[] stockTradeArray;
-    private int numStockTrades;
+    private int numStockTrades = 0;
     final int MAXIMUM_NUM_OBJECTS = 1000;
     
     public StockTrade[] getStockTradeArray() {
@@ -20,17 +20,15 @@ public class StockTradeLogImpl {
     }
     
     public int getNumStockTrades() {
-        numStockTrades = stockTradeArray.length;
         return numStockTrades;
     }
     
     public boolean addStockTrade(StockTrade tradeObj) {
         boolean successful = false;
-        for (int i = 0; i < stockTradeArray.length; i++) {
-            if (stockTradeArray[i] == null) {
-                stockTradeArray[i] = tradeObj;
-                successful = true;
-            }
+        //check if there's room in the array for more trades
+        if (numStockTrades < MAXIMUM_NUM_OBJECTS) {
+            stockTradeArray[numStockTrades] = tradeObj;
+            numStockTrades = numStockTrades++;
         }
     return successful;
     }
@@ -48,8 +46,39 @@ public class StockTradeLogImpl {
     return objectsDeleted;
     }
     
+    public boolean removeStockTrade(String stockSymbol) {
+        boolean stockTradeRemoved = false;
+        
+    return stockTradeRemoved;    
+    }
     
+    public boolean isStockSymbolUnique(String stockSymbol) {
+        boolean isUnique = false;
+        for (int i = 0; i < stockTradeArray.length; i++) {
+            StockTrade stockTradeLogObj = stockTradeArray[i];
+            isUnique = !stockTradeLogObj.getStockSymbol().equals(stockSymbol);
+        }
+        
+    return isUnique;
+    }
     
+    public int numberOfBrokerStockTrades(String license) {
+        int x = 0;
+        
+    return x;
+    }
+    
+    public double totalStockTradeValue() {
+        double y = 0.0;
+        
+    return y;
+    }
+    
+    public double totalStockTradeValue(String license) {
+        double z = 0.0;
+        
+    return z;
+    }
     
     
 }
