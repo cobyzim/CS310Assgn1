@@ -20,13 +20,13 @@ public class BrokerLogImpl {
     
     public boolean addBroker(Broker brokerObj) {
        boolean successful = true;
-       //boolean brokerAdded = false;
+       boolean brokerAdded = false;
        int arraySize = brokerLog.size() - 1;
        
        
        if (!brokerLog.isEmpty()) {
            for (int i = 0; i <= arraySize; i++) {
-               //if(!brokerAdded) {
+               if(!brokerAdded) {
                    Broker brokerLogObj = brokerLog.get(i);
                
                    System.out.println("BrokerObj: " + brokerObj.getBrokerLicense());
@@ -36,14 +36,15 @@ public class BrokerLogImpl {
                    }
                    else {
                        brokerLog.add(i, brokerObj);
-                       //brokerAdded = true;
+                       brokerAdded = true;
                    }
-               //}
+               }
                
            }
-           brokerLog.add(brokerObj);
-           //brokerAdded = true;
-           return successful;
+           if(!brokerAdded) {
+               brokerLog.add(brokerObj);
+           }
+           
        }
        
        else {
@@ -51,8 +52,10 @@ public class BrokerLogImpl {
            System.out.println("in else");
        }
         //System.out.println(brokerLog);
-  
-    return successful; 
+       System.out.println("Array List has " + brokerLog.size() +
+               "entries");
+       System.out.println("ARRAY LIST: " + brokerLog);
+       return successful; 
     }
     
     public boolean removeBroker(String license) {
