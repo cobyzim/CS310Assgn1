@@ -126,17 +126,15 @@ public class CS310Zimmerman {
             //hasBrokerErrors = true;
         }
         //if hasBrokerErrors is true, do the error message
+        if (!brokerLogImpl.isLicenseUnique(line[2])) {
+            System.out.println("\tERROR: Broker with license " + line[2] +
+                        " is not unique and will NOT be added to the log.");
+        }
         if (brokerLogImpl.isLicenseUnique(line[2])) {
             if (brokerLogImpl.addBroker(filledBroker)) {
                 System.out.println("ADDED: Broker with license " + line[2]);
             }
-            else {
-                System.out.println("/tERROR: Broker with license " + line[2] +
-                        "is not unique and will NOT be added to the log");
-            }
-            
         }
-        
     }
 
     public static void addStockTrade(String[] line) {
