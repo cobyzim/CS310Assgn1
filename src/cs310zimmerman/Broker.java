@@ -19,6 +19,7 @@ public class Broker {
     private String lastName;
     private String dept;
     private double commissionRate;
+    private String[] brokerArray;
 
     /**
      * Constructor with no parameters used for broker objects with no hard-
@@ -38,13 +39,23 @@ public class Broker {
      * Constructor with parameters used for broker objects with hard-coded 
      * attributes
      */
-    public Broker(String brokerLicense, String firstName, String lastName, 
+    /*public Broker(String brokerLicense, String firstName, String lastName, 
             String dept, double commissionRate) {
         setBrokerLicense(brokerLicense);
         setFirstName(firstName);
         setLastName(lastName);
         setDept(dept);
         setCommissionRate(commissionRate);
+    }
+    */
+    
+    public Broker(String[] brokerArray) {
+        this.brokerArray = brokerArray;
+        setBrokerLicense(brokerArray[2]);
+        setFirstName(brokerArray[3]);
+        setLastName(brokerArray[4]);
+        setDept(brokerArray[5]);
+        setCommissionRate(Double.parseDouble(brokerArray[6]));
     }
     
     /**
