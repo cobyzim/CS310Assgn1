@@ -29,6 +29,7 @@ public class CS310Zimmerman {
     public static void main(String[] args) throws FileNotFoundException {
         final String INPUT_FILENAME = "input/assn1input.txt";
         
+        /*
         System.out.println("Running Test 1a:");
         System.out.println("Broker Object 1:");
         Broker broker = new Broker("abc12345", "Coby", "Zimmerman", "123-542", 
@@ -93,11 +94,14 @@ public class CS310Zimmerman {
             System.out.println("The two stock trade objects ARE NOT equal.");
         }
         System.out.println();
+        */
         
         System.out.println("Running Test 3:");
+        
         try {
            File text = new File(INPUT_FILENAME);
-           Scanner scnr = new Scanner(text); 
+           Scanner scnr = new Scanner(text);
+           BrokerLogImpl brokerLogImpl = new BrokerLogImpl();
            
            while(scnr.hasNextLine()) {
                boolean hasBrokerErrors = false;
@@ -107,16 +111,11 @@ public class CS310Zimmerman {
                if (arrOfStr[0].equals("BROKER")) {
                    if (arrOfStr[1].equals("ADD")) {
                        System.out.println("ADDING BROKER");
-                   }
-                   if (arrOfStr[1].equals("DEL")) {
-                       System.out.println("DELETING BROKER");
-                   }
-                   
-                   Broker emptyBroker = new Broker();
-                   Broker filledBroker = setBrokerAttributes(emptyBroker,
-                           arrOfStr);
-                   
-                   if (!filledBroker.isValidLicense()) {
+                       Broker filledBroker = new Broker(arrOfStr);
+                       
+                       boolean brokerAdded = brokerLogImpl.addBroker(filledBroker);
+                       
+                       if (!filledBroker.isValidLicense()) {
                        System.out.println(filledBroker.toString());
                        System.out.println("ERROR: Invalid broker license number"
                                + " format: " + filledBroker.getBrokerLicense());
@@ -135,6 +134,21 @@ public class CS310Zimmerman {
                        displayBrokerAttributes(filledBroker);
                    }
                    
+                   }
+                   if (arrOfStr[1].equals("DEL")) {
+                       System.out.println("DELETING BROKER");
+                       boolean brokerRemoved = brokerLogImpl.removeBroker(arrOfStr[2]);
+                   }
+                   
+                   /*Broker emptyBroker = new Broker();
+                   Broker filledBroker = setBrokerAttributes(emptyBroker,
+                           arrOfStr);
+                   */
+                   
+                   
+                   
+                   
+                   
                }
                if (arrOfStr[0].equals("TRADE")) {
                    if (arrOfStr[1].equals("BUY")) {
@@ -144,9 +158,13 @@ public class CS310Zimmerman {
                        System.out.println("SELLING STOCK");
                    }
                    
+                   /*
                    StockTrade emptyStockTrade = new StockTrade();
                    StockTrade filledStockTrade = setStockTradeAttributes(
                            emptyStockTrade, arrOfStr);
+                   */
+                   
+                   StockTrade filledStockTrade = new StockTrade(arrOfStr);
                    
                    if (!filledStockTrade.isValidStockSymbol()) {
                        System.out.println(filledStockTrade.toString());
@@ -175,6 +193,7 @@ public class CS310Zimmerman {
                    }
                }
            }
+           System.out.println(brokerLogImpl.getBrokerLog());
         }
         
         catch (IOException error) {
@@ -184,6 +203,7 @@ public class CS310Zimmerman {
         
     }
     
+
     
     /**
      * 
@@ -194,6 +214,7 @@ public class CS310Zimmerman {
      * Method using setters from Broker class to give empty broker object in 
      * main values from csv file.
      */
+    /*
     public static Broker setBrokerAttributes(Broker broker, 
             String[] brokerAttributes) {
         broker.setBrokerLicense(brokerAttributes[2]);
@@ -204,6 +225,7 @@ public class CS310Zimmerman {
         
     return broker;
     }
+    */
     
     /**
      *
@@ -230,6 +252,7 @@ public class CS310Zimmerman {
      * Method using setters from the StockTrade class to give empty stockTrade
      * object values from csv file.
      */
+    /*
     public static StockTrade setStockTradeAttributes(StockTrade stockTrade, 
             String[] stockAttributes) {
         stockTrade.setStockSymbol(stockAttributes[2]);
@@ -245,6 +268,7 @@ public class CS310Zimmerman {
         
     return stockTrade;
     }
+    */
     
     /**
      *
