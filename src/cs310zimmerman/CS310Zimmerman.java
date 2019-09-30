@@ -170,12 +170,12 @@ public class CS310Zimmerman {
             String stockSymbol = line[2];
             boolean brokerIsUnique = brokerLogImpl.isLicenseUnique(license);
             boolean stockSymbolIsUnique = stockTradeLog.isStockSymbolUnique(stockSymbol);
-            if (brokerIsUnique && stockSymbolIsUnique) {
+            if (!brokerIsUnique && stockSymbolIsUnique) {
                 stockTradeLog.addStockTrade(filledStockTrade);
                 System.out.println("ADDED: StockTrade with Stock symbol " + 
                         stockSymbol + " listed by Broker " + license);
             }
-            else if (!brokerIsUnique && stockSymbolIsUnique) {
+            else if (brokerIsUnique && stockSymbolIsUnique) {
                 System.out.println("ADD ERROR: StockTrade with Stock Symbol " + 
                         stockSymbol + " has Broker with license " + license
                         + ", but there is no such Broker license in the Broker"
@@ -188,11 +188,7 @@ public class CS310Zimmerman {
                         + "be added to StockTrade log.");
             }
             //might need one more else if for potential of both to be wrong
-            
-
-            
-            
-        
+           
     }
     
     
