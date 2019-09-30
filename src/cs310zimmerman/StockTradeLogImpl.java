@@ -31,26 +31,26 @@ public class StockTradeLogImpl {
             stockTradeArray[numStockTrades] = tradeObj;
             numStockTrades = numStockTrades++;
         }
-    return successful;
+        return successful;
     }
     
     public boolean removeStockTradeByBroker(String license) {
         boolean objectsDeleted = false;
-        for (int i = 0; i < stockTradeArray.length; i++) {
+        for (int i = 0; i < numStockTrades; i++) {
             StockTrade stockTradeObj = stockTradeArray[i];
             if (stockTradeObj.getBrokerLicense().equals(license)) {
-                stockTradeObj = null;
+                stockTradeArray[i] = stockTradeArray[numStockTrades];
+                numStockTrades--;
+                objectsDeleted = true;
             }
         }
-        
-        
-    return objectsDeleted;
+        return objectsDeleted;
     }
     
     public boolean removeStockTrade(String stockSymbol) {
         boolean stockTradeRemoved = false;
         
-    return stockTradeRemoved;    
+        return stockTradeRemoved;    
     }
     
     public boolean isStockSymbolUnique(String stockSymbol) {
@@ -75,19 +75,19 @@ public class StockTradeLogImpl {
     public int numberOfBrokerStockTrades(String license) {
         int x = 0;
         
-    return x;
+        return x;
     }
     
     public double totalStockTradeValue() {
         double y = 0.0;
         
-    return y;
+        return y;
     }
     
     public double totalStockTradeValue(String license) {
         double z = 0.0;
         
-    return z;
+        return z;
     }
     
     
