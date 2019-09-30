@@ -97,17 +97,23 @@ public class StockTradeLogImpl {
         
         for(int i = 0; i < numStockTrades; i++) {
             StockTrade stockTradeObj = stockTradeArray[i];
-            stockTradeObj.getWholeShares();
+            stockHoldingSum = stockHoldingSum + stockTradeObj.getWholeShares();
         }
-        
-        
         return stockHoldingSum;
     }
     
     public double totalStockTradeValue(String license) {
-        double z = 0.0;
+        double stockHoldingSum = 0.0;
         
-        return z;
+        for(int i = 0; i < numStockTrades; i++) {
+            StockTrade stockTradeObj = stockTradeArray[i];
+            if (stockTradeObj.getBrokerLicense().equals(license)) {
+                stockHoldingSum = stockHoldingSum + stockTradeObj.getWholeShares();
+            }
+        }
+        
+        
+        return stockHoldingSum;
     }
     
     
