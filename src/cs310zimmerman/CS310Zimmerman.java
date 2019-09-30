@@ -85,7 +85,7 @@ public class CS310Zimmerman {
                     }
                     if (arrOfStr[1].equals("DEL")) {
                         System.out.println("DELETING BROKER");
-                        //boolean brokerRemoved = brokerLogImpl.removeBroker(arrOfStr[2]);
+                        deleteBroker(arrOfStr);
                     }
                 }
                 if (arrOfStr[0].equals("TRADE")) {
@@ -95,6 +95,7 @@ public class CS310Zimmerman {
                     }
                     if (arrOfStr[1].equals("SELL")) {
                         System.out.println("SELLING STOCK");
+                        deleteStockTrade(arrOfStr);
                     }
                 }  
                
@@ -192,16 +193,35 @@ public class CS310Zimmerman {
     }
     
     
-    
+    //test this (also look at changing it to !unique so it makes more sense
     public static void deleteBroker(String[] line) {
-        
         String license = line[2];
-        if (!brokerLogImpl.isLicenseUnique(license)) {
-           brokerLogImpl.removeBroker(license);
-            System.out.println("DELETED: Broker with license: " + license + 
-                    "has been removed from the Broker log. All Broker's stocks"
-                    + " will also be removed from the StockTrade log.");
-        }
         
+        if (brokerLogImpl.isLicenseUnique(license)) {
+            brokerLogImpl.removeBroker(license);
+            System.out.println("DELETED: Broker with license: " + license + 
+                    " has been removed from the Broker log. All Broker's stocks"
+                    + " will also be removed from the StockTrade log.");
+            stockTradeLog.removeStockTradeByBroker(license);
+        }
+        else {
+            System.out.println("\tERROR: Broker with license " + license + 
+                    " not found in log.");
+        } 
+    }
+    
+    public static void deleteStockTrade(String[] line) {
+        String stockSymbol = line[2];
+        
+        if(stockTradeLog.isStockSymbolUnique(stockSymbol)) {
+            stockTradeLog.removeStockTrade(stockSymbol);
+            System.out.println("DELETED: StockTrade with Stock symbol " + 
+                    stockSymbol);
+        }
+        else {
+            System.out.println("DEL ERROR: StockTrade with Stock symbol " + 
+                    stockSymbol + " is not in the StockTrade log, so it "
+                    + "cannot be deleted.");
+        }
     }
 }
