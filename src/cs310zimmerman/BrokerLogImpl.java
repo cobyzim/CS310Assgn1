@@ -81,7 +81,7 @@ public class BrokerLogImpl {
             if (!licenseExists) {
                 Broker brokerLogObj = brokerLog.get(i);
                 isUnique = brokerLogObj.getBrokerLicense().equals(license);
-                if (!isUnique) {
+                if (isUnique == false) {
                     licenseExists = true;
                 }
             }
