@@ -36,7 +36,7 @@ public class StockTradeLogImpl {
     
     public boolean removeStockTradeByBroker(String license) {
         boolean objectsDeleted = false;
-        for (int i = 0; i <stockTradeArray.length; i++) {
+        for (int i = 0; i < stockTradeArray.length; i++) {
             StockTrade stockTradeObj = stockTradeArray[i];
             if (stockTradeObj.getBrokerLicense().equals(license)) {
                 stockTradeObj = null;
@@ -61,7 +61,7 @@ public class StockTradeLogImpl {
             if (!stockSymbolExists && numStockTrades > 0) {
                 StockTrade stockTradeLogObj = stockTradeArray[i];
                 isUnique = stockTradeLogObj.getStockSymbol().equals(stockSymbol);
-                if (!isUnique) {
+                if (isUnique) {
                     stockSymbolExists = true;
                 }
             }  
