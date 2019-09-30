@@ -49,6 +49,14 @@ public class StockTradeLogImpl {
     
     public boolean removeStockTrade(String stockSymbol) {
         boolean stockTradeRemoved = false;
+        for (int i = 0; i < numStockTrades; i++) {
+            StockTrade stockTradeObj = stockTradeArray[i];
+            if (stockTradeObj.getStockSymbol().equals(stockSymbol)) {
+                stockTradeArray[i] = stockTradeArray[numStockTrades];
+                numStockTrades--;
+                stockTradeRemoved = true;
+            }
+        }
         
         return stockTradeRemoved;    
     }
@@ -73,15 +81,27 @@ public class StockTradeLogImpl {
     }
     
     public int numberOfBrokerStockTrades(String license) {
-        int x = 0;
+        int numberOfTrades = 0;
         
-        return x;
+        for(int i = 0; i < numStockTrades; i++) {
+            StockTrade stockTradeObj = stockTradeArray[i];
+            if (stockTradeObj.getBrokerLicense().equals(license)) {
+                numberOfTrades++;
+            }
+        }
+        return numberOfTrades;
     }
     
     public double totalStockTradeValue() {
-        double y = 0.0;
+        double stockHoldingSum = 0.0;
         
-        return y;
+        for(int i = 0; i < numStockTrades; i++) {
+            StockTrade stockTradeObj = stockTradeArray[i];
+            stockTradeObj.getWholeShares();
+        }
+        
+        
+        return stockHoldingSum;
     }
     
     public double totalStockTradeValue(String license) {
