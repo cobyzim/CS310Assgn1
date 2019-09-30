@@ -10,9 +10,10 @@ package cs310zimmerman;
  * @author cobyz
  */
 public class StockTradeLogImpl {
-    private StockTrade[] stockTradeArray;
     private int numStockTrades = 0;
     final int MAXIMUM_NUM_OBJECTS = 1000;
+    private StockTrade[] stockTradeArray = getStockTradeArray();
+
     
     public StockTrade[] getStockTradeArray() {
         stockTradeArray = new StockTrade[MAXIMUM_NUM_OBJECTS];
@@ -53,13 +54,22 @@ public class StockTradeLogImpl {
     }
     
     public boolean isStockSymbolUnique(String stockSymbol) {
-        boolean isUnique = false;
-        for (int i = 0; i < stockTradeArray.length; i++) {
-            StockTrade stockTradeLogObj = stockTradeArray[i];
-            isUnique = !stockTradeLogObj.getStockSymbol().equals(stockSymbol);
-        }
+        boolean isUnique = true;
+        boolean stockSymbolExists = false;
         
-    return isUnique;
+        for (int i = 0; i < stockTradeArray.length; i++) {
+            if (!stockSymbolExists && numStockTrades > 0) {
+                StockTrade stockTradeLogObj = stockTradeArray[i];
+                isUnique = stockTradeLogObj.getStockSymbol().equals(stockSymbol);
+                if (!isUnique) {
+                    stockSymbolExists = true;
+                }
+            }  
+        }
+        if (stockSymbolExists) {
+            return false;
+        }
+        else return true;
     }
     
     public int numberOfBrokerStockTrades(String license) {
