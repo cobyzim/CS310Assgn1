@@ -62,7 +62,7 @@ public class BrokerLogImpl {
         boolean successful = false;
         int arraySize = brokerLog.size() - 1;
         
-        for (int i = 0; i < arraySize; i++) {
+        for (int i = 0; i <= arraySize; i++) {
             Broker brokerLogObj = brokerLog.get(i);
             if (brokerLogObj.getBrokerLicense().equals(license)) {
                 brokerLog.remove(i);
@@ -77,11 +77,13 @@ public class BrokerLogImpl {
         boolean licenseExists = false;
         int arraySize = brokerLog.size() - 1;
         
-        for (int i = 0; i < arraySize; i++) {
+        for (int i = 0; i <= arraySize; i++) {
             if (!licenseExists) {
                 Broker brokerLogObj = brokerLog.get(i);
+                //System.out.println("object license = " + brokerLogObj.getBrokerLicense());
+                //System.out.println("license arg = " + license);
                 isUnique = brokerLogObj.getBrokerLicense().equals(license);
-                if (isUnique == false) {
+               if (isUnique == true) {
                     licenseExists = true;
                 }
             }
