@@ -69,7 +69,7 @@ public class BrokerLogImpl {
                 successful = true;
             }
         }
-    return successful;
+        return successful;
     }
     
     public boolean isLicenseUnique(String license) {
