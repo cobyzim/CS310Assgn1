@@ -55,7 +55,7 @@ public class StockTrade {
         this.stockTradeArray = stockTradeArray;
         setStockSymbol(stockTradeArray[2]);
         setPricePerShare(Double.parseDouble(stockTradeArray[3]));
-        setPricePerShare(Integer.parseInt(stockTradeArray[4]));
+        setWholeShares(Integer.parseInt(stockTradeArray[4]));
         setBrokerLicense(stockTradeArray[5]);
         setTaxable(Boolean.parseBoolean(stockTradeArray[6]));
     }
