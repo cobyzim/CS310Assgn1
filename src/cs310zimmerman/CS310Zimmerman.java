@@ -27,6 +27,8 @@ public class CS310Zimmerman {
      * not the information within them is valid.
      */
     static BrokerLogImpl brokerLogImpl = new BrokerLogImpl();
+    static StockTradeLogImpl stockTradeLog = new StockTradeLogImpl();
+    
     public static void main(String[] args) throws FileNotFoundException {
     
         processFile();
@@ -70,7 +72,6 @@ public class CS310Zimmerman {
            File text = new File(INPUT_FILENAME);
            Scanner scnr = new Scanner(text);
           
-           
             while(scnr.hasNextLine()) {
                 //boolean hasBrokerErrors = false;
                 //boolean hasStockErrors = false;
@@ -90,6 +91,7 @@ public class CS310Zimmerman {
                 if (arrOfStr[0].equals("TRADE")) {
                     if (arrOfStr[1].equals("BUY")) {
                         System.out.println("BUYING STOCK");
+                        addStockTrade(arrOfStr);
                     }
                     if (arrOfStr[1].equals("SELL")) {
                         System.out.println("SELLING STOCK");
@@ -138,8 +140,7 @@ public class CS310Zimmerman {
     }
 
     public static void addStockTrade(String[] line) {
-        StockTradeLogImpl stockTradeLog = new StockTradeLogImpl();
-        
+        //StockTradeLogImpl stockTradeLog = new StockTradeLogImpl();
         StockTrade filledStockTrade = new StockTrade(line);
 
             if (!filledStockTrade.isValidStockSymbol()) {
@@ -163,26 +164,27 @@ public class CS310Zimmerman {
                 System.out.println();
                 //hasStockErrors = true;
             }
-            BrokerLogImpl brokerLogImpl = new BrokerLogImpl();
+            //BrokerLogImpl brokerLogImpl = new BrokerLogImpl();
         
             String license = line[5];
+            String stockSymbol = line[2];
             boolean brokerIsUnique = brokerLogImpl.isLicenseUnique(license);
-            boolean stockSymbolIsUnique = stockTradeLog.isStockSymbolUnique(line[2]);
-            if (!brokerIsUnique && stockSymbolIsUnique) {
+            boolean stockSymbolIsUnique = stockTradeLog.isStockSymbolUnique(stockSymbol);
+            if (brokerIsUnique && stockSymbolIsUnique) {
                 stockTradeLog.addStockTrade(filledStockTrade);
                 System.out.println("ADDED: StockTrade with Stock symbol " + 
-                        line[2] + " listed by Broker " + line[5]);
+                        stockSymbol + " listed by Broker " + license);
             }
-            else if (brokerIsUnique && stockSymbolIsUnique) {
+            else if (!brokerIsUnique && stockSymbolIsUnique) {
                 System.out.println("ADD ERROR: StockTrade with Stock Symbol " + 
-                        line[2] + "has Broker with license " + line[5]
-                        + " , but there is no such Broker license in the Broker"
-                        + " log. StockTrade " + line[2] + " will NOT be added to "
+                        stockSymbol + " has Broker with license " + license
+                        + ", but there is no such Broker license in the Broker"
+                        + " log. StockTrade " + stockSymbol + " will NOT be added to "
                         + "StockTrade log.");
             }
             else {
                 System.out.println("ADD ERROR: StockTrade has Stock Symbol "
-                        + "that already exists: " + line[2] + "It will NOT "
+                        + "that already exists: " + stockSymbol + "It will NOT "
                         + "be added to StockTrade log.");
             }
             //might need one more else if for potential of both to be wrong
@@ -196,11 +198,13 @@ public class CS310Zimmerman {
     
     
     public static void deleteBroker(String[] line) {
-        BrokerLogImpl brokerLogImpl = new BrokerLogImpl();
         
         String license = line[2];
         if (!brokerLogImpl.isLicenseUnique(license)) {
-           brokerLogImpl.removeBroker(license); 
+           brokerLogImpl.removeBroker(license);
+            System.out.println("DELETED: Broker with license: " + license + 
+                    "has been removed from the Broker log. All Broker's stocks"
+                    + " will also be removed from the StockTrade log.");
         }
         
     }
