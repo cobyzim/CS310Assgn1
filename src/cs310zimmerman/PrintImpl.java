@@ -11,11 +11,23 @@ import java.io.*;
  *
  * @author cobyz
  */
+
 public class PrintImpl {
     private ArrayList<Broker> brokerLog;
-    private String[] stockTradeArray;
+    private StockTrade[] stockTradeArray;
     private  int numStockTrades;
     
-    //public static void printReport()
+    public void printReport(BrokerLogImpl brokerLogImpl, StockTradeLogImpl stockTradeLogImpl) {
+        brokerLog = brokerLogImpl.getBrokerLog();
+        stockTradeArray = stockTradeLogImpl.getStockTradeArray();
+        numStockTrades = stockTradeLogImpl.getNumStockTrades();
+        
+        for (int i = 0; i < numStockTrades; i++) {
+            
+        }
+        
+        
+        
+    }
     //loop through brokers, grab license, loop through stocktrades, compare if they have same license
 }
