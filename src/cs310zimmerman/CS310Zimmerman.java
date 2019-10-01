@@ -27,7 +27,7 @@ public class CS310Zimmerman {
      * not the information within them is valid.
      */
     static BrokerLogImpl brokerLogImpl = new BrokerLogImpl();
-    static StockTradeLogImpl stockTradeLog = new StockTradeLogImpl();
+    static StockTradeLogImpl stockTradeLogImpl = new StockTradeLogImpl();
     
     public static void main(String[] args) throws FileNotFoundException {
     
@@ -180,9 +180,9 @@ public class CS310Zimmerman {
             String license = line[5];
             String stockSymbol = line[2];
             boolean brokerIsUnique = brokerLogImpl.isLicenseUnique(license);
-            boolean stockSymbolIsUnique = stockTradeLog.isStockSymbolUnique(stockSymbol);
+            boolean stockSymbolIsUnique = stockTradeLogImpl.isStockSymbolUnique(stockSymbol);
             if (!brokerIsUnique && stockSymbolIsUnique) {
-                stockTradeLog.addStockTrade(filledStockTrade);
+                stockTradeLogImpl.addStockTrade(filledStockTrade);
                 System.out.println("ADDED: StockTrade with Stock symbol " + 
                         stockSymbol + " listed by Broker " + license);
             }
@@ -212,7 +212,7 @@ public class CS310Zimmerman {
             System.out.println("DELETED: Broker with license: " + license + 
                 " has been removed from the Broker log. All Broker's stocks"
                 + " will also be removed from the StockTrade log.");
-            stockTradeLog.removeStockTradeByBroker(license);
+            stockTradeLogImpl.removeStockTradeByBroker(license);
         }
         else {
             System.out.println("\tERROR: Broker with license " + license + 
@@ -223,8 +223,8 @@ public class CS310Zimmerman {
     public static void deleteStockTrade(String[] line) {
         String stockSymbol = line[2];
         
-        if(stockTradeLog.isStockSymbolUnique(stockSymbol)) {
-            stockTradeLog.removeStockTrade(stockSymbol);
+        if(stockTradeLogImpl.isStockSymbolUnique(stockSymbol)) {
+            stockTradeLogImpl.removeStockTrade(stockSymbol);
             System.out.println("DELETED: StockTrade with Stock symbol " + 
                 stockSymbol);
         }
