@@ -29,10 +29,10 @@ public class BrokerLogImpl {
                if(!brokerAdded) {
                    Broker brokerLogObj = brokerLog.get(i);
                
-                   System.out.println("BrokerObj: " + brokerObj.getBrokerLicense());
+                   //System.out.println("BrokerObj: " + brokerObj.getBrokerLicense());
                    int x = brokerLogObj.getBrokerLicense().compareTo(brokerObj.getBrokerLicense());
                    if (x < 0) {
-                       System.out.println("I'm bigger than current Broker" + brokerLogObj.getBrokerLicense());
+                       //System.out.println("I'm bigger than current Broker" + brokerLogObj.getBrokerLicense());
                    }
                    else {
                        brokerLog.add(i, brokerObj);
@@ -49,7 +49,7 @@ public class BrokerLogImpl {
        
        else {
            brokerLog.add(brokerObj);
-           System.out.println("in else");
+           //System.out.println("in else");
        }
         //System.out.println(brokerLog);
        System.out.println("Array List has " + brokerLog.size() +
