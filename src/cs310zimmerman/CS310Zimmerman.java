@@ -28,42 +28,12 @@ public class CS310Zimmerman {
      */
     static BrokerLogImpl brokerLogImpl = new BrokerLogImpl();
     static StockTradeLogImpl stockTradeLogImpl = new StockTradeLogImpl();
+    static PrintImpl printImpl = new PrintImpl();
     
     public static void main(String[] args) throws FileNotFoundException {
     
         processFile();
-        /*
-            StockTrade filledStockTrade = new StockTrade(arrOfStr);
 
-            if (!filledStockTrade.isValidStockSymbol()) {
-                System.out.println(filledStockTrade.toString());
-                System.out.println("ERROR: Invalid stock symbol format:"
-                        + " " + filledStockTrade.getStockSymbol());
-                System.out.println();
-                hasStockErrors = true;
-            }
-            if (!filledStockTrade.isValidPrice()) {
-                System.out.println(filledStockTrade.toString());
-                System.out.println("ERROR: Invalid stock price: "
-                        + filledStockTrade.getPricePerShare());
-                System.out.println();
-                hasStockErrors = true;
-            }
-            if (!filledStockTrade.isValidWholeShares()) {
-                System.out.println(filledStockTrade.toString());
-                System.out.println("ERROR: Invalid number of shares: "
-                        + filledStockTrade.getWholeShares());
-                System.out.println();
-                hasStockErrors = true;
-            }
-        }
-    }
-
-    System.out.println (brokerLogImpl.getBrokerLog());
-        }
-           
-    }
-    */
     }
     public static void processFile() throws FileNotFoundException {
         final String INPUT_FILENAME = "input/assn1input.txt";
