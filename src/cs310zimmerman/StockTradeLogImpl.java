@@ -1,29 +1,47 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Implementation class used to implement the log of stock trades in an 
+ * unordered array. It creates and manages these objects using nine methods.
  */
 package cs310zimmerman;
 
 /**
  *
- * @author cobyz
+ * @author Coby Zimmerman
  */
 public class StockTradeLogImpl {
+    
     private int numStockTrades = 0;
     final int MAXIMUM_NUM_OBJECTS = 1000;
     private StockTrade[] stockTradeArray = getStockTradeArray();
 
-    
+    /**
+     * Method used to return the contents of the log of stock trades.
+     * 
+     * @return - returns log of stock trades
+     */
     public StockTrade[] getStockTradeArray() {
         stockTradeArray = new StockTrade[MAXIMUM_NUM_OBJECTS];
         return stockTradeArray;
     }
     
+    /**
+     * Method used to return the count for the amount of elements in the
+     * stock trade array log.
+     * 
+     * @return - returns the count attribute
+     */
     public int getNumStockTrades() {
         return numStockTrades;
     }
     
+    /**
+     * Method used to add a stock trade object to the log of stock trades if
+     * there is room.
+     * 
+     * @param tradeObj - passes in stock trade object
+     * @return - returns true or false based on whether or not a stock trade was
+     * added to the log.
+     */
     public boolean addStockTrade(StockTrade tradeObj) {
         boolean successful = false;
         //check if there's room in the array for more trades
@@ -34,6 +52,14 @@ public class StockTradeLogImpl {
         return successful;
     }
     
+    /**
+     * Method used to delete stock trade objects from the log of stock trades if
+     * they have the given broker license.
+     * 
+     * @param license - passes in a broker license
+     * @return - returns true or false based on whether or not any stock trade
+     * objects are deleted
+     */
     public boolean removeStockTradeByBroker(String license) {
         boolean objectsDeleted = false;
         for (int i = 0; i < numStockTrades; i++) {
