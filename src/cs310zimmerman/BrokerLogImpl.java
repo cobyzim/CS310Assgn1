@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Implementation class used to implement the log of brokers in an arraylist. It
+ * creates / manages the ordered list of objects with four methods.
  */
 package cs310zimmerman;
 
@@ -9,15 +8,28 @@ import java.util.ArrayList;
 
 /**
  *
- * @author cobyz
+ * @author Coby Zimmerman
  */
 public class BrokerLogImpl {
+    
     private ArrayList<Broker> brokerLog = new ArrayList<Broker>();
     
+    /**
+     * Method used to return the contents of the log of brokers.
+     * 
+     * @return - returns log of brokers
+     */
     public ArrayList getBrokerLog() {
         return brokerLog;
     }
     
+    /**
+     * Method used to add brokers to log of brokers in ascending order.
+     * 
+     * @param brokerObj - passes in broker object
+     * @return - returns true or false based on if a broker object is added or 
+     * not
+     */
     public boolean addBroker(Broker brokerObj) {
        boolean successful = true;
        boolean brokerAdded = false;
@@ -56,8 +68,17 @@ public class BrokerLogImpl {
                "entries");
        System.out.println("ARRAY LIST: " + brokerLog);
        return successful; 
+       //should we refigure successful?
     }
     
+    /**
+     * Method used to remove a broker object from the log of brokers if the
+     * desired license is found.
+     * 
+     * @param license - passes in a broker license
+     * @return - returns true or false based on if a broker object is removed or
+     * not
+     */
     public boolean removeBroker(String license) {
         boolean successful = false;
         int arraySize = brokerLog.size() - 1;
@@ -72,6 +93,14 @@ public class BrokerLogImpl {
         return successful;
     }
     
+    /**
+     * Method used to test if a broker with a specific license exists in the log
+     * of brokers already.
+     * 
+     * @param license - passes in a broker license 
+     * @return - returns true or false based on whether or not the license
+     * exists in the log.
+     */
     public boolean isLicenseUnique(String license) {
         boolean isUnique = true;
         boolean licenseExists = false;
