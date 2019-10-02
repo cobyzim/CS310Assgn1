@@ -91,7 +91,7 @@ public class CS310Zimmerman {
     public static void addBroker(String[] line) {
         Broker filledBroker = new Broker(line);
         boolean hasBrokerErrors = false;
-
+       
         if (!filledBroker.isValidLicense()) {
             //System.out.println(filledBroker.toString());
             System.out.println("\tERROR: Broker with license "
@@ -102,7 +102,7 @@ public class CS310Zimmerman {
         if (!filledBroker.isValidDept()) {
             //System.out.println(filledBroker.toString());
             System.out.println("\tERROR: Broker with license "
-                    + filledBroker.getBrokerLicense() + " has invalid department"
+                    + filledBroker.getBrokerLicense() + " has invalid department "
                     + filledBroker.getDept());
             System.out.println();
             hasBrokerErrors = true;
@@ -115,16 +115,13 @@ public class CS310Zimmerman {
         //need to fix this
         if (brokerLogImpl.isLicenseUnique(line[2])) {
             if (brokerLogImpl.addBroker(filledBroker)) {
-                System.out.println("ADDED: Broker with license " + line[2]);
-                /*
-                 if (hasBrokerErrors = true) {
-                 System.out.println("ADDED: Broker with license " + line[2]
+                 if (hasBrokerErrors) {
+                   System.out.println("ADDED: Broker with license " + line[2]
                  + ", regardless of data errors.");
                  }
-                 if (hasBrokerErrors = false) {
-                 System.out.println("ADDED: Broker with license " + line[2]);
+                 else {
+                   System.out.println("ADDED: Broker with license " + line[2]);
                  }
-                 */
 
             }
         }
@@ -141,6 +138,7 @@ public class CS310Zimmerman {
      */
     public static void addStockTrade(String[] line) {
         StockTrade filledStockTrade = new StockTrade(line);
+        boolean hasStockErrors = false;
 
         if (!filledStockTrade.isValidStockSymbol()) {
             System.out.println(filledStockTrade.toString());
@@ -148,7 +146,7 @@ public class CS310Zimmerman {
                     + filledStockTrade.getStockSymbol() + " has an invalid "
                     + "Stock symbol.");
             System.out.println();
-            //hasStockErrors = true;
+            hasStockErrors = true;
         }
         if (!filledStockTrade.isValidPrice()) {
             System.out.println(filledStockTrade.toString());
@@ -156,7 +154,7 @@ public class CS310Zimmerman {
                     + filledStockTrade.getStockSymbol() + " has invalid price "
                     + filledStockTrade.getPricePerShare());
             System.out.println();
-            //hasStockErrors = true;
+            hasStockErrors = true;
         }
         if (!filledStockTrade.isValidWholeShares()) {
             System.out.println(filledStockTrade.toString());
@@ -164,7 +162,7 @@ public class CS310Zimmerman {
                     + filledStockTrade.getStockSymbol() + " has invalid "
                     + "number of shares " + filledStockTrade.getWholeShares());
             System.out.println();
-            //hasStockErrors = true;
+            hasStockErrors = true;
         }
             //BrokerLogImpl brokerLogImpl = new BrokerLogImpl();
 
@@ -174,8 +172,16 @@ public class CS310Zimmerman {
         boolean stockSymbolIsUnique = stockTradeLogImpl.isStockSymbolUnique(stockSymbol);
         if (!brokerIsUnique && stockSymbolIsUnique) {
             stockTradeLogImpl.addStockTrade(filledStockTrade);
-            System.out.println("ADDED: StockTrade with Stock symbol "
+            if (hasStockErrors) {
+                System.out.println("ADDED: StockTrade with Stock symbol " + 
+                        stockSymbol + "listed by Broker " + line[5] + ", "
+                        + "regardless of data errors.");
+            }
+            else {
+                System.out.println("ADDED: StockTrade with Stock symbol "
                     + stockSymbol + " listed by Broker " + license);
+            }
+            
         } else if (brokerIsUnique && stockSymbolIsUnique) {
             System.out.println("ADD ERROR: StockTrade with Stock Symbol "
                     + stockSymbol + " has Broker with license " + license
