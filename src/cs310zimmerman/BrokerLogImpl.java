@@ -35,16 +35,13 @@ public class BrokerLogImpl {
        boolean brokerAdded = false;
        int arraySize = brokerLog.size() - 1;
        
-       
        if (!brokerLog.isEmpty()) {
            for (int i = 0; i <= arraySize; i++) {
                if(!brokerAdded) {
                    Broker brokerLogObj = brokerLog.get(i);
                
-                   //System.out.println("BrokerObj: " + brokerObj.getBrokerLicense());
                    int x = brokerLogObj.getBrokerLicense().compareTo(brokerObj.getBrokerLicense());
                    if (x < 0) {
-                       //System.out.println("I'm bigger than current Broker" + brokerLogObj.getBrokerLicense());
                    }
                    else {
                        brokerLog.add(i, brokerObj);
@@ -58,17 +55,10 @@ public class BrokerLogImpl {
            }
            
        }
-       
        else {
            brokerLog.add(brokerObj);
-           //System.out.println("in else");
        }
-        //System.out.println(brokerLog);
-       System.out.println("Array List has " + brokerLog.size() +
-               "entries");
-       System.out.println("ARRAY LIST: " + brokerLog);
-       return successful; 
-       //should we refigure successful?
+       return successful;
     }
     
     /**
@@ -109,8 +99,6 @@ public class BrokerLogImpl {
         for (int i = 0; i <= arraySize; i++) {
             if (!licenseExists) {
                 Broker brokerLogObj = brokerLog.get(i);
-                //System.out.println("object license = " + brokerLogObj.getBrokerLicense());
-                //System.out.println("license arg = " + license);
                 isUnique = brokerLogObj.getBrokerLicense().equals(license);
                if (isUnique == true) {
                     licenseExists = true;
