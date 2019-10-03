@@ -22,6 +22,7 @@ public class PrintImpl {
         brokerLog = brokerLogImpl.getBrokerLog();
         stockTradeArray = stockTradeLogImpl.getStockTradeArray();
         numStockTrades = stockTradeLogImpl.getNumStockTrades();
+           System.out.println(numStockTrades);
         int arraySize = brokerLog.size() - 1;
         String brokerLicense;
         String firstName;
@@ -32,10 +33,17 @@ public class PrintImpl {
         String stockSymbol;
         double pricePerShare;
         int wholeShares;
-        boolean taxable;
+        String taxable;
+        int numListings;
+        double totalListValue;
+        int numListingsAll = 0;
+        double totalListValueAll = 0.0;
         
+        FileWriter fileWriter = new FileWriter(OUTPUT_FILENAME);
+        PrintWriter printWriter = new PrintWriter(fileWriter);
         
         for (int i = 0; i <= arraySize; i++) {
+            System.out.println("In i loop");
             Broker brokerLogObj = brokerLog.get(i);
             brokerLicense = brokerLogObj.getBrokerLicense();
             firstName = brokerLogObj.getFirstName();
@@ -43,29 +51,54 @@ public class PrintImpl {
             dept = brokerLogObj.getDept();
             commissionRate = brokerLogObj.getCommissionRate();
             
-            for (int j = 0; j < numStockTrades; i++) {
-                StockTrade stockTradeObj = stockTradeArray[i];
-                tradeLicense = stockTradeObj.getBrokerLicense();
-                stockSymbol = stockTradeObj.getStockSymbol();
-                pricePerShare = stockTradeObj.getPricePerShare();
-                wholeShares = stockTradeObj.getWholeShares();
-                if (stockTradeObj.isTaxable() == true) {
+            System.out.println("numstocktrades: " + numStockTrades);
+            System.out.println("stock trade array size = " + stockTradeArray.length);
+            for (int j = 0; j < numStockTrades; j++) {
+                System.out.println("in j loop");
+                StockTrade stockTradeLogObj = stockTradeArray[j];
+                tradeLicense = stockTradeLogObj.getBrokerLicense();
+                stockSymbol = stockTradeLogObj.getStockSymbol();
+                pricePerShare = stockTradeLogObj.getPricePerShare();
+                wholeShares = stockTradeLogObj.getWholeShares();
+                if (stockTradeLogObj.isTaxable()) {
                     taxable = "YES";
                 }
+                else {
+                    taxable = "NO";
+                }
+                numListings = numStockTrades;
+                totalListValue = stockTradeLogImpl.totalStockTradeValue(brokerLicense);
+                
+                
+                
                 if (brokerLicense.equals(tradeLicense)) {
-                    FileWriter fileWriter = new FileWriter(OUTPUT_FILENAME);
-                    PrintWriter printWriter = new PrintWriter(fileWriter);
+                    System.out.println("In if license compare check");
                     
                     printWriter.printf("%s  %s,  %s\n", brokerLicense, 
-                        brokerLogObj.getLastName(), brokerLogObj.getFirstName());
-                    printWriter.printf("\n\t%s \t.2f \t%d   %s", )
+                        lastName, firstName);
+                    
+                    printWriter.printf("\n\t%s \t%.2f \t%d   %s\n", stockSymbol, 
+                            pricePerShare, wholeShares, taxable);
+                    
+                    printWriter.printf("\n   Number of StockTrade Listings for "
+                            + "Broker: %d\n", numListings);
+                    
+                    printWriter.printf("\nTotal sales value of StockTradeListings"
+                            + " for Broker %s: $ %.2f\n", brokerLicense, totalListValue);
+                    
                     
                 }
-            }
-            
+                numListingsAll = numListingsAll + numListings;
+                totalListValueAll = totalListValueAll + totalListValue;
+            } 
         }
+        printWriter.printf("\nTotal Number of StockTrade Listings for ALL "
+                + "Brokers = \n", numListingsAll);
         
+        printWriter.printf("Total sales value of StockTrade Listings for ALL "
+                + "Brokers = $ %.2f", totalListValueAll);
         
-        
+        fileWriter.close();
+        printWriter.close();
     }
 }
