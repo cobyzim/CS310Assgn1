@@ -93,7 +93,7 @@ public class PrintImpl {
             } 
         }
         printWriter.printf("\nTotal Number of StockTrade Listings for ALL "
-                + "Brokers = \n", numListingsAll);
+                + "Brokers = %d\n", numListingsAll);
         
         printWriter.printf("Total sales value of StockTrade Listings for ALL "
                 + "Brokers = $ %.2f", totalListValueAll);
