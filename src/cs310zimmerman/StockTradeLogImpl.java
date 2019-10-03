@@ -12,7 +12,9 @@ public class StockTradeLogImpl {
     
     private int numStockTrades = 0;
     final int MAXIMUM_NUM_OBJECTS = 1000;
-    private StockTrade[] stockTradeArray = getStockTradeArray();
+   
+    private StockTrade[] stockTradeArray = new StockTrade[MAXIMUM_NUM_OBJECTS];
+    //private StockTrade[] stockTradeArray = getStockTradeArray();
 
     /**
      * Method used to return the contents of the log of stock trades.
@@ -20,7 +22,7 @@ public class StockTradeLogImpl {
      * @return - returns log of stock trades
      */
     public StockTrade[] getStockTradeArray() {
-        stockTradeArray = new StockTrade[MAXIMUM_NUM_OBJECTS];
+        
         return stockTradeArray;
     }
     
@@ -44,10 +46,10 @@ public class StockTradeLogImpl {
      */
     public boolean addStockTrade(StockTrade tradeObj) {
         boolean successful = false;
-        //check if there's room in the array for more trades
         if (numStockTrades < MAXIMUM_NUM_OBJECTS) {
             stockTradeArray[numStockTrades] = tradeObj;
-            numStockTrades = numStockTrades++;
+            numStockTrades += 1;
+            successful = true;
         }
         return successful;
     }
@@ -83,7 +85,6 @@ public class StockTradeLogImpl {
                 stockTradeRemoved = true;
             }
         }
-        
         return stockTradeRemoved;    
     }
     
@@ -91,7 +92,7 @@ public class StockTradeLogImpl {
         boolean isUnique = true;
         boolean stockSymbolExists = false;
         
-        for (int i = 0; i < stockTradeArray.length; i++) {
+        for (int i = 0; i < numStockTrades; i++) {
             if (!stockSymbolExists && numStockTrades > 0) {
                 StockTrade stockTradeLogObj = stockTradeArray[i];
                 isUnique = stockTradeLogObj.getStockSymbol().equals(stockSymbol);
@@ -139,10 +140,6 @@ public class StockTradeLogImpl {
                 stockHoldingSum = stockHoldingSum + holdings;
             }
         }
-        
-        
         return stockHoldingSum;
     }
-    
-    
 }
