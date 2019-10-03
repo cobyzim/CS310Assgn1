@@ -230,7 +230,7 @@ public class CS310Zimmerman {
     public static void deleteStockTrade(String[] line) {
         String stockSymbol = line[2];
 
-        if (stockTradeLogImpl.isStockSymbolUnique(stockSymbol)) {
+        if (!stockTradeLogImpl.isStockSymbolUnique(stockSymbol)) {
             stockTradeLogImpl.removeStockTrade(stockSymbol);
             
             System.out.println("deleteStockTrade: numStockTrades = " + stockTradeLogImpl.getNumStockTrades());
