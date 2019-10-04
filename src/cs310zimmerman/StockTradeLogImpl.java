@@ -12,7 +12,6 @@ public class StockTradeLogImpl {
     
     private int numStockTrades = 0;
     final int MAXIMUM_NUM_OBJECTS = 1000;
-   
     private StockTrade[] stockTradeArray = new StockTrade[MAXIMUM_NUM_OBJECTS];
     //private StockTrade[] stockTradeArray = getStockTradeArray();
 
@@ -22,7 +21,6 @@ public class StockTradeLogImpl {
      * @return - returns log of stock trades
      */
     public StockTrade[] getStockTradeArray() {
-        
         return stockTradeArray;
     }
     
@@ -58,7 +56,7 @@ public class StockTradeLogImpl {
      * Method used to delete stock trade objects from the log of stock trades if
      * they have the given broker license.
      * 
-     * @param license - passes in a broker license
+     * @param license - passes in a broker license string
      * @return - returns true or false based on whether or not any stock trade
      * objects are deleted
      */
@@ -75,6 +73,14 @@ public class StockTradeLogImpl {
         return objectsDeleted;
     }
     
+    /**
+     * Method used to delete stock trade objects from the log of stock trades if
+     * they have a given stock symbol.
+     * 
+     * @param stockSymbol - passes in a stock symbol string
+     * @return - returns true or false based on whether or not any stock trade
+     * objects are deleted
+     */
     public boolean removeStockTrade(String stockSymbol) {
         boolean stockTradeRemoved = false;
         for (int i = 0; i < numStockTrades; i++) {
@@ -88,6 +94,15 @@ public class StockTradeLogImpl {
         return stockTradeRemoved;    
     }
     
+    /**
+     * Method used to determine whether an object with a given stock symbol has 
+     * a unique stock symbol (whether the stock symbol does or doesn't already 
+     * exist in the log).
+     * 
+     * @param stockSymbol - passes in a stock symbol string
+     * @return - returns true or false depending on whether or not the stock
+     * symbol is unique (does or doesn't already exist in the log)
+     */
     public boolean isStockSymbolUnique(String stockSymbol) {
         boolean isUnique = true;
         boolean stockSymbolExists = false;
@@ -107,6 +122,13 @@ public class StockTradeLogImpl {
         else return true;
     }
     
+    /**
+     * Method used to determine the number of trades for one broker object with 
+     * a certain license.
+     * 
+     * @param license - passes in a broker license as a string
+     * @return - returns the number of stock trades by one broker
+     */
     public int numberOfBrokerStockTrades(String license) {
         int numberOfTrades = 0;
         
@@ -119,6 +141,12 @@ public class StockTradeLogImpl {
         return numberOfTrades;
     }
     
+    /**
+     * Method used to calculate and return the total sum of stock holdings in
+     * the log.
+     * 
+     * @return - returns the sum of stock holdings in the log
+     */
     public double totalStockTradeValue() {
         double stockHoldingSum = 0.0;
         
@@ -130,6 +158,14 @@ public class StockTradeLogImpl {
         return stockHoldingSum;
     }
     
+    /**
+     * Method used to calculate and return the sum of stock holdings for one
+     * specific broker's license.
+     * 
+     * @param license - passes in a broker license string
+     * @return - returns the sum of all stock holdings for a specific broker's
+     * license
+     */
     public double totalStockTradeValue(String license) {
         double stockHoldingSum = 0.0;
         
