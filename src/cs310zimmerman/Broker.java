@@ -59,100 +59,90 @@ public class Broker {
     }
     
     /**
+     * Setter used to set the value of brokerLicense
      * 
      * @param brokerLicense - passes in brokerLicense as parameter
-     * 
-     * Setter used to set the value of brokerLicense
      */
     public void setBrokerLicense(String brokerLicense) {
         this.brokerLicense = brokerLicense;
     }
     
     /**
-     *
-     * @param firstName - passes in first name of broker as parameter
-     * 
      * Setter used to set the value of broker's first name
+     * 
+     * @param firstName - passes in first name of broker as parameter
      */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
     /**
-     *
-     * @param lastName - passes in last name of broker as parameter
-     * 
      * Setter used to set the value of broker's last name
+     * 
+     * @param lastName - passes in last name of broker as parameter
      */
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
     /**
-     *
-     * @param dept - passes in broker's department number as parameter
-     * 
      * Setter used to set the value of broker's department number
+     * 
+     * @param dept - passes in broker's department number as parameter
      */
     public void setDept(String dept) {
         this.dept = dept;
     }
 
     /**
-     *
-     * @param commissionRate - passes in commission rate as parameter
-     * 
      * Setter used to set the value of commission rate for brokers
+     * 
+     * @param commissionRate - passes in commission rate as parameter
      */
     public void setCommissionRate(double commissionRate) {
         this.commissionRate = commissionRate;
     }
     
     /**
-     *
-     * @return - returns value of broker license
-     * 
      * Getter used to retrieve value of broker license
+     * 
+     * @return - returns value of broker license
      */
     public String getBrokerLicense() {
         return brokerLicense;
     }
 
     /**
-     *
-     * @return - returns value of first name
-     * 
      * Getter used to retrieve value of broker first name
+     * 
+     * @return - returns value of first name
      */
     public String getFirstName() {
         return firstName;
     }
 
     /**
-     *
-     * @return - returns value of last name
-     * 
      * Getter used to retrieve value of broker last name
+     * 
+     * @return - returns value of last name
      */
     public String getLastName() {
         return lastName;
     }
 
     /**
-     *
-     * @return - returns value of department number
-     * 
      * Getter used to retrieve value of broker department number
+     * 
+     * @return - returns value of department number
      */
     public String getDept() {
         return dept;
     }
 
     /**
-     *
-     * @return - returns value of commission rate
-     * 
      * Getter used to retrieve value of broker commission rate
+     * 
+     * @return - returns value of commission rate
      */
     public double getCommissionRate() {
         return commissionRate;
@@ -165,11 +155,10 @@ public class Broker {
     }
 
     /**
-     *
-     * @return - returns true or false
-     * 
      * Method returning true or false depending on whether two broker objects
      * are the same
+     * 
+     * @return - returns true or false
      */
     @Override
     public boolean equals(Object obj) {
@@ -200,11 +189,10 @@ public class Broker {
     }
 
     /**
-     *
-     * @return - returns string
-     * 
      * Method returning a string containing the values given to all the broker
      * data fields
+     * 
+     * @return - returns string
      */
     @Override
     public String toString() {
@@ -215,11 +203,10 @@ public class Broker {
     }
     
     /**
-     *
-     * @return - returns true or false
-     * 
      * Method that checks the validity of a broker license number and returns
      * true if it is valid, and false if it is invalid
+     * 
+     * @return - returns true or false
      */
     public boolean isValidLicense() {
         boolean licenseValidity = true;
@@ -245,11 +232,10 @@ public class Broker {
     }
     
     /**
-     *
-     * @return - returns true or false
-     * 
      * Method that checks the validity of broker department number and returns
      * true or false based on this validity
+     * 
+     * @return - returns true or false
      */
     public boolean isValidDept() {
         boolean deptValidity = true;
@@ -273,6 +259,6 @@ public class Broker {
         else {
             return false;
         }
-    return deptValidity;
+        return deptValidity;
     }
 }
