@@ -152,7 +152,8 @@ public class StockTradeLogImpl {
         
         for(int i = 0; i < numStockTrades; i++) {
             StockTrade stockTradeObj = stockTradeArray[i];
-            double holdings = stockTradeObj.getWholeShares() * stockTradeObj.getPricePerShare();
+            double holdings = stockTradeObj.getWholeShares() * 
+                    stockTradeObj.getPricePerShare();
             stockHoldingSum = stockHoldingSum + holdings;
         }
         return stockHoldingSum;
@@ -172,7 +173,8 @@ public class StockTradeLogImpl {
         for(int i = 0; i < numStockTrades; i++) {
             StockTrade stockTradeObj = stockTradeArray[i];
             if (stockTradeObj.getBrokerLicense().equals(license)) {
-                double holdings = stockTradeObj.getWholeShares() * stockTradeObj.getPricePerShare();
+                double holdings = stockTradeObj.getWholeShares() * 
+                        stockTradeObj.getPricePerShare();
                 stockHoldingSum = stockHoldingSum + holdings;
             }
         }
