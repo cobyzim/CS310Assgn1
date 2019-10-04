@@ -30,26 +30,11 @@ public class StockTrade {
     }
     
     /**
-     *
-     * @param stockSymbol - passes in stock symbol as a string parameter
-     * @param pricePerShare - passes in share price as a double parameter
-     * @param wholeShares - passes in number of shares as integer parameter
-     * @param brokerLicense - passes in broker license as a string parameter
-     * @param taxable - passes in taxability 
+     * Constructor with stock trade array of strings as a parameter
      * 
-     * Constructor with parameters used for stock trade objects with hard-coded
-     * attributes
+     * @param stockTradeArray - passes in stock trade array of strings
      */
-    /*
-    public StockTrade(String stockSymbol, double pricePerShare, int wholeShares,
-            String brokerLicense, boolean taxable) {
-        setStockSymbol(stockSymbol);
-        setPricePerShare(pricePerShare);
-        setWholeShares(wholeShares);
-        setBrokerLicense(brokerLicense);
-        setTaxable(taxable);
-    }
-    */
+  
     
     public StockTrade(String[] stockTradeArray) {
         this.stockTradeArray = stockTradeArray;
@@ -61,100 +46,90 @@ public class StockTrade {
     }
 
     /**
-     *
-     * @param stockSymbol - passes in stockSymbol as a parameter
-     * 
      * Setter used to set the value of stockSymbol
+     * 
+     * @param stockSymbol - passes in stockSymbol as a parameter
      */
     public void setStockSymbol(String stockSymbol) {
         this.stockSymbol = stockSymbol;
     }
 
     /**
-     *
-     * @param pricePerShare - passes in pricePerShare as a parameter
-     * 
      * Setter used to set the value of pricePerShare
+     * 
+     * @param pricePerShare - passes in pricePerShare as a parameter
      */
     public void setPricePerShare(double pricePerShare) {
         this.pricePerShare = pricePerShare;
     }
 
     /**
-     *
-     * @param wholeShares - passes in wholeShares as a parameter
-     * 
      * Setter used to set the value of wholeShares
+     * 
+     * @param wholeShares - passes in wholeShares as a parameter
      */
     public void setWholeShares(int wholeShares) {
         this.wholeShares = wholeShares;
     }
 
     /**
-     *
-     * @param brokerLicense - passes in brokerLicense as a parameter
-     * 
      * Setter used to set the value of brokerLicense
+     * 
+     * @param brokerLicense - passes in brokerLicense as a parameter
      */
     public void setBrokerLicense(String brokerLicense) {
         this.brokerLicense = brokerLicense;
     }
 
     /**
-     *
-     * @param taxable - passes in taxable as a parameter
-     * 
      * Setter used to set the value of taxable
+     * 
+     * @param taxable - passes in taxable as a parameter
      */
     public void setTaxable(boolean taxable) {
         this.taxable = taxable;
     }
 
     /**
-     *
-     * @return - returns value of stockSymbol
-     * 
      * Getter used to retrieve the value of stockSymbol
+     * 
+     * @return - returns value of stockSymbol
      */
     public String getStockSymbol() {
         return stockSymbol;
     }
 
     /**
-     *
-     * @return - returns value of pricePerShare
-     * 
      * Getter used to retrieve the value of pricePerShare
+     * 
+     * @return - returns value of pricePerShare
      */
     public double getPricePerShare() {
         return pricePerShare;
     }
 
     /**
-     *
-     * @return - returns the value of wholeShares
-     * 
      * Getter used to retrieve the value of wholeShares
+     * 
+     * @return - returns the value of wholeShares
      */
     public int getWholeShares() {
         return wholeShares;
     }
 
     /**
-     *
-     * @return - returns the value of brokerLicense
-     * 
      * Getter used to retrieve the value of brokerLicense
+     * 
+     * @return - returns the value of brokerLicense
      */
     public String getBrokerLicense() {
         return brokerLicense;
     }
 
     /**
-     *
-     * @return - returns value of taxable
-     * 
      * Getter used to retrieve the value of taxable (true or false)
+     * 
+     * @return - returns value of taxable
      */
     public boolean isTaxable() {
         return taxable;
@@ -167,11 +142,10 @@ public class StockTrade {
     }
 
     /**
-     *
-     * @return - returns true or false
-     * 
      * Method returning true or false depending on whether two stock trade
      * objects are the same
+     * 
+     * @return - returns true or false
      */
     @Override
     public boolean equals(Object obj) {
@@ -202,11 +176,10 @@ public class StockTrade {
     }
 
     /**
-     *
-     * @return - returns string
-     * 
      * Method returning a string containing the values given to all the stock 
      * trade data fields
+     * 
+     * @return - returns string
      */
     @Override
     public String toString() {
@@ -217,11 +190,10 @@ public class StockTrade {
     }
     
     /**
-     *
-     * @return - returns true or false
-     * 
      * Method that checks the validity of a stock symbol, returning true if it 
      * is valid and false if it is not
+     * 
+     * @return - returns true or false
      */
     public boolean isValidStockSymbol() {
         boolean stockSymbolValidity = true;
@@ -240,11 +212,10 @@ public class StockTrade {
     }
     
     /**
-     *
-     * @return - returns true or false
-     * 
      * Method that checks the validity of price per share, returning true if it
      * is valid and false if it is not
+     * 
+     * @return - returns true or false
      */
     public boolean isValidPrice() {
         boolean priceValidity = true;
@@ -257,11 +228,10 @@ public class StockTrade {
     }
     
     /**
-     *
-     * @return - returns true or false
-     * 
      * Method that checks the validity of the number of shares, returning true
      * if it is valid and false if it is not
+     * 
+     * @return - returns true or false
      */
     public boolean isValidWholeShares() {
         boolean shareValidity = true;
