@@ -40,20 +40,19 @@ public class BrokerLogImpl {
                if(!brokerAdded) {
                    Broker brokerLogObj = brokerLog.get(i);
                
-                   int x = brokerLogObj.getBrokerLicense().compareTo(brokerObj.getBrokerLicense());
+                   int x = 
+                   brokerLogObj.getBrokerLicense().compareTo(brokerObj.getBrokerLicense());
                    if (x < 0) {
                    }
                    else {
                        brokerLog.add(i, brokerObj);
                        brokerAdded = true;
                    }
-               }
-               
+               }  
            }
            if(!brokerAdded) {
                brokerLog.add(brokerObj);
            }
-           
        }
        else {
            brokerLog.add(brokerObj);
