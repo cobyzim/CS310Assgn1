@@ -7,6 +7,7 @@ import java.util.Objects;
  * Class to define data fields and methods for broker objects which contain 
  * broker licenses, first names, last names, department numbers, and commission
  * rates.
+
  */
 
 /**
