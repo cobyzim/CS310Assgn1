@@ -5,6 +5,7 @@
 package cs310zimmerman;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  *
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 public class BrokerLogImpl {
     
     private ArrayList<Broker> brokerLog = new ArrayList<Broker>();
+    private BrokerNode top;
     
     /**
      * Method used to return the contents of the log of brokers.
@@ -21,6 +23,20 @@ public class BrokerLogImpl {
      */
     public ArrayList getBrokerLog() {
         return brokerLog;
+    }
+    
+    public BrokerNode getTop() {
+        return this.top;
+    }
+    
+    public void setTop(BrokerNode top) {
+        this.top = top;
+    }
+    
+    public boolean isEmpty() {
+        boolean empty = true;
+        
+        return empty;
     }
     
     /**
@@ -108,5 +124,13 @@ public class BrokerLogImpl {
             return false;
         }
         else return true;
+    }
+    
+    public traverse() {
+        
+    }
+    
+    public cleanList(StockTradeLogImpl stockTradeLogImpl) {
+        
     }
 }
