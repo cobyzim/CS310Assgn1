@@ -21,9 +21,8 @@ public class BrokerNode {
         return next;
     }
     
-    public BrokerNode setNext(BrokerNode brokerNode) {
+    public void setNext(BrokerNode brokerNode) {
         next = brokerNode;
-        return next;
     }
 }
     
