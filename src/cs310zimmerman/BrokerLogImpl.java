@@ -126,11 +126,11 @@ public class BrokerLogImpl {
         else return true;
     }
     
-    public traverse() {
+    //public traverse() {
         
-    }
+   // }
     
-    public cleanList(StockTradeLogImpl stockTradeLogImpl) {
+    //public cleanList(StockTradeLogImpl stockTradeLogImpl) {
         
-    }
+    //}
 }
