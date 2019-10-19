@@ -37,11 +37,13 @@ public class CS310Zimmerman {
         System.out.println();
         System.out.println("Creating report...");
         System.out.println("Report is located in file: output/assn2report.txt");
-        try {
+        /*try {
             printImpl.printReport(brokerLogImpl, stockTradeLogImpl);
         } catch (IOException ex) {
             System.out.println("I/O exception occurred");
         }
+        */
+        createReport();
 
     }
 
@@ -245,6 +247,14 @@ public class CS310Zimmerman {
             System.out.println("DEL ERROR: StockTrade with Stock symbol "
                     + stockSymbol + " is not in the StockTrade log, so it "
                     + "cannot be deleted.");
+        }
+    }
+    
+    public static void createReport() {
+        try {
+            printImpl.printReport(brokerLogImpl, stockTradeLogImpl);
+        } catch (IOException ex) {
+            System.out.println("I/O exception occurred");
         }
     }
 }
