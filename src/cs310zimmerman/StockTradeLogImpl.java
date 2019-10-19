@@ -65,7 +65,7 @@ public class StockTradeLogImpl {
         for (int i = 0; i < numStockTrades; i++) {
             StockTrade stockTradeObj = stockTradeArray[i];
             if (stockTradeObj.getBrokerLicense().equals(license)) {
-                stockTradeArray[i] = stockTradeArray[numStockTrades];
+                stockTradeArray[i] = stockTradeArray[numStockTrades - 1]; //changed this
                 numStockTrades--;
                 objectsDeleted = true;
             }
@@ -86,7 +86,7 @@ public class StockTradeLogImpl {
         for (int i = 0; i < numStockTrades; i++) {
             StockTrade stockTradeObj = stockTradeArray[i];
             if (stockTradeObj.getStockSymbol().equals(stockSymbol)) {
-                stockTradeArray[i] = stockTradeArray[numStockTrades];
+                stockTradeArray[i] = stockTradeArray[numStockTrades - 1]; //changed this
                 numStockTrades--;
                 stockTradeRemoved = true;
             }
