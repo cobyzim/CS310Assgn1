@@ -30,7 +30,7 @@ public class PrintImpl {
     public void printReport(BrokerLogImpl brokerLogImpl, 
             StockTradeLogImpl stockTradeLogImpl) throws IOException {
         final String OUTPUT_FILENAME = "output/assn2report.txt";
-        brokerLog = brokerLogImpl.getBrokerLog();
+        //brokerLog = brokerLogImpl.getBrokerLog();
         stockTradeArray = stockTradeLogImpl.getStockTradeArray();
         numStockTrades = stockTradeLogImpl.getNumStockTrades();
            //System.out.println(numStockTrades);
