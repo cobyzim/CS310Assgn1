@@ -14,8 +14,6 @@ public class StockTradeLogImpl {
     
     private int numStockTrades = 0;
     final int MAXIMUM_NUM_OBJECTS = 1000;
-    private StockTrade[] stockTradeArray = new StockTrade[MAXIMUM_NUM_OBJECTS];
-    //private StockTrade[] stockTradeArray = getStockTradeArray();
     LinkedList<StockTrade> stockTradeList = new LinkedList<StockTrade>();
 
     /**
@@ -53,14 +51,6 @@ public class StockTradeLogImpl {
             numStockTrades += 1;
             successful = true;
         }
-        /*
-        if (numStockTrades < MAXIMUM_NUM_OBJECTS) {
-            stockTradeArray[numStockTrades] = tradeObj;
-            numStockTrades += 1;
-            successful = true;
-        }
-        return successful;
-        */
         return successful;
     }
     
@@ -84,18 +74,6 @@ public class StockTradeLogImpl {
                 objectsDeleted = true;
             }
         }
-        
-        /*
-        for (int i = 0; i < numStockTrades; i++) {
-            StockTrade stockTradeObj = stockTradeArray[i];
-            if (stockTradeObj.getBrokerLicense().equals(license)) {
-                stockTradeArray[i] = stockTradeArray[numStockTrades - 1]; //changed this
-                numStockTrades--;
-                objectsDeleted = true;
-            }
-        }
-        return objectsDeleted;
-        */
         return objectsDeleted;
     }
     
@@ -119,18 +97,6 @@ public class StockTradeLogImpl {
                 stockTradeRemoved = true;
             }
         }
-        
-        /*
-        for (int i = 0; i < numStockTrades; i++) {
-            StockTrade stockTradeObj = stockTradeArray[i];
-            if (stockTradeObj.getStockSymbol().equals(stockSymbol)) {
-                stockTradeArray[i] = stockTradeArray[numStockTrades - 1]; //changed this
-                numStockTrades--;
-                stockTradeRemoved = true;
-            }
-        }
-        return stockTradeRemoved;   
-        */
         return stockTradeRemoved;
     }
     
@@ -144,22 +110,16 @@ public class StockTradeLogImpl {
      * symbol is unique (does or doesn't already exist in the log)
      */
     public boolean isStockSymbolUnique(String stockSymbol) {
-        boolean isUnique = true;
-        boolean stockSymbolExists = false;
+        boolean stockSymbolUnique = true;
+        Iterator<StockTrade> iter = stockTradeList.iterator();
         
-        for (int i = 0; i < numStockTrades; i++) {
-            if (!stockSymbolExists && numStockTrades > 0) {
-                StockTrade stockTradeLogObj = stockTradeArray[i];
-                isUnique = stockTradeLogObj.getStockSymbol().equals(stockSymbol);
-                if (isUnique) {
-                    stockSymbolExists = true;
-                }
-            }  
+        while (iter.hasNext()) {
+            StockTrade targetNode = iter.next();
+            if (targetNode.getStockSymbol().equals(stockSymbol)) {
+                stockSymbolUnique = false;
+            }
         }
-        if (stockSymbolExists) {
-            return false;
-        }
-        else return true;
+        return stockSymbolUnique;
     }
     
     /**
@@ -264,5 +224,15 @@ public class StockTradeLogImpl {
         }
     }
     
-    
+    public void cleanList() {
+        Iterator<StockTrade> iter = stockTradeList.iterator();
+        
+        while (iter.hasNext()) {
+            StockTrade currentNode = iter.next();
+            if (!currentNode.isValidStockSymbol()) {
+                stockTradeList.remove(currentNode);
+                numStockTrades--;
+            }
+        }
+    }
 }
