@@ -4,16 +4,11 @@
  */
 package cs310zimmerman;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-
 /**
  *
  * @author Coby Zimmerman
  */
 public class BrokerLogImpl {
-    
-    //BrokerLogImpl brokerLog = new BrokerLogImpl();
 
     private BrokerNode top;
     
@@ -47,21 +42,6 @@ public class BrokerLogImpl {
        BrokerNode newNode = new BrokerNode(brokerObj);
        int compareToResult;
        
-       /*
-       if (!isEmpty()) {
-           compareToResult = newNode.getData().getBrokerLicense().compareTo(current.getData().getBrokerLicense());
-           while(newNode.getData().getBrokerLicense().compareTo(current.getData().getBrokerLicense()) <= 0) {
-               previous = current;
-               current = current.getNext();
-           }
-           current.setNext(newNode);
-           //newNode.setNext(current);
-       }
-       else {
-           setTop(newNode);
-           previous = current;
-       }
-       */
        if (isEmpty()) {
            top = newNode;
            return successful;
@@ -147,46 +127,15 @@ public class BrokerLogImpl {
      */
     
     public boolean isLicenseUnique(String license) {
-        //boolean isUnique = true;
-        boolean isUnique = true;
-        boolean licenseExists = false;
-        //BrokerNode seek = top;
-        
-        //while (seek != null && seek.getData().getBrokerLicense().compareTo(license) != 0) {
-        //    seek = seek.getNext();
-        //    isUnique = false;
-        //}
+        boolean licenseUnique = true;
+
         
         for (BrokerNode seek = top; seek != null; seek = seek.getNext()) {
             if (seek.getData().getBrokerLicense().equals(license)) {
-                isUnique = false;
-                if (isUnique = false) {
-                    licenseExists = true;
-                }
+                  licenseUnique = false;
             }
         }
-        if (licenseExists) {
-            return false;
-        }
-        else return true;
-                
-        /*
-        int arraySize = brokerLog.size() - 1;
-        
-        for (int i = 0; i <= arraySize; i++) {
-            if (!licenseExists) {
-                Broker brokerLogObj = brokerLog.get(i);
-                isUnique = brokerLogObj.getBrokerLicense().equals(license);
-               if (isUnique == true) {
-                    licenseExists = true;
-                }
-            }
-        }
-        if (licenseExists) {
-            return false;
-        }
-        else return true;
-        */
+        return licenseUnique;
     }
     
     
