@@ -5,6 +5,7 @@
  */
 package cs310zimmerman;
 import java.util.LinkedList;
+import cs310zimmerman.*;
 
 /**
  *
@@ -12,9 +13,11 @@ import java.util.LinkedList;
  */
 public class BrokerNode {
     private BrokerNode next;
+    private Broker data;
 
     public BrokerNode(Broker broker) {
         next = null;
+        data = broker;
     }
     
     public BrokerNode getNext() {
@@ -24,6 +27,15 @@ public class BrokerNode {
     public void setNext(BrokerNode brokerNode) {
         next = brokerNode;
     }
+    
+    public void setData(Broker broker) {
+        data = broker;
+    }
+    
+    public Broker getData() {
+        return data;
+    }
+    
 }
     
     
