@@ -35,6 +35,8 @@ public class CS310Zimmerman {
 
         processFile();
         System.out.println();
+        brokerLogImpl.traverse();
+        
         System.out.println("Creating report...");
         System.out.println("Report is located in file: output/assn2report.txt");
         /*try {
@@ -43,7 +45,9 @@ public class CS310Zimmerman {
             System.out.println("I/O exception occurred");
         }
         */
-        createReport();
+        //createReport();
+        //System.out.println(brokerLogImpl);
+        //brokerLogImpl.toString();
 
     }
 
@@ -113,11 +117,12 @@ public class CS310Zimmerman {
                     + "department " + filledBroker.getDept());
             hasBrokerErrors = true;
         }
-        if (!brokerLogImpl.isLicenseUnique(line[2])) {
-            System.out.println("\tERROR: Broker with license " + line[2]
-                    + " is not unique and will NOT be added to the log.");
-        }
-        if (brokerLogImpl.isLicenseUnique(line[2])) {
+        
+        //if (!brokerLogImpl.isLicenseUnique(line[2])) {
+        //    System.out.println("\tERROR: Broker with license " + line[2]
+        //            + " is not unique and will NOT be added to the log.");
+        //}
+        //if (brokerLogImpl.isLicenseUnique(line[2])) {
             if (brokerLogImpl.addBroker(filledBroker)) {
                  if (hasBrokerErrors) {
                    System.out.println("ADDED: Broker with license " + line[2]
@@ -127,7 +132,8 @@ public class CS310Zimmerman {
                    System.out.println("ADDED: Broker with license " + line[2]);
                  }
             }
-        }
+        //}
+        
     }
 
     /**
@@ -167,6 +173,7 @@ public class CS310Zimmerman {
 
         String license = line[5];
         String stockSymbol = line[2];
+        /*
         boolean brokerIsUnique = brokerLogImpl.isLicenseUnique(license);
         boolean stockSymbolIsUnique = 
                 stockTradeLogImpl.isStockSymbolUnique(stockSymbol);
@@ -197,6 +204,7 @@ public class CS310Zimmerman {
                     + "that already exists: " + stockSymbol + "It will NOT "
                     + "be added to StockTrade log.");
         }
+        */
     }
 
     /**
@@ -209,7 +217,8 @@ public class CS310Zimmerman {
     public static void deleteBroker(String[] line) {
         String license = line[2];
 
-        if (brokerLogImpl.isLicenseUnique(license)) {
+        
+        //if (brokerLogImpl.isLicenseUnique(license)) {
             brokerLogImpl.removeBroker(license);
             System.out.println("DELETED: Broker with license: " + license
                     + " has been removed from the Broker log. All Broker's "
@@ -219,10 +228,12 @@ public class CS310Zimmerman {
             System.out.println("deleteBroker: numStockTrades = " + 
                     stockTradeLogImpl.getNumStockTrades());
             
-        } else {
-            System.out.println("\tERROR: Broker with license " + license
-                    + " not found in log.");
-        }
+        //} 
+        //else {
+        //   System.out.println("\tERROR: Broker with license " + license
+        //           + " not found in log.");
+        //}
+        
     }
 
     /**
