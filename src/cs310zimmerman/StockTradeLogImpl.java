@@ -254,7 +254,15 @@ public class StockTradeLogImpl {
         return stockHoldingSum;
     }
     
-    
+    public void traverseDisplay() {
+        Iterator<StockTrade> iter = stockTradeList.iterator();
+        System.out.println("StockTrade Log: ");
+        
+        while (iter.hasNext()) {
+            StockTrade currentNode = iter.next();
+            System.out.println(currentNode.toString());
+        }
+    }
     
     
 }
