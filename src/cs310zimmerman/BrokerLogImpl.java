@@ -91,7 +91,6 @@ public class BrokerLogImpl {
        
        previous.setNext(newNode);
        
-       
        return successful;
     }
     
@@ -103,21 +102,40 @@ public class BrokerLogImpl {
      * @return - returns true or false based on if a broker object is removed or
      * not
      */
-    /*
+    
     public boolean removeBroker(String license) {
         boolean successful = false;
-        int arraySize = brokerLog.size() - 1;
+        BrokerNode previous = null;
+        BrokerNode current = top;
         
-        for (int i = 0; i <= arraySize; i++) {
-            Broker brokerLogObj = brokerLog.get(i);
-            if (brokerLogObj.getBrokerLicense().equals(license)) {
-                brokerLog.remove(i);
-                successful = true;
-            }
+        while (current != null && current.getData().getBrokerLicense().compareTo(license) != 0) {
+            previous = current;
+            current = current.getNext();
         }
+        
+        if (top.getData().getBrokerLicense().compareTo(license) == 0) {
+            top = top.getNext();
+            successful = true;
+        }
+        
+        else if (current != null && current.getNext() != null) {
+            previous.setNext(current.getNext());
+            successful = true;
+        }
+        
+        else if (current != null && current.getNext() == null) {
+            previous.setNext(current.getNext());
+            successful = true;
+        }
+        
+        else if (current == null) {
+            successful = false;
+        }
+        
+        
         return successful;
     }
-    */
+    
     
     /**
      * Method used to test if a broker with a specific license exists in the log
@@ -127,10 +145,19 @@ public class BrokerLogImpl {
      * @return - returns true or false based on whether or not the license
      * exists in the log.
      */
-    /*
+    
     public boolean isLicenseUnique(String license) {
-        boolean isUnique = true;
+        //boolean isUnique = true;
+        boolean isUnique = false;
         boolean licenseExists = false;
+        BrokerNode seek = top;
+        
+        while (seek != null && seek.getData().getBrokerLicense().compareTo(license) != 0) {
+            seek = seek.getNext();
+            ;
+        }
+                
+        /*
         int arraySize = brokerLog.size() - 1;
         
         for (int i = 0; i <= arraySize; i++) {
@@ -146,8 +173,11 @@ public class BrokerLogImpl {
             return false;
         }
         else return true;
+        */
+        
+        return isUnique;
     }
-    */
+    
     
     //public traverse() {
         
