@@ -150,14 +150,25 @@ public class BrokerLogImpl {
         //boolean isUnique = true;
         boolean isUnique = true;
         boolean licenseExists = false;
-        BrokerNode seek = top;
+        //BrokerNode seek = top;
         
-        while (seek != null && seek.getData().getBrokerLicense().compareTo(license) != 0) {
-            seek = seek.getNext();
-            isUnique = false;
+        //while (seek != null && seek.getData().getBrokerLicense().compareTo(license) != 0) {
+        //    seek = seek.getNext();
+        //    isUnique = false;
+        //}
+        
+        for (BrokerNode seek = top; seek != null; seek = seek.getNext()) {
+            if (seek.getData().getBrokerLicense().equals(license)) {
+                isUnique = false;
+                if (isUnique = false) {
+                    licenseExists = true;
+                }
+            }
         }
-        
-        
+        if (licenseExists) {
+            return false;
+        }
+        else return true;
                 
         /*
         int arraySize = brokerLog.size() - 1;
@@ -176,8 +187,6 @@ public class BrokerLogImpl {
         }
         else return true;
         */
-        
-        return isUnique;
     }
     
     
@@ -188,29 +197,12 @@ public class BrokerLogImpl {
         while (current != null) {
             System.out.println(current.getData().toString());
             current = current.getNext();
-        }
-        
-        
+        }    
     }
     
     //public cleanList(StockTradeLogImpl stockTradeLogImpl) {
         
     //}
     
-/*
-    public String toString() {
-            String result = "";
-            BrokerNode current = top;
-            while(current.getNext() != null){
-                System.out.println(current.getData().toString());
-                result += current.getData().toString();
-                if(current.getNext() != null){
-                     result += ", ";
-                }
-                current = current.getNext();
-            }
-            return "List: " + result;
-    }
-    */
 }
 
