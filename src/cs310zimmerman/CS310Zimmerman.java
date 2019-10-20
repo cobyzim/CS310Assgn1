@@ -36,6 +36,7 @@ public class CS310Zimmerman {
         processFile();
         System.out.println();
         brokerLogImpl.traverse();
+        stockTradeLogImpl.traverseDisplay();
         
         System.out.println("Creating report...");
         System.out.println("Report is located in file: output/assn2report.txt");
@@ -178,7 +179,9 @@ public class CS310Zimmerman {
         boolean stockSymbolIsUnique = 
                 stockTradeLogImpl.isStockSymbolUnique(stockSymbol);
         if (!brokerIsUnique && stockSymbolIsUnique) {
+        */
             stockTradeLogImpl.addStockTrade(filledStockTrade);
+            
             
             System.out.println("addStockTrades: numStockTrades = " + 
                     stockTradeLogImpl.getNumStockTrades());
@@ -192,7 +195,7 @@ public class CS310Zimmerman {
                 System.out.println("ADDED: StockTrade with Stock symbol "
                     + stockSymbol + " listed by Broker " + license);
             }
-            
+            /*
         } else if (brokerIsUnique && stockSymbolIsUnique) {
             System.out.println("ADD ERROR: StockTrade with Stock Symbol "
                     + stockSymbol + " has Broker with license " + license
@@ -246,7 +249,8 @@ public class CS310Zimmerman {
     public static void deleteStockTrade(String[] line) {
         String stockSymbol = line[2];
 
-        if (!stockTradeLogImpl.isStockSymbolUnique(stockSymbol)) {
+        
+        //if (!stockTradeLogImpl.isStockSymbolUnique(stockSymbol)) {
             stockTradeLogImpl.removeStockTrade(stockSymbol);
             
             System.out.println("deleteStockTrade: numStockTrades = " + 
@@ -254,11 +258,12 @@ public class CS310Zimmerman {
             
             System.out.println("DELETED: StockTrade with Stock symbol "
                     + stockSymbol);
-        } else {
-            System.out.println("DEL ERROR: StockTrade with Stock symbol "
-                    + stockSymbol + " is not in the StockTrade log, so it "
-                    + "cannot be deleted.");
-        }
+        //} else {
+        //    System.out.println("DEL ERROR: StockTrade with Stock symbol "
+        //            + stockSymbol + " is not in the StockTrade log, so it "
+        //           + "cannot be deleted.");
+        //}
+        
     }
     
     public static void createReport() {
