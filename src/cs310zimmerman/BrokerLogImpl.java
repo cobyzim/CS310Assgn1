@@ -13,17 +13,9 @@ import java.util.LinkedList;
  */
 public class BrokerLogImpl {
     
-    private ArrayList<Broker> brokerLog = new ArrayList<Broker>();
+    //BrokerLogImpl brokerLog = new BrokerLogImpl();
+
     private BrokerNode top;
-    
-    /**
-     * Method used to return the contents of the log of brokers.
-     * 
-     * @return - returns log of brokers
-     */
-    public ArrayList getBrokerLog() {
-        return brokerLog;
-    }
     
     public BrokerNode getTop() {
         return this.top;
@@ -34,9 +26,10 @@ public class BrokerLogImpl {
     }
     
     public boolean isEmpty() {
-        boolean empty = true;
-        
-        return empty;
+        if (top == null) {
+            return true;
+        }
+        return false;
     }
     
     /**
@@ -49,30 +42,56 @@ public class BrokerLogImpl {
     public boolean addBroker(Broker brokerObj) {
        boolean successful = true;
        boolean brokerAdded = false;
-       int arraySize = brokerLog.size() - 1;
+       BrokerNode previous = null;
+       BrokerNode current = null;
+       BrokerNode newNode = new BrokerNode(brokerObj);
+       int compareToResult;
        
-       if (!brokerLog.isEmpty()) {
-           for (int i = 0; i <= arraySize; i++) {
-               if(!brokerAdded) {
-                   Broker brokerLogObj = brokerLog.get(i);
-               
-                   int x = 
-                   brokerLogObj.getBrokerLicense().compareTo(brokerObj.getBrokerLicense());
-                   if (x < 0) {
-                   }
-                   else {
-                       brokerLog.add(i, brokerObj);
-                       brokerAdded = true;
-                   }
-               }  
+       /*
+       if (!isEmpty()) {
+           compareToResult = newNode.getData().getBrokerLicense().compareTo(current.getData().getBrokerLicense());
+           while(newNode.getData().getBrokerLicense().compareTo(current.getData().getBrokerLicense()) <= 0) {
+               previous = current;
+               current = current.getNext();
            }
-           if(!brokerAdded) {
-               brokerLog.add(brokerObj);
-           }
+           current.setNext(newNode);
+           //newNode.setNext(current);
        }
        else {
-           brokerLog.add(brokerObj);
+           setTop(newNode);
+           previous = current;
        }
+       */
+       if (isEmpty()) {
+           top = newNode;
+           return successful;
+       }
+       
+       previous = top;
+       
+       if (newNode.getData().getBrokerLicense().compareTo(previous.getData().getBrokerLicense()) < 0) {
+           top = newNode;
+           top.setNext(previous);
+           return successful;
+       }
+       
+       current = previous.getNext();
+       
+       while (current != null) {
+           if (newNode.getData().getBrokerLicense().compareTo(current.getData().getBrokerLicense()) < 0) {
+               newNode.setNext(current);
+               previous.setNext(newNode);
+               return successful;
+           }
+           else {
+               previous = current;
+               current = previous.getNext();
+           }
+       }
+       
+       previous.setNext(newNode);
+       
+       
        return successful;
     }
     
@@ -84,6 +103,7 @@ public class BrokerLogImpl {
      * @return - returns true or false based on if a broker object is removed or
      * not
      */
+    /*
     public boolean removeBroker(String license) {
         boolean successful = false;
         int arraySize = brokerLog.size() - 1;
@@ -97,6 +117,7 @@ public class BrokerLogImpl {
         }
         return successful;
     }
+    */
     
     /**
      * Method used to test if a broker with a specific license exists in the log
@@ -106,6 +127,7 @@ public class BrokerLogImpl {
      * @return - returns true or false based on whether or not the license
      * exists in the log.
      */
+    /*
     public boolean isLicenseUnique(String license) {
         boolean isUnique = true;
         boolean licenseExists = false;
@@ -125,6 +147,7 @@ public class BrokerLogImpl {
         }
         else return true;
     }
+    */
     
     //public traverse() {
         
@@ -133,4 +156,21 @@ public class BrokerLogImpl {
     //public cleanList(StockTradeLogImpl stockTradeLogImpl) {
         
     //}
+    
+/*
+    public String toString() {
+            String result = "";
+            BrokerNode current = top;
+            while(current.getNext() != null){
+                System.out.println(current.getData().toString());
+                result += current.getData().toString();
+                if(current.getNext() != null){
+                     result += ", ";
+                }
+                current = current.getNext();
+            }
+            return "List: " + result;
+    }
+    */
 }
+
