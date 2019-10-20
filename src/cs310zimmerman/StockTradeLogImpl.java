@@ -3,6 +3,8 @@
  * unordered array. It creates and manages these objects using nine methods.
  */
 package cs310zimmerman;
+import java.util.LinkedList;
+import java.util.Iterator;
 
 /**
  *
@@ -14,14 +16,15 @@ public class StockTradeLogImpl {
     final int MAXIMUM_NUM_OBJECTS = 1000;
     private StockTrade[] stockTradeArray = new StockTrade[MAXIMUM_NUM_OBJECTS];
     //private StockTrade[] stockTradeArray = getStockTradeArray();
+    LinkedList<StockTrade> stockTradeList = new LinkedList<StockTrade>();
 
     /**
      * Method used to return the contents of the log of stock trades.
      * 
      * @return - returns log of stock trades
      */
-    public StockTrade[] getStockTradeArray() {
-        return stockTradeArray;
+    public LinkedList<StockTrade> getStockTradeList() {
+        return stockTradeList;
     }
     
     /**
@@ -44,11 +47,20 @@ public class StockTradeLogImpl {
      */
     public boolean addStockTrade(StockTrade tradeObj) {
         boolean successful = false;
+        
+        if (numStockTrades < MAXIMUM_NUM_OBJECTS) {
+            stockTradeList.add(numStockTrades, tradeObj);
+            numStockTrades += 1;
+            successful = true;
+        }
+        /*
         if (numStockTrades < MAXIMUM_NUM_OBJECTS) {
             stockTradeArray[numStockTrades] = tradeObj;
             numStockTrades += 1;
             successful = true;
         }
+        return successful;
+        */
         return successful;
     }
     
@@ -62,6 +74,18 @@ public class StockTradeLogImpl {
      */
     public boolean removeStockTradeByBroker(String license) {
         boolean objectsDeleted = false;
+        Iterator<StockTrade> iter = stockTradeList.iterator();
+        
+        while (iter.hasNext()) {
+            StockTrade targetNode = iter.next();
+            if (targetNode.getBrokerLicense().equals(license)) {
+                stockTradeList.remove(targetNode); //might be wrong
+                numStockTrades--;
+                objectsDeleted = true;
+            }
+        }
+        
+        /*
         for (int i = 0; i < numStockTrades; i++) {
             StockTrade stockTradeObj = stockTradeArray[i];
             if (stockTradeObj.getBrokerLicense().equals(license)) {
@@ -70,6 +94,8 @@ public class StockTradeLogImpl {
                 objectsDeleted = true;
             }
         }
+        return objectsDeleted;
+        */
         return objectsDeleted;
     }
     
@@ -83,6 +109,18 @@ public class StockTradeLogImpl {
      */
     public boolean removeStockTrade(String stockSymbol) {
         boolean stockTradeRemoved = false;
+        Iterator<StockTrade> iter = stockTradeList.iterator();
+        
+        while (iter.hasNext()) {
+            StockTrade targetNode = iter.next();
+            if (targetNode.getStockSymbol().equals(stockSymbol)) {
+                stockTradeList.remove(targetNode);
+                numStockTrades--;
+                stockTradeRemoved = true;
+            }
+        }
+        
+        /*
         for (int i = 0; i < numStockTrades; i++) {
             StockTrade stockTradeObj = stockTradeArray[i];
             if (stockTradeObj.getStockSymbol().equals(stockSymbol)) {
@@ -91,7 +129,9 @@ public class StockTradeLogImpl {
                 stockTradeRemoved = true;
             }
         }
-        return stockTradeRemoved;    
+        return stockTradeRemoved;   
+        */
+        return stockTradeRemoved;
     }
     
     /**
@@ -131,13 +171,24 @@ public class StockTradeLogImpl {
      */
     public int numberOfBrokerStockTrades(String license) {
         int numberOfTrades = 0;
+        Iterator<StockTrade> iter = stockTradeList.iterator();
         
+        while (iter.hasNext()) {
+            StockTrade currentNode = iter.next();
+            if (currentNode.getBrokerLicense().equals(license)) {
+                numberOfTrades++;
+            }
+        }
+        
+        /*
         for(int i = 0; i < numStockTrades; i++) {
             StockTrade stockTradeObj = stockTradeArray[i];
             if (stockTradeObj.getBrokerLicense().equals(license)) {
                 numberOfTrades++;
             }
         }
+        return numberOfTrades;
+        */
         return numberOfTrades;
     }
     
@@ -149,13 +200,23 @@ public class StockTradeLogImpl {
      */
     public double totalStockTradeValue() {
         double stockHoldingSum = 0.0;
+        Iterator<StockTrade> iter = stockTradeList.iterator();
         
+        while (iter.hasNext()) {
+            StockTrade currentNode = iter.next();
+            double holdings = currentNode.getWholeShares() * currentNode.getPricePerShare();
+            stockHoldingSum = stockHoldingSum + holdings;
+        }
+        
+        /*
         for(int i = 0; i < numStockTrades; i++) {
             StockTrade stockTradeObj = stockTradeArray[i];
             double holdings = stockTradeObj.getWholeShares() * 
                     stockTradeObj.getPricePerShare();
             stockHoldingSum = stockHoldingSum + holdings;
         }
+        return stockHoldingSum;
+        */
         return stockHoldingSum;
     }
     
@@ -169,7 +230,17 @@ public class StockTradeLogImpl {
      */
     public double totalStockTradeValue(String license) {
         double stockHoldingSum = 0.0;
+        Iterator<StockTrade> iter = stockTradeList.iterator();
         
+        while (iter.hasNext()) {
+            StockTrade currentNode = iter.next();
+            if (currentNode.getBrokerLicense().equals(license)) {
+                double holdings = currentNode.getWholeShares() * currentNode.getPricePerShare();
+                stockHoldingSum = stockHoldingSum + holdings;
+            }
+        }
+        
+        /*
         for(int i = 0; i < numStockTrades; i++) {
             StockTrade stockTradeObj = stockTradeArray[i];
             if (stockTradeObj.getBrokerLicense().equals(license)) {
@@ -179,5 +250,11 @@ public class StockTradeLogImpl {
             }
         }
         return stockHoldingSum;
+        */
+        return stockHoldingSum;
     }
+    
+    
+    
+    
 }
