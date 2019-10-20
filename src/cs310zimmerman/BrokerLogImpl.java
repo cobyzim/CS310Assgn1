@@ -148,14 +148,16 @@ public class BrokerLogImpl {
     
     public boolean isLicenseUnique(String license) {
         //boolean isUnique = true;
-        boolean isUnique = false;
+        boolean isUnique = true;
         boolean licenseExists = false;
         BrokerNode seek = top;
         
         while (seek != null && seek.getData().getBrokerLicense().compareTo(license) != 0) {
             seek = seek.getNext();
-            ;
+            isUnique = false;
         }
+        
+        
                 
         /*
         int arraySize = brokerLog.size() - 1;
@@ -179,9 +181,17 @@ public class BrokerLogImpl {
     }
     
     
-    //public traverse() {
+    public void traverse() {
+        BrokerNode current = top;
+        System.out.println("Broker Log: ");
         
-   // }
+        while (current != null) {
+            System.out.println(current.getData().toString());
+            current = current.getNext();
+        }
+        
+        
+    }
     
     //public cleanList(StockTradeLogImpl stockTradeLogImpl) {
         
