@@ -66,8 +66,6 @@ public class CS310Zimmerman {
         }
         
         //createReport();
-        //System.out.println(brokerLogImpl);
-        //brokerLogImpl.toString();
 
     }
 
@@ -200,10 +198,6 @@ public class CS310Zimmerman {
         
             stockTradeLogImpl.addStockTrade(filledStockTrade);
             
-            
-            //System.out.println("addStockTrades: numStockTrades = " + 
-            //        stockTradeLogImpl.getNumStockTrades());
-            
             if (hasStockErrors) {
                 System.out.println("ADDED: StockTrade with Stock symbol " + 
                         stockSymbol + "listed by Broker " + line[5] + ", "
@@ -246,9 +240,7 @@ public class CS310Zimmerman {
                     + " has been removed from the Broker log. All Broker's "
                     + "stocks will also be removed from the StockTrade log.");
             stockTradeLogImpl.removeStockTradeByBroker(license);
-            
-            //System.out.println("deleteBroker: numStockTrades = " + 
-            //        stockTradeLogImpl.getNumStockTrades());
+
         } 
         else {
            System.out.println("\tERROR: Broker with license " + license
@@ -269,9 +261,6 @@ public class CS310Zimmerman {
         
         if (!stockTradeLogImpl.isStockSymbolUnique(stockSymbol)) {
             stockTradeLogImpl.removeStockTrade(stockSymbol);
-            
-            //System.out.println("deleteStockTrade: numStockTrades = " + 
-            //        stockTradeLogImpl.getNumStockTrades());
             
             System.out.println("DELETED: StockTrade with Stock symbol "
                     + stockSymbol);
