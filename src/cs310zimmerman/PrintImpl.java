@@ -6,7 +6,6 @@
  */
 package cs310zimmerman;
 
-//import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Iterator;
 import java.io.*;
@@ -26,13 +25,14 @@ public class PrintImpl {
      * 
      * @param brokerLogImpl - passes in the broker implementation object
      * @param stockTradeLogImpl - passes in stock trade implementation object
+     * @param fileName - passes in the file name where the report will be 
+     * generated
      * @throws IOException - throws exception if I/O operations fail or are
      * interrupted.
      */
     public void printReport(BrokerLogImpl brokerLogImpl, 
             StockTradeLogImpl stockTradeLogImpl, String fileName) throws IOException {
         final String OUTPUT_FILENAME = fileName;
-        //final String OUTPUT_FILENAME = "output/assn2report.txt";
         top = brokerLogImpl.getTop();
         stockTradeList = stockTradeLogImpl.getStockTradeList();
         numStockTrades = stockTradeLogImpl.getNumStockTrades();
@@ -94,7 +94,7 @@ public class PrintImpl {
             if (stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense) > 0) {
             printWriter.printf("\n   Number of StockTrade Listings for "
                             + "Broker: %d\n", stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense));
-                                                                                //Fix all of this
+                                                                                
                     printWriter.printf("\nTotal sales value of "
                             + "StockTradeListings" + " for Broker %s: $ %.2f\n",
                             brokerLicense, stockTradeLogImpl.totalStockTradeValue(brokerLicense));
