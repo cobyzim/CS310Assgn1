@@ -42,7 +42,8 @@ public class StockTrade {
         setPricePerShare(Double.parseDouble(stockTradeArray[3]));
         setWholeShares(Integer.parseInt(stockTradeArray[4]));
         setBrokerLicense(stockTradeArray[5]);
-        setTaxable(Boolean.parseBoolean(stockTradeArray[6]));
+        String taxableVal = stockTradeArray[6];
+        setTaxable(taxableVal.equals("Y") ? true : false);
     }
 
     /**
