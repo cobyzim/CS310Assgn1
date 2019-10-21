@@ -30,8 +30,9 @@ public class PrintImpl {
      * interrupted.
      */
     public void printReport(BrokerLogImpl brokerLogImpl, 
-            StockTradeLogImpl stockTradeLogImpl) throws IOException {
-        final String OUTPUT_FILENAME = "output/assn2report.txt";
+            StockTradeLogImpl stockTradeLogImpl, String fileName) throws IOException {
+        final String OUTPUT_FILENAME = fileName;
+        //final String OUTPUT_FILENAME = "output/assn2report.txt";
         top = brokerLogImpl.getTop();
         stockTradeList = stockTradeLogImpl.getStockTradeList();
         numStockTrades = stockTradeLogImpl.getNumStockTrades();
