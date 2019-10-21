@@ -1,6 +1,7 @@
 /*
- * Implementation class used to implement the log of stock trades in an 
- * unordered array. It creates and manages these objects using nine methods.
+ * Implementation class used to implement the list of stock trades in an 
+ * unordered linked list. It creates and manages these objects using nine 
+ * methods.
  */
 package cs310zimmerman;
 import java.util.LinkedList;
@@ -17,9 +18,9 @@ public class StockTradeLogImpl {
     LinkedList<StockTrade> stockTradeList = new LinkedList<StockTrade>();
 
     /**
-     * Method used to return the contents of the log of stock trades.
+     * Method used to return the contents of the list of stock trades.
      * 
-     * @return - returns log of stock trades
+     * @return - returns list of stock trades
      */
     public LinkedList<StockTrade> getStockTradeList() {
         return stockTradeList;
@@ -27,7 +28,7 @@ public class StockTradeLogImpl {
     
     /**
      * Method used to return the count for the amount of elements in the
-     * stock trade array log.
+     * stock trade list.
      * 
      * @return - returns the count attribute
      */
@@ -36,12 +37,12 @@ public class StockTradeLogImpl {
     }
     
     /**
-     * Method used to add a stock trade object to the log of stock trades if
+     * Method used to add a stock trade object to the list of stock trades if
      * there is room.
      * 
      * @param tradeObj - passes in stock trade object
      * @return - returns true or false based on whether or not a stock trade was
-     * added to the log.
+     * added to the list.
      */
     public boolean addStockTrade(StockTrade tradeObj) {
         boolean successful = false;
@@ -51,11 +52,12 @@ public class StockTradeLogImpl {
             numStockTrades += 1;
             successful = true;
         }
+        
         return successful;
     }
     
     /**
-     * Method used to delete stock trade objects from the log of stock trades if
+     * Method used to delete stock trade objects from list of stock trades if
      * they have the given broker license.
      * 
      * @param license - passes in a broker license string
@@ -78,7 +80,7 @@ public class StockTradeLogImpl {
     }
     
     /**
-     * Method used to delete stock trade objects from the log of stock trades if
+     * Method used to delete stock trade objects from list of stock trades if
      * they have a given stock symbol.
      * 
      * @param stockSymbol - passes in a stock symbol string
@@ -103,11 +105,11 @@ public class StockTradeLogImpl {
     /**
      * Method used to determine whether an object with a given stock symbol has 
      * a unique stock symbol (whether the stock symbol does or doesn't already 
-     * exist in the log).
+     * exist in the list).
      * 
      * @param stockSymbol - passes in a stock symbol string
      * @return - returns true or false depending on whether or not the stock
-     * symbol is unique (does or doesn't already exist in the log)
+     * symbol is unique (does or doesn't already exist in the list)
      */
     public boolean isStockSymbolUnique(String stockSymbol) {
         boolean stockSymbolUnique = true;
@@ -140,21 +142,12 @@ public class StockTradeLogImpl {
             }
         }
         
-        /*
-        for(int i = 0; i < numStockTrades; i++) {
-            StockTrade stockTradeObj = stockTradeArray[i];
-            if (stockTradeObj.getBrokerLicense().equals(license)) {
-                numberOfTrades++;
-            }
-        }
-        return numberOfTrades;
-        */
         return numberOfTrades;
     }
     
     /**
      * Method used to calculate and return the total sum of stock holdings in
-     * the log.
+     * the list.
      * 
      * @return - returns the sum of stock holdings in the log
      */
@@ -167,16 +160,7 @@ public class StockTradeLogImpl {
             double holdings = currentNode.getWholeShares() * currentNode.getPricePerShare();
             stockHoldingSum = stockHoldingSum + holdings;
         }
-        
-        /*
-        for(int i = 0; i < numStockTrades; i++) {
-            StockTrade stockTradeObj = stockTradeArray[i];
-            double holdings = stockTradeObj.getWholeShares() * 
-                    stockTradeObj.getPricePerShare();
-            stockHoldingSum = stockHoldingSum + holdings;
-        }
-        return stockHoldingSum;
-        */
+
         return stockHoldingSum;
     }
     
@@ -200,20 +184,14 @@ public class StockTradeLogImpl {
             }
         }
         
-        /*
-        for(int i = 0; i < numStockTrades; i++) {
-            StockTrade stockTradeObj = stockTradeArray[i];
-            if (stockTradeObj.getBrokerLicense().equals(license)) {
-                double holdings = stockTradeObj.getWholeShares() * 
-                        stockTradeObj.getPricePerShare();
-                stockHoldingSum = stockHoldingSum + holdings;
-            }
-        }
-        return stockHoldingSum;
-        */
         return stockHoldingSum;
     }
     
+    /**
+     * Method used to iterate throught the list of stock trades and display them 
+     * using the toString method.
+     * 
+     */
     public void traverseDisplay() {
         Iterator<StockTrade> iter = stockTradeList.iterator();
         System.out.println("StockTrade Log: ");
@@ -224,6 +202,11 @@ public class StockTradeLogImpl {
         }
     }
     
+    /**
+     * Method used to clean the list of stock trades based on whether they have
+     * invalid stock symbols.
+     * 
+     */
     public void cleanList() {
         Iterator<StockTrade> iter = stockTradeList.iterator();
         
