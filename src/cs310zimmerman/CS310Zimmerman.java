@@ -2,10 +2,10 @@
  * Program to manage information regarding brokers and their stock trades.
  * Data is read from particular files containing information on brokers and
  * stocks, and the program determines whether this info is valid or not, while 
- * also adding or deleting Broker/Stock Trade objects to a log based on the 
- * broker license and stock symbol uniqueness. The broker log contains broker 
- * objects in an ordered arraylist while the stock trade log contains stock
- * trade objects in an unordered array.
+ * also adding or deleting Broker/Stock Trade objects to lists based on the 
+ * broker license and stock symbol uniqueness. The broker list contains broker 
+ * objects in an ordered linked list while the stock trade list contains stock
+ * trade objects in an unordered linked list.
  */
 package cs310zimmerman;
 
@@ -25,7 +25,7 @@ public class CS310Zimmerman {
     static PrintImpl printImpl = new PrintImpl();
 
     /**
-     * Main method that calls the processFile method and the createReport method
+     * Main method that calls the processFile method and the printReport method
      *
      * @param args the command line arguments
      * @throws java.io.FileNotFoundException - signals that file denoted by
@@ -37,15 +37,34 @@ public class CS310Zimmerman {
         System.out.println();
         brokerLogImpl.traverse();
         stockTradeLogImpl.traverseDisplay();
+        System.out.println();
         
+        System.out.println("Creating initial report...");
+        System.out.println();
         System.out.println("Creating report...");
-        System.out.println("Report is located in file: output/assn2report.txt");
-        /*try {
-            printImpl.printReport(brokerLogImpl, stockTradeLogImpl);
+        System.out.println("Report is complete -- located in file: output/assn3initialReport.txt");
+        try {
+            printImpl.printReport(brokerLogImpl, stockTradeLogImpl, "output/assn3initialReport.txt");
         } catch (IOException ex) {
             System.out.println("I/O exception occurred");
         }
-        */
+        
+        System.out.println();
+        System.out.println("Cleaning up broker and stockTrade logs...");
+        brokerLogImpl.cleanList(stockTradeLogImpl);
+        stockTradeLogImpl.cleanList();
+        System.out.println();
+        System.out.println("Creating clean report...");
+        System.out.println();
+        System.out.println("Creating report...");
+        System.out.println("Report is complete -- located in file: output/assn3cleanReport.txt");
+        
+        try {
+            printImpl.printReport(brokerLogImpl, stockTradeLogImpl, "output/assn3cleanReport.txt");
+        } catch (IOException ex) {
+            System.out.println("I/O exception occurred");
+        }
+        
         //createReport();
         //System.out.println(brokerLogImpl);
         //brokerLogImpl.toString();
@@ -96,10 +115,10 @@ public class CS310Zimmerman {
     }
 
     /**
-     * Method used to add a new broker object to the log based on the uniqueness
+     * Method used to add a new broker object to the list based on the uniqueness
      * of the broker license. Also checks if the broker object has a valid
      * license and a valid department number, printing an error message if
-     * either are invalid. Will still add the object to the log regardless.
+     * either are invalid. Will still add the object to the list regardless.
      *
      * @param line - passes in array of strings from input file
      */
@@ -119,11 +138,11 @@ public class CS310Zimmerman {
             hasBrokerErrors = true;
         }
         
-        //if (!brokerLogImpl.isLicenseUnique(line[2])) {
-        //    System.out.println("\tERROR: Broker with license " + line[2]
-        //            + " is not unique and will NOT be added to the log.");
-        //}
-        //if (brokerLogImpl.isLicenseUnique(line[2])) {
+        if (!brokerLogImpl.isLicenseUnique(line[2])) {
+            System.out.println("\tERROR: Broker with license " + line[2]
+                    + " is not unique and will NOT be added to the log.");
+        }
+        if (brokerLogImpl.isLicenseUnique(line[2])) {
             if (brokerLogImpl.addBroker(filledBroker)) {
                  if (hasBrokerErrors) {
                    System.out.println("ADDED: Broker with license " + line[2]
@@ -133,16 +152,15 @@ public class CS310Zimmerman {
                    System.out.println("ADDED: Broker with license " + line[2]);
                  }
             }
-        //}
-        
+        }  
     }
 
     /**
-     * Method used to add a new stock trade object to the log of stock trade
+     * Method used to add a new stock trade object to the list of stock trade
      * objects based on the broker license not being unique and the stock symbol
      * being unique. Also checks if the stock trade object has a valid stock
      * symbol, a valid price per share, and a valid number of shares. If these
-     * are not valid, it will still add the object to the log.
+     * are not valid, it will still add the object to the list.
      *
      * @param line - passes in array of strings from input file
      */
@@ -174,17 +192,17 @@ public class CS310Zimmerman {
 
         String license = line[5];
         String stockSymbol = line[2];
-        /*
+        
         boolean brokerIsUnique = brokerLogImpl.isLicenseUnique(license);
         boolean stockSymbolIsUnique = 
                 stockTradeLogImpl.isStockSymbolUnique(stockSymbol);
         if (!brokerIsUnique && stockSymbolIsUnique) {
-        */
+        
             stockTradeLogImpl.addStockTrade(filledStockTrade);
             
             
-            System.out.println("addStockTrades: numStockTrades = " + 
-                    stockTradeLogImpl.getNumStockTrades());
+            //System.out.println("addStockTrades: numStockTrades = " + 
+            //        stockTradeLogImpl.getNumStockTrades());
             
             if (hasStockErrors) {
                 System.out.println("ADDED: StockTrade with Stock symbol " + 
@@ -195,23 +213,25 @@ public class CS310Zimmerman {
                 System.out.println("ADDED: StockTrade with Stock symbol "
                     + stockSymbol + " listed by Broker " + license);
             }
-            /*
-        } else if (brokerIsUnique && stockSymbolIsUnique) {
+            
+        } 
+        else if (brokerIsUnique && stockSymbolIsUnique) {
             System.out.println("ADD ERROR: StockTrade with Stock Symbol "
                     + stockSymbol + " has Broker with license " + license
                     + ", but there is no such Broker license in the Broker"
                     + " log. StockTrade " + stockSymbol + " will NOT be added to "
                     + "StockTrade log.");
-        } else {
+        } 
+        else {
             System.out.println("ADD ERROR: StockTrade has Stock Symbol "
                     + "that already exists: " + stockSymbol + "It will NOT "
                     + "be added to StockTrade log.");
         }
-        */
+        
     }
 
     /**
-     * Method used to delete a broker from the log of brokers based on if the
+     * Method used to delete a broker from the list of brokers based on if the
      * broker license number is not unique. Will print whether an object has
      * been deleted or not.
      *
@@ -219,28 +239,25 @@ public class CS310Zimmerman {
      */
     public static void deleteBroker(String[] line) {
         String license = line[2];
-
         
-        //if (brokerLogImpl.isLicenseUnique(license)) {
+        if (brokerLogImpl.isLicenseUnique(license)) {
             brokerLogImpl.removeBroker(license);
             System.out.println("DELETED: Broker with license: " + license
                     + " has been removed from the Broker log. All Broker's "
                     + "stocks will also be removed from the StockTrade log.");
             stockTradeLogImpl.removeStockTradeByBroker(license);
             
-            System.out.println("deleteBroker: numStockTrades = " + 
-                    stockTradeLogImpl.getNumStockTrades());
-            
-        //} 
-        //else {
-        //   System.out.println("\tERROR: Broker with license " + license
-        //           + " not found in log.");
-        //}
-        
+            //System.out.println("deleteBroker: numStockTrades = " + 
+            //        stockTradeLogImpl.getNumStockTrades());
+        } 
+        else {
+           System.out.println("\tERROR: Broker with license " + license
+                   + " not found in log.");
+        } 
     }
 
     /**
-     * Method used to delete a stock trade object from the log of stock trades
+     * Method used to delete a stock trade object from the list of stock trades
      * based on if the stock symbol is not unique. Will print whether an object
      * has been deleted or not.
      *
@@ -250,27 +267,30 @@ public class CS310Zimmerman {
         String stockSymbol = line[2];
 
         
-        //if (!stockTradeLogImpl.isStockSymbolUnique(stockSymbol)) {
+        if (!stockTradeLogImpl.isStockSymbolUnique(stockSymbol)) {
             stockTradeLogImpl.removeStockTrade(stockSymbol);
             
-            System.out.println("deleteStockTrade: numStockTrades = " + 
-                    stockTradeLogImpl.getNumStockTrades());
+            //System.out.println("deleteStockTrade: numStockTrades = " + 
+            //        stockTradeLogImpl.getNumStockTrades());
             
             System.out.println("DELETED: StockTrade with Stock symbol "
                     + stockSymbol);
-        //} else {
-        //    System.out.println("DEL ERROR: StockTrade with Stock symbol "
-        //            + stockSymbol + " is not in the StockTrade log, so it "
-        //           + "cannot be deleted.");
-        //}
+        } 
+        else {
+            System.out.println("DEL ERROR: StockTrade with Stock symbol "
+                    + stockSymbol + " is not in the StockTrade log, so it "
+                   + "cannot be deleted.");
+        }
         
     }
     
+    /*
     public static void createReport() {
         try {
-            printImpl.printReport(brokerLogImpl, stockTradeLogImpl);
+            printImpl.printReport(brokerLogImpl, stockTradeLogImpl, );
         } catch (IOException ex) {
             System.out.println("I/O exception occurred");
         }
     }
+    */
 }
