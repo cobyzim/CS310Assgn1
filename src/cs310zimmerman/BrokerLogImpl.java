@@ -90,7 +90,7 @@ public class BrokerLogImpl {
     }
     
     /**
-     * Method used to remove a broker object from the log of brokers if the
+     * Method used to remove a broker object from the list of brokers if the
      * desired license is found.
      * 
      * @param license - passes in a broker license
@@ -132,7 +132,7 @@ public class BrokerLogImpl {
     }
     
     /**
-     * Method used to test if a broker with a specific license exists in the log
+     * Method used to test if a broker with a specific license exists in list
      * of brokers already.
      * 
      * @param license - passes in a broker license 
@@ -151,6 +151,10 @@ public class BrokerLogImpl {
         return licenseUnique;
     }
     
+    /**
+     * Method used to iterate through the linked list of brokers and display
+     * each one using the toString method.
+     */
     public void traverse() {
         BrokerNode current = top;
         System.out.println("Broker Log: ");
@@ -161,6 +165,12 @@ public class BrokerLogImpl {
         }    
     }
     
+    /**
+     * Method used to clean up the list of brokers based on whether they have
+     * valid licenses or not
+     * 
+     * @param stockTradeLogImpl - passes in stockTradeLogImpl
+     */
     public void cleanList(StockTradeLogImpl stockTradeLogImpl) {
         BrokerNode previous = null;
         BrokerNode current = top;
@@ -173,26 +183,6 @@ public class BrokerLogImpl {
                 current = current.getNext();
             }
         }
-        
-        
-        /*
-        if (top.getData().getBrokerLicense().compareTo(license) == 0) {
-            top = top.getNext();
-        }
-        
-        else if (current != null && current.getNext() != null) {
-            previous.setNext(current.getNext());
-        }
-        
-        else if (current != null && current.getNext() == null) {
-            previous.setNext(current.getNext());
-        }
-        
-        else if (current == null) {
-        }
-        */
-        
-    }
-    
+    } 
 }
 
