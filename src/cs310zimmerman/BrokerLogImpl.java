@@ -1,6 +1,6 @@
 /*
- * Implementation class used to implement the log of brokers in an arraylist. It
- * creates / manages the ordered list of objects with four methods.
+ * Implementation class used to implement the list of brokers in a linked list. 
+ * It creates / manages the ordered list of objects with eight methods.
  */
 package cs310zimmerman;
 
@@ -12,14 +12,29 @@ public class BrokerLogImpl {
 
     private BrokerNode top;
     
+    /**
+     * Method to retrieve the head (reference to the first node)
+     * 
+     * @return - returns top (head)
+     */
     public BrokerNode getTop() {
         return this.top;
     }
     
+    /**
+     * Method used to set the value of the first node
+     * 
+     * @param top - passes in the node to be set to top
+     */
     public void setTop(BrokerNode top) {
         this.top = top;
     }
     
+    /**
+     * Method used to determine if the linked list has any nodes or not
+     * 
+     * @return - returns true if the list is empty, false if it is not
+     */
     public boolean isEmpty() {
         if (top == null) {
             return true;
@@ -28,7 +43,7 @@ public class BrokerLogImpl {
     }
     
     /**
-     * Method used to add brokers to log of brokers in ascending order.
+     * Method used to add brokers to list of brokers in ascending order.
      * 
      * @param brokerObj - passes in broker object
      * @return - returns true or false based on if a broker object is added or 
@@ -116,7 +131,6 @@ public class BrokerLogImpl {
         return successful;
     }
     
-    
     /**
      * Method used to test if a broker with a specific license exists in the log
      * of brokers already.
@@ -129,7 +143,6 @@ public class BrokerLogImpl {
     public boolean isLicenseUnique(String license) {
         boolean licenseUnique = true;
 
-        
         for (BrokerNode seek = top; seek != null; seek = seek.getNext()) {
             if (seek.getData().getBrokerLicense().equals(license)) {
                   licenseUnique = false;
@@ -137,7 +150,6 @@ public class BrokerLogImpl {
         }
         return licenseUnique;
     }
-    
     
     public void traverse() {
         BrokerNode current = top;
@@ -149,9 +161,38 @@ public class BrokerLogImpl {
         }    
     }
     
-    //public cleanList(StockTradeLogImpl stockTradeLogImpl) {
+    public void cleanList(StockTradeLogImpl stockTradeLogImpl) {
+        BrokerNode previous = null;
+        BrokerNode current = top;
         
-    //}
+        while (current != null) { //&& current.getData().isValidLicense()) {
+            previous = current;
+            current = current.getNext();
+            
+            if (!previous.getData().isValidLicense()) {
+                current = current.getNext();
+            }
+        }
+        
+        
+        /*
+        if (top.getData().getBrokerLicense().compareTo(license) == 0) {
+            top = top.getNext();
+        }
+        
+        else if (current != null && current.getNext() != null) {
+            previous.setNext(current.getNext());
+        }
+        
+        else if (current != null && current.getNext() == null) {
+            previous.setNext(current.getNext());
+        }
+        
+        else if (current == null) {
+        }
+        */
+        
+    }
     
 }
 
