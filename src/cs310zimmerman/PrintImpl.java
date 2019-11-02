@@ -61,8 +61,9 @@ public class PrintImpl {
             dept = current.getData().getDept();
             commissionRate = current.getData().getCommissionRate();
             
-            if (stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense) > 0) {
+            if (stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense) >= 0) {
               
+                    printWriter.printf("\n");
                     printWriter.printf("%s  %s,  %s\n", brokerLicense, 
                         lastName, firstName);
             }
@@ -92,12 +93,17 @@ public class PrintImpl {
             }
             
             if (stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense) > 0) {
-            printWriter.printf("\n   Number of StockTrade Listings for "
-                            + "Broker: %d\n", stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense));
+            printWriter.printf("\n\tNumber of StockTrade Listings for "
+                            + "Broker: %d", stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense));
                                                                                 
-                    printWriter.printf("\nTotal sales value of "
+                    printWriter.printf("\n\tTotal sales value of "
                             + "StockTradeListings" + " for Broker %s: $ %.2f\n",
                             brokerLicense, stockTradeLogImpl.totalStockTradeValue(brokerLicense));
+            }
+            else {
+                printWriter.printf("\n\tNumber of StockTradeListings for Broker : 0");
+                printWriter.printf("\n\tTotal sales value of "
+                        + "StockTradeListings for Broker: $0.00\n");
             }
             current = current.getNext();
         }
