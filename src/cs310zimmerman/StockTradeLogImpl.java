@@ -71,7 +71,8 @@ public class StockTradeLogImpl {
         while (iter.hasNext()) {
             StockTrade targetNode = iter.next();
             if (targetNode.getBrokerLicense().equals(license)) {
-                stockTradeList.remove(targetNode); //might be wrong
+                iter.remove();
+                //stockTradeList.remove(targetNode); //might be wrong
                 numStockTrades--;
                 objectsDeleted = true;
             }
@@ -94,7 +95,8 @@ public class StockTradeLogImpl {
         while (iter.hasNext()) {
             StockTrade targetNode = iter.next();
             if (targetNode.getStockSymbol().equals(stockSymbol)) {
-                stockTradeList.remove(targetNode);
+                iter.remove();
+                //stockTradeList.remove(targetNode);
                 numStockTrades--;
                 stockTradeRemoved = true;
             }
@@ -188,8 +190,8 @@ public class StockTradeLogImpl {
     }
     
     /**
-     * Method used to iterate throught the list of stock trades and display them 
-     * using the toString method.
+     * Method used to iterate throughout the list of stock trades and display 
+     * them using the toString method.
      * 
      */
     public void traverseDisplay() {
@@ -213,7 +215,11 @@ public class StockTradeLogImpl {
         while (iter.hasNext()) {
             StockTrade currentNode = iter.next();
             if (!currentNode.isValidStockSymbol()) {
-                stockTradeList.remove(currentNode);
+                System.out.println("Invalid MLS number for stockTrade " + 
+                        currentNode.getStockSymbol() + " -- Deleting stockTrade"
+                        + " from log");
+                iter.remove();
+                //stockTradeList.remove(currentNode);
                 numStockTrades--;
             }
         }
