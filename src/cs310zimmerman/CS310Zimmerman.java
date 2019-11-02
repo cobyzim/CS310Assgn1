@@ -43,6 +43,7 @@ public class CS310Zimmerman {
         System.out.println();
         System.out.println("Creating report...");
         System.out.println("Report is complete -- located in file: output/assn3initialReport.txt");
+        
         try {
             printImpl.printReport(brokerLogImpl, stockTradeLogImpl, "output/assn3initialReport.txt");
         } catch (IOException ex) {
@@ -78,7 +79,7 @@ public class CS310Zimmerman {
      * specific pathname has failed to open
      */
     public static void processFile() throws FileNotFoundException {
-        final String INPUT_FILENAME = "input/assn2input.txt";
+        final String INPUT_FILENAME = "input/assn3input.txt";
 
         try {
             File text = new File(INPUT_FILENAME);
@@ -200,7 +201,7 @@ public class CS310Zimmerman {
             
             if (hasStockErrors) {
                 System.out.println("ADDED: StockTrade with Stock symbol " + 
-                        stockSymbol + "listed by Broker " + line[5] + ", "
+                        stockSymbol + " listed by Broker " + line[5] + ", "
                         + "regardless of data errors.");
             }
             else {
@@ -234,7 +235,7 @@ public class CS310Zimmerman {
     public static void deleteBroker(String[] line) {
         String license = line[2];
         
-        if (brokerLogImpl.isLicenseUnique(license)) {
+        if (!brokerLogImpl.isLicenseUnique(license)) {
             brokerLogImpl.removeBroker(license);
             System.out.println("DELETED: Broker with license: " + license
                     + " has been removed from the Broker log. All Broker's "
