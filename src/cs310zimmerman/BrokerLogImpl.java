@@ -180,7 +180,13 @@ public class BrokerLogImpl {
             current = current.getNext();
             
             if (!previous.getData().isValidLicense()) {
-                current = current.getNext();
+                System.out.println("Invalid license for broker " + 
+                        previous.getData().getBrokerLicense() + " -- Deleting "
+                        + "broker and stockTrades for that broker from logs");
+                //current = current.getNext();
+                removeBroker(previous.getData().getBrokerLicense());
+                stockTradeLogImpl.removeStockTradeByBroker(
+                        previous.getData().getBrokerLicense());
             }
         }
     } 
