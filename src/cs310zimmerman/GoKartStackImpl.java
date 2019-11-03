@@ -27,10 +27,17 @@ public class GoKartStackImpl
         goKartStack = new int[STACK_SIZE];
         top = 0;
         
-        for (int i = top; i <= STACK_SIZE; i++) {
-            
+        /*
+        GoKartStackImpl goKartBasicStack = new GoKartStackImpl(4);
+        for (int i = goKartBasicStack.STACK_SIZE; i >= 0; i--) {
+            goKartBasicStack.push(i);
         }
         
+        GoKartStackImpl goKartRacingStack = new GoKartStackImpl(3);
+        for (int i = goKartRacingStack.STACK_SIZE; i >= 0; i--) {
+            goKartRacingStack.push(i + goKartBasicStack.STACK_SIZE);
+        }
+        */
     }
     
     /**
@@ -40,7 +47,14 @@ public class GoKartStackImpl
      */
     public GoKartStackImpl(int numGoKarts, int startGoKartNum) 
     {
-        STACK_SIZE = numGoKarts;    // update this and remove this comment
+        STACK_SIZE = numGoKarts;
+        goKartStack = new int[STACK_SIZE];
+        top = startGoKartNum;
+        
+        for (int i = STACK_SIZE; i >= 0; i--) {
+            goKartStack[i] = top;
+            top--;
+        }
         
     }  
     
@@ -51,8 +65,9 @@ public class GoKartStackImpl
     public void push (int goKartNum) 
     {
         if (top < goKartStack.length) {
-            top++;
+            //top++;
             goKartStack[top] = goKartNum;
+            top++;
         }
         else {
             System.out.println("the stack is full");
@@ -84,7 +99,7 @@ public class GoKartStackImpl
     public boolean isEmpty() 
     {      
         boolean empty = false;
-        if (top < 0) {
+        if (top == 0) {
             empty = true;
         }
         
@@ -98,7 +113,7 @@ public class GoKartStackImpl
     public boolean isFull() 
     {   
         boolean full = false;
-        if (top > STACK_SIZE){ 
+        if (top >= STACK_SIZE){ 
             full = true;
         }
         
