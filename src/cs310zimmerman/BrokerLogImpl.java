@@ -189,6 +189,17 @@ public class BrokerLogImpl {
                         previous.getData().getBrokerLicense());
             }
         }
-    } 
+    }
+    
+    public BrokerNode findBroker(String license) {
+        BrokerNode brokerNode = null;
+        for (BrokerNode seek = top; seek != null; seek = seek.getNext()) {
+            if (seek.getData().getBrokerLicense().equals(license)) {
+                brokerNode = seek;
+            }
+        }
+        
+    return brokerNode;
+    }
 }
 
