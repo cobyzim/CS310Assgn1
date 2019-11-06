@@ -7,8 +7,7 @@ package cs310zimmerman;
 
 /**
  * 
- * @author 
- * @version
+ * @author Coby Zimmerman
  */
 public class BrokerQueueImpl 
 {
@@ -20,7 +19,8 @@ public class BrokerQueueImpl
      */
     public BrokerQueueImpl() 
     {
-
+        first = null;
+        last = null;
     }
 
     /**
@@ -29,8 +29,11 @@ public class BrokerQueueImpl
      */
     public boolean isEmpty() 
     {
-        
-        return true;    // update this and remove this comment
+        boolean empty = false;
+        if (first == null) {
+            empty = true;
+        }
+        return empty;
     }
 
     /**
@@ -39,7 +42,14 @@ public class BrokerQueueImpl
      */
     public void add(Broker broker) 
     {
-        
+        BrokerNode newNode = new BrokerNode(broker);
+        if (last != null) {
+            last.setNext(newNode);
+        }
+        else {
+            first = newNode;
+        }
+        last = newNode;
     }
 
     /**
@@ -48,8 +58,18 @@ public class BrokerQueueImpl
      */
     public Broker remove() 
     {
-        
-        return null;    // update this and remove this comment
+        Broker broker = null;
+        if (first != null) {
+            broker = first.getData();
+            first = first.getNext();
+            if (isEmpty()) {
+                last = null;
+            }
+        }
+        else {
+            System.out.println("Queue was empty - cannot return broker");
+        }
+        return broker;
     }
     
 }
