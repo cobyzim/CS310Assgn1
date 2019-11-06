@@ -7,8 +7,7 @@ package cs310zimmerman;
 
 /**
  * 
- * @author 
- * @version
+ * @author Coby Zimmerman
  */
 public class GoKartStackImpl 
 {
