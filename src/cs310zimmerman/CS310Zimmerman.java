@@ -67,7 +67,8 @@ public class CS310Zimmerman {
         }
         
         //createReport();
-
+        
+        
     }
 
     /**
@@ -283,4 +284,34 @@ public class CS310Zimmerman {
         }
     }
     */
+    
+    public static void processGoKartInfo() throws FileNotFoundException {
+        final String INPUT_FILENAME = "input/gokartInfo1.txt";
+
+        try {
+            File text = new File(INPUT_FILENAME);
+            Scanner scnr = new Scanner(text);
+
+            while (scnr.hasNextLine()) {
+                String str = scnr.nextLine();
+                String[] arrOfStr = str.split(" ", 2);
+                if (arrOfStr[0].equals("REQUEST")) {
+                    //do something
+                }
+                if (arrOfStr[0].equals("RETURN")) {
+                    //do something
+                }
+            }
+        }
+        catch (IOException error) {
+            System.out.println("Could not find file: " + INPUT_FILENAME);
+            System.exit(1);
+        }
+    }
+    
+    public static void processGoKartRequest(String[] line) {
+        String brokerLicense = line[1];
+        
+        //when checking to see whether broker is in log, make sure to check if null
+    }
 }
