@@ -37,8 +37,8 @@ public class GoKartUsageImpl
     public void assignGoKartToBroker(int goKartNum, String brokerLic, 
             String brokerName, String goKartType) 
     {
-        goKartUsage[goKartNum] = brokerLic;
-        System.out.printf("\n %s is using %s go-kart number %d", brokerName, goKartType, goKartNum);
+        goKartUsage[goKartNum-1] = brokerLic;
+        System.out.printf("%s has been assigned %s go-kart number %d\n", brokerName, goKartType, goKartNum);
     }
     
     /**
@@ -74,7 +74,7 @@ public class GoKartUsageImpl
             if (goKartUsage[i].equals(brokerLic)) {
                 goKartUsage[i] = null;
                 kartNum = i;
-                System.out.printf("%s has returned go-kart number %d", brokerLic, kartNum);
+                System.out.printf("%s has returned go-kart number %d\n", brokerLic, kartNum);
             }
         }
         return kartNum;
