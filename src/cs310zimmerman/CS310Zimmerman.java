@@ -297,7 +297,7 @@ public class CS310Zimmerman {
     */
     
     public static void processGoKartInfo() throws FileNotFoundException {
-        final String INPUT_FILENAME = "input/gokartInfo2.txt";
+        final String INPUT_FILENAME = "input/gokartInfo3.txt";
 
         try {
             File text = new File(INPUT_FILENAME);
@@ -339,10 +339,29 @@ public class CS310Zimmerman {
                 else {
                     if (!goKartStackImplBasic.isEmpty()) {
                         int basicGoKartNum = goKartStackImplBasic.pop();
-                        System.out.println("Top broker ");
+                        System.out.print("Top broker ");
                         goKartUsageImpl.assignGoKartToBroker(basicGoKartNum, brokerLicense, 
                             brokerLogImpl.findBroker(brokerLicense).getData().getFirstName(), basic);
                     }
+                    else {
+                        brokerQueueImplTop.add(brokerLogImpl.findBroker(brokerLicense).getData()); //try and make this a variable so its not so large
+                        String firstName = brokerLogImpl.findBroker(brokerLicense).getData().getFirstName();
+                        System.out.printf("%s waiting in top broker queue", firstName);
+                        //place in top broker queue
+                    }
+                }
+            }
+            else {
+                if (!goKartStackImplBasic.isEmpty()) {
+                    int basicGoKartNumOne = goKartStackImplBasic.pop();
+                    System.out.print("Standard broker ");
+                    goKartUsageImpl.assignGoKartToBroker(basicGoKartNumOne, brokerLicense, 
+                        brokerLogImpl.findBroker(brokerLicense).getData().getFirstName(), basic);
+                }
+                else {
+                    brokerQueueImplStandard.add(brokerLogImpl.findBroker(brokerLicense).getData());
+                    String firstNameTwo = brokerLogImpl.findBroker(brokerLicense).getData().getFirstName();
+                        System.out.printf("%s waiting in standard broker queue\n", firstNameTwo);
                 }
             }
         }
