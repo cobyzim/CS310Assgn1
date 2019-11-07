@@ -48,13 +48,15 @@ public class GoKartStackImpl
     {
         STACK_SIZE = numGoKarts;
         goKartStack = new int[STACK_SIZE];
-        top = startGoKartNum;
+        //top = startGoKartNum;
+        top = numGoKarts - 1;
         
-        for (int i = STACK_SIZE; i >= 0; i--) {
-            goKartStack[i] = top;
-            top--;
+        for (int i = 0; i < STACK_SIZE; i++) {
+            goKartStack[i] = startGoKartNum;
+            startGoKartNum--;
+            //top--;
         }
-        
+       
     }  
     
     /**
@@ -81,6 +83,7 @@ public class GoKartStackImpl
     {
         int goKartNum = -1;
         if (!isEmpty()) {
+
             goKartNum = goKartStack[top];
             top--;
         }
@@ -98,7 +101,7 @@ public class GoKartStackImpl
     public boolean isEmpty() 
     {      
         boolean empty = false;
-        if (top == 0) {
+        if (top == -1) {
             empty = true;
         }
         
