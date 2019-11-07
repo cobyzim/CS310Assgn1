@@ -337,14 +337,12 @@ public class CS310Zimmerman {
                         brokerLogImpl.findBroker(brokerLicense).getData().getFirstName(), racing);
                 }
                 else {
-                    /*
                     if (!goKartStackImplBasic.isEmpty()) {
                         int basicGoKartNum = goKartStackImplBasic.pop();
                         System.out.println("Top broker ");
                         goKartUsageImpl.assignGoKartToBroker(basicGoKartNum, brokerLicense, 
                             brokerLogImpl.findBroker(brokerLicense).getData().getFirstName(), basic);
                     }
-                    */
                 }
             }
         }
