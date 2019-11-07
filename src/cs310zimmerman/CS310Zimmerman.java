@@ -23,6 +23,11 @@ public class CS310Zimmerman {
     static BrokerLogImpl brokerLogImpl = new BrokerLogImpl();
     static StockTradeLogImpl stockTradeLogImpl = new StockTradeLogImpl();
     static PrintImpl printImpl = new PrintImpl();
+    static BrokerQueueImpl brokerQueueImplStandard = new BrokerQueueImpl();
+    static BrokerQueueImpl brokerQueueImplTop = new BrokerQueueImpl();
+    static GoKartUsageImpl goKartUsageImpl = new GoKartUsageImpl(7);
+    static GoKartStackImpl goKartStackImplBasic = new GoKartStackImpl(4, 4);
+    static GoKartStackImpl goKartStackImplRacing = new GoKartStackImpl(3, 7);
 
     /**
      * Main method that calls the processFile method and the printReport method
@@ -39,6 +44,7 @@ public class CS310Zimmerman {
         stockTradeLogImpl.traverseDisplay();
         System.out.println();
         
+        /*
         System.out.println("Creating initial report...");
         System.out.println();
         System.out.println("Creating report...");
@@ -51,6 +57,8 @@ public class CS310Zimmerman {
         }
         
         System.out.println();
+        */
+        
         System.out.println("Cleaning up broker and stockTrade logs...");
         brokerLogImpl.cleanList(stockTradeLogImpl);
         stockTradeLogImpl.cleanList();
@@ -68,6 +76,9 @@ public class CS310Zimmerman {
         
         //createReport();
         
+        System.out.println();
+        processGoKartInfo();
+        
         
     }
 
@@ -80,7 +91,7 @@ public class CS310Zimmerman {
      * specific pathname has failed to open
      */
     public static void processFile() throws FileNotFoundException {
-        final String INPUT_FILENAME = "input/assn3input.txt";
+        final String INPUT_FILENAME = "input/assn4input7.txt";
 
         try {
             File text = new File(INPUT_FILENAME);
@@ -286,7 +297,7 @@ public class CS310Zimmerman {
     */
     
     public static void processGoKartInfo() throws FileNotFoundException {
-        final String INPUT_FILENAME = "input/gokartInfo1.txt";
+        final String INPUT_FILENAME = "input/gokartInfo2.txt";
 
         try {
             File text = new File(INPUT_FILENAME);
@@ -296,7 +307,7 @@ public class CS310Zimmerman {
                 String str = scnr.nextLine();
                 String[] arrOfStr = str.split(" ", 2);
                 if (arrOfStr[0].equals("REQUEST")) {
-                    //do something
+                    processGoKartRequest(arrOfStr);
                 }
                 if (arrOfStr[0].equals("RETURN")) {
                     //do something
@@ -310,7 +321,43 @@ public class CS310Zimmerman {
     }
     
     public static void processGoKartRequest(String[] line) {
+        final double TOP_BROKER = 5000000.00;
+        String basic = "basic";
+        String racing = "racing";
         String brokerLicense = line[1];
+        
+        if (brokerLogImpl.findBroker(brokerLicense) != null) {
+            double brokerValue = stockTradeLogImpl.totalStockTradeValue(brokerLicense);
+            //System.out.println(brokerValue);   //check to see what the value of broker portfolio is and it works
+            if (brokerValue >= TOP_BROKER) {
+                if (!goKartStackImplRacing.isEmpty()) {
+                    int racingGoKartNum = goKartStackImplRacing.pop();
+                    System.out.print("Top broker ");
+                    goKartUsageImpl.assignGoKartToBroker(racingGoKartNum, brokerLicense, 
+                        brokerLogImpl.findBroker(brokerLicense).getData().getFirstName(), racing);
+                }
+                else {
+                    /*
+                    if (!goKartStackImplBasic.isEmpty()) {
+                        int basicGoKartNum = goKartStackImplBasic.pop();
+                        System.out.println("Top broker ");
+                        goKartUsageImpl.assignGoKartToBroker(basicGoKartNum, brokerLicense, 
+                            brokerLogImpl.findBroker(brokerLicense).getData().getFirstName(), basic);
+                    }
+                    */
+                }
+            }
+        }
+        else {
+            System.out.printf("Unknown broker %s is not allowed access to "
+                    + "go-karts. Request ignored.\n", brokerLicense);
+        }
+        
+        //broker w/ 5,000,000.00 or more can use racing carts
+        //others only allowed to use basic cart
+        //if all go karts gone, put broker in queues w/ top brokers get priority
+        //if license is not in log, issue error message, ignore request, move on
+        //provide auidit trail w/ each request/return
         
         //when checking to see whether broker is in log, make sure to check if null
     }
