@@ -385,12 +385,12 @@ public class CS310Zimmerman {
         String basic = "basic";
         String racing = "racing";
         
-        if (brokerLogImpl.findBroker(brokerLicense) != null) {
-            String brokerName = brokerLogImpl.findBroker(brokerLicense).getData().getFirstName();
-            double brokerValue = stockTradeLogImpl.totalStockTradeValue(brokerLicense);
+        if (brokerLogImpl.findBroker(brokerLicense) != null) { //check if broker is in log
+            String brokerName = brokerLogImpl.findBroker(brokerLicense).getData().getFirstName(); //gets broker name from license
+            double brokerValue = stockTradeLogImpl.totalStockTradeValue(brokerLicense); //gets total value of stock trades
                 if (brokerValue >= TOP_BROKER) {
                     
-                    if(!goKartStackImplRacing.isFull()) {
+                    if(!goKartStackImplRacing.isFull()) { 
                         int kartNum = goKartUsageImpl.returnGoKart(brokerLicense, brokerName);
                         
                         if (kartNum != -1) { //they have a go kart
