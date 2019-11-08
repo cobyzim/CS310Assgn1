@@ -44,21 +44,6 @@ public class CS310Zimmerman {
         stockTradeLogImpl.traverseDisplay();
         System.out.println();
         
-        /*
-        System.out.println("Creating initial report...");
-        System.out.println();
-        System.out.println("Creating report...");
-        System.out.println("Report is complete -- located in file: output/assn3initialReport.txt");
-        
-        try {
-            printImpl.printReport(brokerLogImpl, stockTradeLogImpl, "output/assn3initialReport.txt");
-        } catch (IOException ex) {
-            System.out.println("I/O exception occurred");
-        }
-        
-        System.out.println();
-        */
-        
         System.out.println("Cleaning up broker and stockTrade logs...");
         brokerLogImpl.cleanList(stockTradeLogImpl);
         stockTradeLogImpl.cleanList();
@@ -66,10 +51,12 @@ public class CS310Zimmerman {
         System.out.println("Creating clean report...");
         System.out.println();
         System.out.println("Creating report...");
-        System.out.println("Report is complete -- located in file: output/assn3cleanReport.txt");
+        System.out.println("Report is complete -- located in file: "
+                + "output/assn3cleanReport.txt");
         
         try {
-            printImpl.printReport(brokerLogImpl, stockTradeLogImpl, "output/assn3cleanReport.txt");
+            printImpl.printReport(brokerLogImpl, stockTradeLogImpl, 
+                    "output/assn3cleanReport.txt");
         } catch (IOException ex) {
             System.out.println("I/O exception occurred");
         }
@@ -126,7 +113,7 @@ public class CS310Zimmerman {
     }
 
     /**
-     * Method used to add a new broker object to the list based on the uniqueness
+     * Method used to add a new broker object to the list based on uniqueness
      * of the broker license. Also checks if the broker object has a valid
      * license and a valid department number, printing an error message if
      * either are invalid. Will still add the object to the list regardless.
@@ -226,8 +213,8 @@ public class CS310Zimmerman {
             System.out.println("ADD ERROR: StockTrade with Stock Symbol "
                     + stockSymbol + " has Broker with license " + license
                     + ", but there is no such Broker license in the Broker"
-                    + " log. StockTrade " + stockSymbol + " will NOT be added to "
-                    + "StockTrade log.");
+                    + " log. StockTrade " + stockSymbol + " will NOT be added "
+                    + "to StockTrade log.");
         } 
         else {
             System.out.println("ADD ERROR: StockTrade has Stock Symbol "
@@ -327,27 +314,32 @@ public class CS310Zimmerman {
         String brokerLicense = line[1];
         
         if (brokerLogImpl.findBroker(brokerLicense) != null) {
-            double brokerValue = stockTradeLogImpl.totalStockTradeValue(brokerLicense);
-            //System.out.println(brokerValue);   //check to see what the value of broker portfolio is and it works
+            double brokerValue = 
+                    stockTradeLogImpl.totalStockTradeValue(brokerLicense);
             if (brokerValue >= TOP_BROKER) {
                 if (!goKartStackImplRacing.isEmpty()) {
                     int racingGoKartNum = goKartStackImplRacing.pop();
                     System.out.print("Top broker ");
-                    goKartUsageImpl.assignGoKartToBroker(racingGoKartNum, brokerLicense, 
-                        brokerLogImpl.findBroker(brokerLicense).getData().getFirstName(), racing);
+                    goKartUsageImpl.assignGoKartToBroker(racingGoKartNum, 
+                        brokerLicense, brokerLogImpl.findBroker(brokerLicense).
+                        getData().getFirstName(), racing);
                 }
                 else {
                     if (!goKartStackImplBasic.isEmpty()) {
                         int basicGoKartNum = goKartStackImplBasic.pop();
                         System.out.print("Top broker ");
-                        goKartUsageImpl.assignGoKartToBroker(basicGoKartNum, brokerLicense, 
-                            brokerLogImpl.findBroker(brokerLicense).getData().getFirstName(), basic);
+                        goKartUsageImpl.assignGoKartToBroker(basicGoKartNum, 
+                            brokerLicense, brokerLogImpl.
+                            findBroker(brokerLicense).getData().getFirstName(), 
+                            basic);
                     }
                     else {
-                        brokerQueueImplTop.add(brokerLogImpl.findBroker(brokerLicense).getData()); //try and make this a variable so its not so large
-                        String firstName = brokerLogImpl.findBroker(brokerLicense).getData().getFirstName();
-                        System.out.printf("%s waiting in top broker queue\n", firstName);
-                        //place in top broker queue
+                        brokerQueueImplTop.add(brokerLogImpl.
+                            findBroker(brokerLicense).getData());
+                        String firstName = brokerLogImpl.
+                            findBroker(brokerLicense).getData().getFirstName();
+                        System.out.printf("%s waiting in top broker queue\n", 
+                            firstName);
                     }
                 }
             }
@@ -355,13 +347,17 @@ public class CS310Zimmerman {
                 if (!goKartStackImplBasic.isEmpty()) {
                     int basicGoKartNumOne = goKartStackImplBasic.pop();
                     System.out.print("Standard broker ");
-                    goKartUsageImpl.assignGoKartToBroker(basicGoKartNumOne, brokerLicense, 
-                        brokerLogImpl.findBroker(brokerLicense).getData().getFirstName(), basic);
+                    goKartUsageImpl.assignGoKartToBroker(basicGoKartNumOne, 
+                        brokerLicense, brokerLogImpl.findBroker(brokerLicense).
+                        getData().getFirstName(), basic);
                 }
                 else {
-                    brokerQueueImplStandard.add(brokerLogImpl.findBroker(brokerLicense).getData());
-                    String firstNameTwo = brokerLogImpl.findBroker(brokerLicense).getData().getFirstName();
-                        System.out.printf("%s waiting in standard broker queue\n", firstNameTwo);
+                    brokerQueueImplStandard.add(brokerLogImpl.
+                        findBroker(brokerLicense).getData());
+                    String firstNameTwo = brokerLogImpl.
+                        findBroker(brokerLicense).getData().getFirstName();
+                        System.out.printf("%s waiting in standard broker "
+                            + "queue\n", firstNameTwo);
                 }
             }
         }
@@ -369,14 +365,6 @@ public class CS310Zimmerman {
             System.out.printf("Unknown broker %s is not allowed access to "
                     + "go-karts. Request ignored.\n", brokerLicense);
         }
-        
-        //broker w/ 5,000,000.00 or more can use racing carts
-        //others only allowed to use basic cart
-        //if all go karts gone, put broker in queues w/ top brokers get priority
-        //if license is not in log, issue error message, ignore request, move on
-        //provide auidit trail w/ each request/return
-        
-        //when checking to see whether broker is in log, make sure to check if null
     }
     
     public static void processGoKartReturn(String[] line) {
@@ -385,61 +373,80 @@ public class CS310Zimmerman {
         String basic = "basic";
         String racing = "racing";
         
-        if (brokerLogImpl.findBroker(brokerLicense) != null) { //check if broker is in log
-            String brokerName = brokerLogImpl.findBroker(brokerLicense).getData().getFirstName(); //gets broker name from license
-            double brokerValue = stockTradeLogImpl.totalStockTradeValue(brokerLicense); //gets total value of stock trades
+        if (brokerLogImpl.findBroker(brokerLicense) != null) {
+            String brokerName = brokerLogImpl.findBroker(brokerLicense).
+                getData().getFirstName();
+            double brokerValue = stockTradeLogImpl.
+                totalStockTradeValue(brokerLicense);
                 if (brokerValue >= TOP_BROKER) {
                     
                     if(!goKartStackImplRacing.isFull()) { 
-                        int kartNum = goKartUsageImpl.returnGoKart(brokerLicense, brokerName);
+                        int kartNum = goKartUsageImpl.
+                            returnGoKart(brokerLicense, brokerName);
                         
-                        if (kartNum != -1) { //they have a go kart
-                            goKartStackImplRacing.push(kartNum); //put the kart back in stack
-                            if (!brokerQueueImplTop.isEmpty()) {  //check if queue is empty
-                                Broker topBroker = brokerQueueImplTop.remove(); //if its not, remove the top broker from that queue
-                                int racingGoKartNum = goKartStackImplRacing.pop(); //pop the kart out of stack for this broker
+                        if (kartNum != -1) {
+                            goKartStackImplRacing.push(kartNum);
+                            if (!brokerQueueImplTop.isEmpty()) {
+                                Broker topBroker = brokerQueueImplTop.remove();
+                                int racingGoKartNum = goKartStackImplRacing.
+                                    pop();
                                 System.out.print("Top broker ");
-                                goKartUsageImpl.assignGoKartToBroker(racingGoKartNum, topBroker.getBrokerLicense(), //assign this go kart to the broker
-                                topBroker.getFirstName(), racing);
+                                goKartUsageImpl.
+                                    assignGoKartToBroker(racingGoKartNum, 
+                                    topBroker.getBrokerLicense(),
+                                    topBroker.getFirstName(), racing);
                             }
                             
                         }
                         else {
-                            System.out.println("Broker is not assigned to go-kart");
+                            System.out.println("Broker is not assigned to "
+                                + "go-kart");
                         }
                     }
                     else { //racing stack is full
-                        int kartNum = goKartUsageImpl.returnGoKart(brokerLicense, brokerName);
+                        int kartNum = goKartUsageImpl.
+                            returnGoKart(brokerLicense, brokerName);
                         
-                        if (kartNum != -1) { //they have a go kart
+                        if (kartNum != -1) {
                             goKartStackImplBasic.push(kartNum);
                             if (!brokerQueueImplStandard.isEmpty()) {
-                                Broker standardBroker = brokerQueueImplStandard.remove();
+                                Broker standardBroker = brokerQueueImplStandard.
+                                    remove();
                                 int basicGoKartNum = goKartStackImplBasic.pop();
                                 System.out.print("Standard broker ");
-                                goKartUsageImpl.assignGoKartToBroker(basicGoKartNum, standardBroker.getBrokerLicense(), standardBroker.getFirstName(), basic);
+                                goKartUsageImpl.
+                                    assignGoKartToBroker(basicGoKartNum, 
+                                    standardBroker.getBrokerLicense(), 
+                                    standardBroker.getFirstName(), basic);
                             }
                         }
                         else {
-                            System.out.println("Broker is not assigned to go-kart");
+                            System.out.println("Broker is not assigned to"
+                                + " go-kart");
                         }
                     }
                 }
                 else {
                     if(!goKartStackImplBasic.isFull()) {
-                        int kartNum = goKartUsageImpl.returnGoKart(brokerLicense, brokerName);
+                        int kartNum = goKartUsageImpl.
+                            returnGoKart(brokerLicense, brokerName);
                         
                         if(kartNum != -1) {
                             goKartStackImplBasic.push(kartNum);
                             if (!brokerQueueImplStandard.isEmpty()) {
-                                Broker standardBroker = brokerQueueImplStandard.remove();
+                                Broker standardBroker = brokerQueueImplStandard.
+                                    remove();
                                 int basicGoKartNum = goKartStackImplBasic.pop();
                                 System.out.print("Standard broker ");
-                                goKartUsageImpl.assignGoKartToBroker(basicGoKartNum, standardBroker.getBrokerLicense(), standardBroker.getFirstName(), basic);
+                                goKartUsageImpl.
+                                    assignGoKartToBroker(basicGoKartNum, 
+                                    standardBroker.getBrokerLicense(), 
+                                    standardBroker.getFirstName(), basic);
                             }
                         }
                         else {
-                            System.out.println("Broker is not assigned to go-kart");
+                            System.out.println("Broker is not assigned to "
+                                + "go-kart");
                         }
                     }
                 }
