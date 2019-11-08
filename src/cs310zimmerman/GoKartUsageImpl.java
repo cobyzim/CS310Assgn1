@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Implementation class that acts as a bookkeeping class, associating and 
+ * disassociating broker licenses with the go-karts they are using or were using
  */
 package cs310zimmerman;
 
@@ -11,13 +10,14 @@ package cs310zimmerman;
  */
 public class GoKartUsageImpl 
 {
-    String[] goKartUsage;   // stores broker licenses
-    
-    final int ARRAY_SIZE;   // the size of the array
+    String[] goKartUsage;
+    final int ARRAY_SIZE;
 
     /**
+     * Constructor method that initializes the array of strings to be filled
+     * with broker licenses with a size of the total number of go-karts.
      * 
-     * @param numGoKarts 
+     * @param numGoKarts - passes in number of go-karts
      */
     public GoKartUsageImpl(int numGoKarts) 
     {
@@ -29,24 +29,24 @@ public class GoKartUsageImpl
     /**
      * Associates a broker with a particular go-kart
      * 
-     * @param goKartNum the go-kart number
-     * @param brokerLic the broker license number
-     * @param brokerName the broker full name
-     * @param goKartType the type of go-kart being assigned
+     * @param goKartNum - the go-kart number
+     * @param brokerLic - the broker license number
+     * @param brokerName - the broker full name
+     * @param goKartType - the type of go-kart being assigned
      */
     public void assignGoKartToBroker(int goKartNum, String brokerLic, 
             String brokerName, String goKartType) 
     {
         goKartUsage[goKartNum-1] = brokerLic;
-        System.out.printf("%s has been assigned %s go-kart number %d\n", brokerName, goKartType, goKartNum);
+        System.out.printf("%s has been assigned %s go-kart number %d\n", 
+            brokerName, goKartType, goKartNum);
     }
     
     /**
      * Gets a broker license for a specific go-kart
      * 
-     * @param goKartNum the number of the go-kart to check if it is assigned
-     * 
-     * @return the broker license or null if not assigned
+     * @param goKartNum - the number of the go-kart to check if it is assigned
+     * @return - the broker license or null if not assigned
      */
     public String getBrokerLicenseForGoKart(int goKartNum) 
     {
@@ -61,10 +61,9 @@ public class GoKartUsageImpl
     /**
      * Will disassociate a go-kart from a particular broker 
      * 
-     * @param brokerLic the broker license
-     * @param brokerName the broker full name
-     * 
-     * @return the number of the go-kart that was being used
+     * @param brokerLic - the broker license
+     * @param brokerName - the broker full name
+     * @return - the number of the go-kart that was being used
      */
     public int returnGoKart(String brokerLic, String brokerName) 
     {
@@ -74,11 +73,11 @@ public class GoKartUsageImpl
             if (goKartUsage[i].equals(brokerLic)) {
                 goKartUsage[i] = "";
                 kartNum = i + 1;
-                System.out.printf("%s has returned go-kart number %d\n", brokerName, kartNum);
+                System.out.printf("%s has returned go-kart number %d\n", 
+                    brokerName, kartNum);
             }
         }
         return kartNum;
     }      
-    
 }
 
