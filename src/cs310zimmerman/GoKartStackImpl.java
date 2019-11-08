@@ -48,13 +48,11 @@ public class GoKartStackImpl
     {
         STACK_SIZE = numGoKarts;
         goKartStack = new int[STACK_SIZE];
-        //top = startGoKartNum;
         top = numGoKarts - 1;
         
         for (int i = 0; i < STACK_SIZE; i++) {
             goKartStack[i] = startGoKartNum;
             startGoKartNum--;
-            //top--;
         }
        
     }  
@@ -66,9 +64,8 @@ public class GoKartStackImpl
     public void push (int goKartNum) 
     {
         if (top < goKartStack.length) {
-            //top++;
-            goKartStack[top] = goKartNum;
             top++;
+            goKartStack[top] = goKartNum;
         }
         else {
             System.out.println("the stack is full");
@@ -83,7 +80,6 @@ public class GoKartStackImpl
     {
         int goKartNum = -1;
         if (!isEmpty()) {
-
             goKartNum = goKartStack[top];
             top--;
         }
