@@ -17,7 +17,8 @@ import java.io.*;
 public class PrintImpl {
     private BrokerNode top;
     private LinkedList<StockTrade> stockTradeList;
-    private  int numStockTrades;
+    private int numStockTrades;
+    private String[] goKartUsage;
     
     /**
      * Method used to generate the report using the broker and stock trade
@@ -31,7 +32,8 @@ public class PrintImpl {
      * interrupted.
      */
     public void printReport(BrokerLogImpl brokerLogImpl, 
-            StockTradeLogImpl stockTradeLogImpl, String fileName) throws IOException {
+            StockTradeLogImpl stockTradeLogImpl, String fileName) throws 
+            IOException {
         final String OUTPUT_FILENAME = fileName;
         top = brokerLogImpl.getTop();
         stockTradeList = stockTradeLogImpl.getStockTradeList();
@@ -61,7 +63,8 @@ public class PrintImpl {
             dept = current.getData().getDept();
             commissionRate = current.getData().getCommissionRate();
             
-            if (stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense) >= 0) {
+            if (stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense) >= 0)
+            {
               
                     printWriter.printf("\n");
                     printWriter.printf("%s  %s,  %s\n", brokerLicense, 
@@ -92,16 +95,20 @@ public class PrintImpl {
                 }
             }
             
-            if (stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense) > 0) {
+            if (stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense) > 0) 
+            {
             printWriter.printf("\n\tNumber of StockTrade Listings for "
-                            + "Broker: %d", stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense));
+                + "Broker: %d", stockTradeLogImpl.
+                numberOfBrokerStockTrades(brokerLicense));
                                                                                 
-                    printWriter.printf("\n\tTotal sales value of "
-                            + "StockTradeListings" + " for Broker %s: $ %.2f\n",
-                            brokerLicense, stockTradeLogImpl.totalStockTradeValue(brokerLicense));
+            printWriter.printf("\n\tTotal sales value of "
+                + "StockTradeListings" + " for Broker %s: $ %.2f\n",
+                brokerLicense, stockTradeLogImpl.
+                totalStockTradeValue(brokerLicense));
             }
             else {
-                printWriter.printf("\n\tNumber of StockTradeListings for Broker : 0");
+                printWriter.printf("\n\tNumber of StockTradeListings for Broker"
+                        + " : 0");
                 printWriter.printf("\n\tTotal sales value of "
                         + "StockTradeListings for Broker: $0.00\n");
             }
@@ -115,5 +122,22 @@ public class PrintImpl {
         
         fileWriter.close();
         printWriter.close();
+    }
+    
+    public void printGoKartReport(GoKartStackImpl goKartStackImpl, 
+            BrokerQueueImpl brokerQueueImpl,BrokerLogImpl brokerLogImpl, 
+            GoKartUsageImpl goKartUsageImpl, String fileName) throws IOException
+    {
+        
+        final String OUTPUT_FILENAME = fileName;
+        FileWriter fileWriter = new FileWriter(OUTPUT_FILENAME);
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        
+        printWriter.printf("GO-KART USAGE REPORT");
+        
+        
+        //include which broker is using which cart
+        //which go karts are available in each stack
+        //which brokers are still in the queues
     }
 }
