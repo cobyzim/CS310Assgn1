@@ -75,9 +75,7 @@ public class CS310Zimmerman {
         }
         catch (IOException exc) {
             System.out.println("I/O exception occurred w/ go-kart file");
-        }
-        
-        
+        } 
     }
 
     /**
@@ -414,78 +412,31 @@ public class CS310Zimmerman {
                 getData().getFirstName();
             double brokerValue = stockTradeLogImpl.
                 totalStockTradeValue(brokerLicense);
+            
             if (brokerValue >= TOP_BROKER) {
-                    
-                    //if(!goKartStackImplRacing.isFull()) { //eddie goes into here but never goes into the else. Can't push the kart into racing stack so its never returned
-                    int kartNum = goKartUsageImpl.returnGoKart(brokerLicense, brokerName);
-                        
-                    if (kartNum != -1) {
-                        if (kartNum > goKartStackImplRacing.getStackSize() && kartNum <= goKartStackImplRacing.getStartGoKartNumber(7)) {
-                        //if (kartNum > 3 && kartNum <= 6) { //try and find a way to fix this
-                            goKartStackImplRacing.push(kartNum);
-                            if (!brokerQueueImplTop.isEmpty()) {
-                                Broker topBroker = brokerQueueImplTop.remove();
-                                int racingGoKartNum = goKartStackImplRacing.
-                                    pop();
-                                System.out.print("Top broker ");
-                                goKartUsageImpl.
-                                    assignGoKartToBroker(racingGoKartNum, 
-                                    topBroker.getBrokerLicense(),
-                                    topBroker.getFirstName(), racing);
-                            }
+                int kartNum = goKartUsageImpl.returnGoKart(brokerLicense, 
+                    brokerName);
+                if (kartNum != -1) {
+                    if (kartNum > goKartStackImplRacing.getStackSize() && 
+                        kartNum <= goKartStackImplRacing.
+                            getStartGoKartNumber(7)) {
+                        goKartStackImplRacing.push(kartNum);
+                        if (!brokerQueueImplTop.isEmpty()) {
+                            Broker topBroker = brokerQueueImplTop.remove();
+                            int racingGoKartNum = goKartStackImplRacing.
+                                pop();
+                            System.out.print("Top broker ");
+                            goKartUsageImpl.
+                                assignGoKartToBroker(racingGoKartNum, 
+                                topBroker.getBrokerLicense(),
+                                topBroker.getFirstName(), racing);
                         }
-                        else {
-                            goKartStackImplBasic.push(kartNum);
-                            if (!brokerQueueImplStandard.isEmpty()) {
-                                Broker standardBroker = brokerQueueImplStandard.
-                                remove();
-                                int basicGoKartNum = goKartStackImplBasic.pop();
-                                System.out.print("Standard broker ");
-                                goKartUsageImpl.
-                                    assignGoKartToBroker(basicGoKartNum, 
-                                    standardBroker.getBrokerLicense(), 
-                                    standardBroker.getFirstName(), basic);
-                            }
-                        }
-                            
                     }
                     else {
-                        System.out.println("Broker is not assigned to "
-                            + "go-kart");
-                    }
-                    //}
-                    //else { //racing stack is full
-                        /*
-                        int kartNum = goKartUsageImpl.returnGoKart(brokerLicense, brokerName);
-                        
-                        if (kartNum != -1) {
-                            goKartStackImplBasic.push(kartNum);
-                            if (!brokerQueueImplStandard.isEmpty()) {
-                                Broker standardBroker = brokerQueueImplStandard.
-                                    remove();
-                                int basicGoKartNum = goKartStackImplBasic.pop();
-                                System.out.print("Standard broker ");
-                                goKartUsageImpl.
-                                    assignGoKartToBroker(basicGoKartNum, 
-                                    standardBroker.getBrokerLicense(), 
-                                    standardBroker.getFirstName(), basic);
-                            }
-                        }
-                        else {
-                            System.out.println("Broker is not assigned to"
-                                + " go-kart");
-                        }
-                    //}
-                        */
-                }
-                else {
-                    int kartNum = goKartUsageImpl.returnGoKart(brokerLicense, brokerName);
-                        
-                    if(kartNum != -1) {
                         goKartStackImplBasic.push(kartNum);
                         if (!brokerQueueImplStandard.isEmpty()) {
                             Broker standardBroker = brokerQueueImplStandard.
-                                remove();
+                            remove();
                             int basicGoKartNum = goKartStackImplBasic.pop();
                             System.out.print("Standard broker ");
                             goKartUsageImpl.
@@ -493,11 +444,33 @@ public class CS310Zimmerman {
                                 standardBroker.getBrokerLicense(), 
                                 standardBroker.getFirstName(), basic);
                         }
+                    }         
+                }
+                else {
+                    System.out.println("Broker is not assigned to "
+                        + "go-kart");
+                }
+            }
+            else {
+                int kartNum = goKartUsageImpl.returnGoKart(brokerLicense, 
+                    brokerName);          
+                if(kartNum != -1) {
+                    goKartStackImplBasic.push(kartNum);
+                    if (!brokerQueueImplStandard.isEmpty()) {
+                        Broker standardBroker = brokerQueueImplStandard.
+                            remove();
+                        int basicGoKartNum = goKartStackImplBasic.pop();
+                        System.out.print("Standard broker ");
+                        goKartUsageImpl.
+                            assignGoKartToBroker(basicGoKartNum, 
+                            standardBroker.getBrokerLicense(), 
+                            standardBroker.getFirstName(), basic);
                     }
-                    else {
-                        System.out.println("Broker is not assigned to "
-                            + "go-kart");
-                    }
+                }
+                else {
+                    System.out.println("Broker is not assigned to "
+                        + "go-kart");
+                }
             }
         }
         else {
