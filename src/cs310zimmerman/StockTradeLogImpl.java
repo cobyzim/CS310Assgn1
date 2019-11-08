@@ -1,6 +1,6 @@
 /*
  * Implementation class used to implement the list of stock trades in an 
- * unordered linked list. It creates and manages these objects using nine 
+ * unordered linked list. It creates and manages these objects using eleven 
  * methods.
  */
 package cs310zimmerman;
@@ -72,7 +72,6 @@ public class StockTradeLogImpl {
             StockTrade targetNode = iter.next();
             if (targetNode.getBrokerLicense().equals(license)) {
                 iter.remove();
-                //stockTradeList.remove(targetNode); //might be wrong
                 numStockTrades--;
                 objectsDeleted = true;
             }
@@ -96,7 +95,6 @@ public class StockTradeLogImpl {
             StockTrade targetNode = iter.next();
             if (targetNode.getStockSymbol().equals(stockSymbol)) {
                 iter.remove();
-                //stockTradeList.remove(targetNode);
                 numStockTrades--;
                 stockTradeRemoved = true;
             }
@@ -159,7 +157,8 @@ public class StockTradeLogImpl {
         
         while (iter.hasNext()) {
             StockTrade currentNode = iter.next();
-            double holdings = currentNode.getWholeShares() * currentNode.getPricePerShare();
+            double holdings = currentNode.getWholeShares() * 
+                    currentNode.getPricePerShare();
             stockHoldingSum = stockHoldingSum + holdings;
         }
 
@@ -181,7 +180,8 @@ public class StockTradeLogImpl {
         while (iter.hasNext()) {
             StockTrade currentNode = iter.next();
             if (currentNode.getBrokerLicense().equals(license)) {
-                double holdings = currentNode.getWholeShares() * currentNode.getPricePerShare();
+                double holdings = currentNode.getWholeShares() * 
+                        currentNode.getPricePerShare();
                 stockHoldingSum = stockHoldingSum + holdings;
             }
         }
@@ -219,7 +219,6 @@ public class StockTradeLogImpl {
                         currentNode.getStockSymbol() + " -- Deleting stockTrade"
                         + " from log");
                 iter.remove();
-                //stockTradeList.remove(currentNode);
                 numStockTrades--;
             }
         }
