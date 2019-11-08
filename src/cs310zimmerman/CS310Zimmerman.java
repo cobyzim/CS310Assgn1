@@ -382,6 +382,8 @@ public class CS310Zimmerman {
     public static void processGoKartReturn(String[] line) {
         String brokerLicense = line[1];
         final double TOP_BROKER = 5000000.00;
+        String basic = "basic";
+        String racing = "racing";
         
         if (brokerLogImpl.findBroker(brokerLicense) != null) {
             String brokerName = brokerLogImpl.findBroker(brokerLicense).getData().getFirstName();
@@ -392,14 +394,60 @@ public class CS310Zimmerman {
                         int kartNum = goKartUsageImpl.returnGoKart(brokerLicense, brokerName);
                         
                         if (kartNum != -1) { //they have a go kart
-                        goKartStackImplRacing.push(kartNum);
+                            goKartStackImplRacing.push(kartNum); //put the kart back in stack
+                            if (!brokerQueueImplTop.isEmpty()) {  //check if queue is empty
+                                Broker topBroker = brokerQueueImplTop.remove(); //if its not, remove the top broker from that queue
+                                int racingGoKartNum = goKartStackImplRacing.pop(); //pop the kart out of stack for this broker
+                                System.out.print("Top broker ");
+                                goKartUsageImpl.assignGoKartToBroker(racingGoKartNum, topBroker.getBrokerLicense(), //assign this go kart to the broker
+                                topBroker.getFirstName(), racing);
+                            }
+                            
                         }
                         else {
                             System.out.println("Broker is not assigned to go-kart");
                         }
                     }
-                    
+                    else { //racing stack is full
+                        int kartNum = goKartUsageImpl.returnGoKart(brokerLicense, brokerName);
+                        
+                        if (kartNum != -1) { //they have a go kart
+                            goKartStackImplBasic.push(kartNum);
+                            if (!brokerQueueImplStandard.isEmpty()) {
+                                Broker standardBroker = brokerQueueImplStandard.remove();
+                                int basicGoKartNum = goKartStackImplBasic.pop();
+                                System.out.print("Standard broker ");
+                                goKartUsageImpl.assignGoKartToBroker(basicGoKartNum, standardBroker.getBrokerLicense(), standardBroker.getFirstName(), basic);
+                            }
+                        }
+                        else {
+                            System.out.println("Broker is not assigned to go-kart");
+                        }
+                    }
                 }
+                else {
+                    if(!goKartStackImplBasic.isFull()) {
+                        int kartNum = goKartUsageImpl.returnGoKart(brokerLicense, brokerName);
+                        
+                        if(kartNum != -1) {
+                            goKartStackImplBasic.push(kartNum);
+                            if (!brokerQueueImplStandard.isEmpty()) {
+                                Broker standardBroker = brokerQueueImplStandard.remove();
+                                int basicGoKartNum = goKartStackImplBasic.pop();
+                                System.out.print("Standard broker ");
+                                goKartUsageImpl.assignGoKartToBroker(basicGoKartNum, standardBroker.getBrokerLicense(), standardBroker.getFirstName(), basic);
+                            }
+                        }
+                        else {
+                            System.out.println("Broker is not assigned to go-kart");
+                        }
+                    }
+                }
+        }
+        else {
+            System.out.printf("Unknown broker %s is not allowed access to go"
+                    + "-karts and cannot return them. Return ignored\n", 
+                    brokerLicense);
         }
         //first check to make sure broker is in the log
         //create broker name and go kart number
