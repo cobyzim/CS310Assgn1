@@ -26,7 +26,13 @@ public class GoKartUsageImpl
         
     }
     
-    public String[] getGoKartUsageArray() {
+    /**
+     * Method used to retrieve the array of go-karts associated with broker
+     * licenses
+     * 
+     * @return - returns the string array
+     */
+    public String[] getGoKartUsageArray() {             //might have to delete this
         return goKartUsage;
     }
  
