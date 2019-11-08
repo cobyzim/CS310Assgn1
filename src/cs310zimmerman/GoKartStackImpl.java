@@ -1,7 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Implementation class used to implement the two stacks of go-karts to be used
+ * by the brokers. The stacks use the same constructor, and the class includes
+ * four other methods including push, pop, isEmpty, and isFull to manage the
+ * stacks.
  */
 package cs310zimmerman;
 
@@ -17,32 +18,25 @@ public class GoKartStackImpl
     final int STACK_SIZE;   // the size of the stack
     
     /**
+     * Constructor method using only one parameter. I chose not to use this 
+     * constructor.
      * 
-     * @param numGoKarts 
+     * @param numGoKarts - passes in number of go-karts
      */
     public GoKartStackImpl(int numGoKarts)
     {
         STACK_SIZE = numGoKarts;    
         goKartStack = new int[STACK_SIZE];
         top = 0;
-        
-        /*
-        GoKartStackImpl goKartBasicStack = new GoKartStackImpl(4);
-        for (int i = goKartBasicStack.STACK_SIZE; i >= 0; i--) {
-            goKartBasicStack.push(i);
-        }
-        
-        GoKartStackImpl goKartRacingStack = new GoKartStackImpl(3);
-        for (int i = goKartRacingStack.STACK_SIZE; i >= 0; i--) {
-            goKartRacingStack.push(i + goKartBasicStack.STACK_SIZE);
-        }
-        */
     }
     
     /**
+     * Constructor method using two parameters, the number of go karts, and the
+     * start go-kart number. I used this constructor to build both the racing
+     * kart stack and the basic kart stack.
      * 
-     * @param numGoKarts
-     * @param startGoKartNum 
+     * @param numGoKarts - passes in number of karts
+     * @param startGoKartNum - passes in the start go-kart number
      */
     public GoKartStackImpl(int numGoKarts, int startGoKartNum) 
     {
@@ -58,8 +52,10 @@ public class GoKartStackImpl
     }  
     
     /**
+     * Method responsible for pushing karts back into the stack after a broker
+     * returns it.
      * 
-     * @param goKartNum 
+     * @param goKartNum - passes in go-kart number
      */
     public void push (int goKartNum) 
     {
@@ -73,8 +69,9 @@ public class GoKartStackImpl
     }
 
     /**
+     * Method that pops a kart off the stack when a broker requests it.
      * 
-     * @return 
+     * @return - returns the number of the go-kart being popped off
      */
     public int pop() 
     {
@@ -91,8 +88,9 @@ public class GoKartStackImpl
     }
 
     /**
+     * Method that checks if the stack is empty
      * 
-     * @return 
+     * @return - returns true if the stack is empty
      */
     public boolean isEmpty() 
     {      
@@ -105,8 +103,9 @@ public class GoKartStackImpl
     }
       
     /**
+     * Method that checks if the stack is full
      * 
-     * @return 
+     * @return - returns true if the stack is full
      */
     public boolean isFull() 
     {   
