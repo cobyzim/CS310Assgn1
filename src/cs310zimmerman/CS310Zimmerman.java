@@ -69,6 +69,15 @@ public class CS310Zimmerman {
         processGoKartInfo();
         
         
+        try {
+            printImpl.printGoKartReport(brokerLogImpl, goKartUsageImpl, 
+                "gokartUsageReport.txt");
+        }
+        catch (IOException exc) {
+            System.out.println("I/O exception occurred w/ go-kart file");
+        }
+        
+        
     }
 
     /**
@@ -407,11 +416,11 @@ public class CS310Zimmerman {
                 totalStockTradeValue(brokerLicense);
                 if (brokerValue >= TOP_BROKER) {
                     
-                    if(!goKartStackImplRacing.isFull()) { 
-                        int kartNum = goKartUsageImpl.
-                            returnGoKart(brokerLicense, brokerName);
+                    //if(!goKartStackImplRacing.isFull()) { //eddie goes into here but never goes into the else. Can't push the kart into racing stack so its never returned
+                    int kartNum = goKartUsageImpl.returnGoKart(brokerLicense, brokerName);
                         
-                        if (kartNum != -1) {
+                    if (kartNum != -1) {
+                        if (kartNum > 3 && kartNum <= 6) { //try and find a way to fix this
                             goKartStackImplRacing.push(kartNum);
                             if (!brokerQueueImplTop.isEmpty()) {
                                 Broker topBroker = brokerQueueImplTop.remove();
@@ -423,16 +432,30 @@ public class CS310Zimmerman {
                                     topBroker.getBrokerLicense(),
                                     topBroker.getFirstName(), racing);
                             }
-                            
                         }
                         else {
-                            System.out.println("Broker is not assigned to "
-                                + "go-kart");
+                            goKartStackImplBasic.push(kartNum);
+                            if (!brokerQueueImplStandard.isEmpty()) {
+                                Broker standardBroker = brokerQueueImplStandard.
+                                remove();
+                                int basicGoKartNum = goKartStackImplBasic.pop();
+                                System.out.print("Standard broker ");
+                                goKartUsageImpl.
+                                    assignGoKartToBroker(basicGoKartNum, 
+                                    standardBroker.getBrokerLicense(), 
+                                    standardBroker.getFirstName(), basic);
+                            }
                         }
+                            
                     }
-                    else { //racing stack is full
-                        int kartNum = goKartUsageImpl.
-                            returnGoKart(brokerLicense, brokerName);
+                    else {
+                        System.out.println("Broker is not assigned to "
+                            + "go-kart");
+                    }
+                    //}
+                    //else { //racing stack is full
+                        /*
+                        int kartNum = goKartUsageImpl.returnGoKart(brokerLicense, brokerName);
                         
                         if (kartNum != -1) {
                             goKartStackImplBasic.push(kartNum);
@@ -451,12 +474,12 @@ public class CS310Zimmerman {
                             System.out.println("Broker is not assigned to"
                                 + " go-kart");
                         }
-                    }
+                    //}
+                        */
                 }
                 else {
                     if(!goKartStackImplBasic.isFull()) {
-                        int kartNum = goKartUsageImpl.
-                            returnGoKart(brokerLicense, brokerName);
+                        int kartNum = goKartUsageImpl.returnGoKart(brokerLicense, brokerName);
                         
                         if(kartNum != -1) {
                             goKartStackImplBasic.push(kartNum);
