@@ -25,6 +25,10 @@ public class GoKartUsageImpl
         goKartUsage = new String[ARRAY_SIZE];
         
     }
+    
+    public String[] getGoKartUsageArray() {
+        return goKartUsage;
+    }
  
     /**
      * Associates a broker with a particular go-kart
