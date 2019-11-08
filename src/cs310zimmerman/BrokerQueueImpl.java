@@ -1,7 +1,7 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Implementation class used to implement the two queues of top and standard
+ * brokers. Includes a constructor and add, remove, and isEmpty methods to 
+ * manage the queues.
  */
 package cs310zimmerman;
 
@@ -11,11 +11,11 @@ package cs310zimmerman;
  */
 public class BrokerQueueImpl 
 {
-    private BrokerNode first;   // reference to the first item in the queue
-    private BrokerNode last;    // reference to the last item in the queue
+    private BrokerNode first;
+    private BrokerNode last;
 
     /**
-     *
+     * Constructor setting values of first and last to null
      */
     public BrokerQueueImpl() 
     {
@@ -24,8 +24,9 @@ public class BrokerQueueImpl
     }
 
     /**
-     *
-     * @return
+     * Method responsible for checking if the queues are empty
+     * 
+     * @return - returns true if the queue is empty
      */
     public boolean isEmpty() 
     {
@@ -37,8 +38,10 @@ public class BrokerQueueImpl
     }
 
     /**
-     *
-     * @param broker
+     * Method used to add a broker object to the queues of brokers waiting for
+     * go-karts.
+     * 
+     * @param broker - passes in a broker object
      */
     public void add(Broker broker) 
     {
@@ -53,8 +56,10 @@ public class BrokerQueueImpl
     }
 
     /**
-     *
-     * @return
+     * Method that removes a broker object from the queues of brokers waiting
+     * for go-karts.
+     * 
+     * @return - returns broker object
      */
     public Broker remove() 
     {
