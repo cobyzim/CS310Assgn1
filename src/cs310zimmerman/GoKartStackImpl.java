@@ -117,10 +117,22 @@ public class GoKartStackImpl
         return full;
     }
     
+    /**
+     * Method used to retrieve the stack size which has been set to the number
+     * of karts in the constructor
+     * 
+     * @return - returns stack size
+     */
     public int getStackSize() {
         return STACK_SIZE;
     }
     
+    /**
+     * Method that is used to retrieve the start number of the go-kart stack
+     * 
+     * @param startNumber - passes in the number the user wants to start at
+     * @return - returns the start number
+     */
     public int getStartGoKartNumber(int startNumber) {
         startGoKartNumber = startNumber - 1;
         
