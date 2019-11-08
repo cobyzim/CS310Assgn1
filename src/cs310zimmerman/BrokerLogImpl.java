@@ -64,7 +64,8 @@ public class BrokerLogImpl {
        
        previous = top;
        
-       if (newNode.getData().getBrokerLicense().compareTo(previous.getData().getBrokerLicense()) < 0) {
+       if (newNode.getData().getBrokerLicense().compareTo(previous.getData().
+        getBrokerLicense()) < 0) {
            top = newNode;
            top.setNext(previous);
            return successful;
@@ -73,7 +74,8 @@ public class BrokerLogImpl {
        current = previous.getNext();
        
        while (current != null) {
-           if (newNode.getData().getBrokerLicense().compareTo(current.getData().getBrokerLicense()) < 0) {
+           if (newNode.getData().getBrokerLicense().compareTo(current.getData().
+            getBrokerLicense()) < 0) {
                newNode.setNext(current);
                previous.setNext(newNode);
                return successful;
@@ -103,7 +105,8 @@ public class BrokerLogImpl {
         BrokerNode previous = null;
         BrokerNode current = top;
         
-        while (current != null && current.getData().getBrokerLicense().compareTo(license) != 0) {
+        while (current != null && current.getData().getBrokerLicense().
+        compareTo(license) != 0) {
             previous = current;
             current = current.getNext();
         }
