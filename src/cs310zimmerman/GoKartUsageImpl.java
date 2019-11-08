@@ -72,9 +72,9 @@ public class GoKartUsageImpl
         
         for (int i = 0; i < ARRAY_SIZE; i++) {
             if (goKartUsage[i].equals(brokerLic)) {
-                goKartUsage[i] = null;
-                kartNum = i;
-                System.out.printf("%s has returned go-kart number %d\n", brokerLic, kartNum);
+                goKartUsage[i] = "";
+                kartNum = i + 1;
+                System.out.printf("%s has returned go-kart number %d\n", brokerName, kartNum);
             }
         }
         return kartNum;
