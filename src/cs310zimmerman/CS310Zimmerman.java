@@ -71,7 +71,7 @@ public class CS310Zimmerman {
         
         try {
             printImpl.printGoKartReport(brokerLogImpl, goKartUsageImpl, 
-                "gokartUsageReport.txt");
+                "output/gokartUsageReport.txt");
         }
         catch (IOException exc) {
             System.out.println("I/O exception occurred w/ go-kart file");
