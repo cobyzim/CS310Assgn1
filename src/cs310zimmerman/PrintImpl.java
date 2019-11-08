@@ -142,8 +142,14 @@ public class PrintImpl {
         
         for (int i = 0; i < goKartUsage.length; i++) {
             if (!goKartUsageImpl.getBrokerLicenseForGoKart(i).equals("")) {
-                printWriter.printf("%s is using go-kart number %d\n", 
-                    goKartUsageImpl.getBrokerLicenseForGoKart(i), i);
+                String brokerLicense = goKartUsageImpl.
+                    getBrokerLicenseForGoKart(i);
+                String brokerFirstName = brokerLogImpl.findBroker(brokerLicense).
+                    getData().getFirstName();
+                String brokerLastName = brokerLogImpl.findBroker(brokerLicense).
+                    getData().getLastName();
+                printWriter.printf("%s %s is using go-kart number %d\n", 
+                    brokerFirstName, brokerLastName, i + 1);
             }
         }
         
@@ -155,5 +161,8 @@ public class PrintImpl {
         //include which broker is using which cart
         //which go karts are available in each stack
         //which brokers are still in the queues
+        
+        fileWriter.close();
+        printWriter.close();
     }
 }
