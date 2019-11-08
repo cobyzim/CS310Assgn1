@@ -12,10 +12,10 @@ package cs310zimmerman;
  */
 public class GoKartStackImpl 
 {
-    int[] goKartStack;      // the array that actually contains the stack data
-    int top;                // the index of the top of the stack data 
-
-    final int STACK_SIZE;   // the size of the stack
+    int[] goKartStack;
+    int top;
+    int startGoKartNumber;
+    final int STACK_SIZE;
     
     /**
      * Constructor method using only one parameter. I chose not to use this 
@@ -115,7 +115,17 @@ public class GoKartStackImpl
         }
         
         return full;
-    }    
+    }
+    
+    public int getStackSize() {
+        return STACK_SIZE;
+    }
+    
+    public int getStartGoKartNumber(int startNumber) {
+        startGoKartNumber = startNumber - 1;
+        
+        return startGoKartNumber;
+    }
 }
     
 
