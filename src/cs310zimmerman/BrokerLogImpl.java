@@ -195,8 +195,7 @@ public class BrokerLogImpl {
     }
     
     /**
-     * Method that checks whether or not a broker is in the log given a certain
-     * license.
+     * Method that finds a broker if it is in the log given a certain license.
      * 
      * @param license - passes in broker license
      * @return - returns the brokerNode or null if it is not in the log
