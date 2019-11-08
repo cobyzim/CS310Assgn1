@@ -1,6 +1,6 @@
 /*
  * Implementation class used to implement the list of brokers in a linked list. 
- * It creates / manages the ordered list of objects with eight methods.
+ * It creates / manages the ordered list of objects with nine methods.
  */
 package cs310zimmerman;
 
@@ -194,6 +194,13 @@ public class BrokerLogImpl {
         }
     }
     
+    /**
+     * Method that checks whether or not a broker is in the log given a certain
+     * license.
+     * 
+     * @param license - passes in broker license
+     * @return - returns the brokerNode or null if it is not in the log
+     */
     public BrokerNode findBroker(String license) {
         BrokerNode brokerNode = null;
         for (BrokerNode seek = top; seek != null; seek = seek.getNext()) {
