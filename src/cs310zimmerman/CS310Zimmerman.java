@@ -310,7 +310,7 @@ public class CS310Zimmerman {
                     processGoKartRequest(arrOfStr);
                 }
                 if (arrOfStr[0].equals("RETURN")) {
-                    //do something
+                    processGoKartReturn(arrOfStr);
                 }
             }
         }
@@ -346,7 +346,7 @@ public class CS310Zimmerman {
                     else {
                         brokerQueueImplTop.add(brokerLogImpl.findBroker(brokerLicense).getData()); //try and make this a variable so its not so large
                         String firstName = brokerLogImpl.findBroker(brokerLicense).getData().getFirstName();
-                        System.out.printf("%s waiting in top broker queue", firstName);
+                        System.out.printf("%s waiting in top broker queue\n", firstName);
                         //place in top broker queue
                     }
                 }
@@ -377,5 +377,34 @@ public class CS310Zimmerman {
         //provide auidit trail w/ each request/return
         
         //when checking to see whether broker is in log, make sure to check if null
+    }
+    
+    public static void processGoKartReturn(String[] line) {
+        String brokerLicense = line[1];
+        final double TOP_BROKER = 5000000.00;
+        
+        if (brokerLogImpl.findBroker(brokerLicense) != null) {
+            String brokerName = brokerLogImpl.findBroker(brokerLicense).getData().getFirstName();
+            double brokerValue = stockTradeLogImpl.totalStockTradeValue(brokerLicense);
+                if (brokerValue >= TOP_BROKER) {
+                    
+                    if(!goKartStackImplRacing.isFull()) {
+                        int kartNum = goKartUsageImpl.returnGoKart(brokerLicense, brokerName);
+                        
+                        if (kartNum != -1) { //they have a go kart
+                        goKartStackImplRacing.push(kartNum);
+                        }
+                        else {
+                            System.out.println("Broker is not assigned to go-kart");
+                        }
+                    }
+                    
+                }
+        }
+        //first check to make sure broker is in the log
+        //create broker name and go kart number
+        //if number returned is -1, print something out cuz doesn't have go kart
+        //else, check which stack its in and return the kart.
+        //update the queues
     }
 }
