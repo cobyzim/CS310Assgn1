@@ -3,6 +3,9 @@
  * that shows the broker objects that have stocktrades. It also shows the number
  * of stock trade listings for each broker, the total value of the stock trade
  * listings for each broker, and both of the latter for all of the brokers.
+ * Moreover, it includes the method that prints the go-kart report which
+ * includes which brokers are using which karts, which karts are still 
+ * available, and which brokers are in the queue.
  */
 package cs310zimmerman;
 
@@ -66,9 +69,9 @@ public class PrintImpl {
             if (stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense) >= 0)
             {
               
-                    printWriter.printf("\n");
-                    printWriter.printf("%s  %s,  %s\n", brokerLicense, 
-                        lastName, firstName);
+                printWriter.printf("\n");
+                printWriter.printf("%s  %s,  %s\n", brokerLicense, 
+                    lastName, firstName);
             }
 
             Iterator<StockTrade> iter = stockTradeList.iterator();
@@ -124,8 +127,7 @@ public class PrintImpl {
         printWriter.close();
     }
     
-    public void printGoKartReport(GoKartStackImpl goKartStackImpl, 
-            BrokerQueueImpl brokerQueueImpl,BrokerLogImpl brokerLogImpl, 
+    public void printGoKartReport(BrokerLogImpl brokerLogImpl, 
             GoKartUsageImpl goKartUsageImpl, String fileName) throws IOException
     {
         
@@ -133,9 +135,23 @@ public class PrintImpl {
         FileWriter fileWriter = new FileWriter(OUTPUT_FILENAME);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         
-        printWriter.printf("GO-KART USAGE REPORT");
+        printWriter.printf("GO-KART USAGE REPORT\n");
+        
+        goKartUsage = goKartUsageImpl.getGoKartUsageArray();
         
         
+        for (int i = 0; i < goKartUsage.length; i++) {
+            if (!goKartUsageImpl.getBrokerLicenseForGoKart(i).equals("")) {
+                printWriter.printf("%s is using go-kart number %d\n", 
+                    goKartUsageImpl.getBrokerLicenseForGoKart(i), i);
+            }
+        }
+        
+        printWriter.printf("\nAVAILABLE GO-KARTS\n");
+        printWriter.printf("\tBASIC GO-KARTS\n");
+        
+        //GoKartStackImpl goKartStackImpl, 
+            //BrokerQueueImpl brokerQueueImpl,
         //include which broker is using which cart
         //which go karts are available in each stack
         //which brokers are still in the queues
