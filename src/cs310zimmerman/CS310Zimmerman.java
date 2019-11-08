@@ -5,7 +5,15 @@
  * also adding or deleting Broker/Stock Trade objects to lists based on the 
  * broker license and stock symbol uniqueness. The broker list contains broker 
  * objects in an ordered linked list while the stock trade list contains stock
- * trade objects in an unordered linked list.
+ * trade objects in an unordered linked list. The program also handles the
+ * broker go-kart event. It places seven go-karts into two different stacks (one
+ * for top brokers who are brokers with $5000000 or more in their portfolio and
+ * one for standard brokers who have less than that). Top brokers have access to
+ * racing karts while standard brokers do not. If all the karts are being used,
+ * then the broker requesting a kart is placed into one of the two queues (one
+ * for top brokers and the other for standard brokers). As soon as a kart is
+ * available, the program assigns this kart to the brokers in the top queue
+ * first, and then the bottom queue.
  */
 package cs310zimmerman;
 
@@ -30,7 +38,8 @@ public class CS310Zimmerman {
     static GoKartStackImpl goKartStackImplRacing = new GoKartStackImpl(3, 7);
 
     /**
-     * Main method that calls the processFile method and the printReport method
+     * Main method that calls the processFile method, the printReport method, 
+     * and the processGoKartInfo method
      *
      * @param args the command line arguments
      * @throws java.io.FileNotFoundException - signals that file denoted by
@@ -54,14 +63,7 @@ public class CS310Zimmerman {
         System.out.println("Report is complete -- located in file: "
                 + "output/assn3cleanReport.txt");
         
-        try {
-            printImpl.printReport(brokerLogImpl, stockTradeLogImpl, 
-                    "output/assn3cleanReport.txt");
-        } catch (IOException ex) {
-            System.out.println("I/O exception occurred");
-        }
-        
-        //createReport();
+        createReport();
         
         System.out.println();
         processGoKartInfo();
@@ -193,7 +195,7 @@ public class CS310Zimmerman {
         
         boolean brokerIsUnique = brokerLogImpl.isLicenseUnique(license);
         boolean stockSymbolIsUnique = 
-                stockTradeLogImpl.isStockSymbolUnique(stockSymbol);
+            stockTradeLogImpl.isStockSymbolUnique(stockSymbol);
         if (!brokerIsUnique && stockSymbolIsUnique) {
         
             stockTradeLogImpl.addStockTrade(filledStockTrade);
@@ -273,16 +275,26 @@ public class CS310Zimmerman {
         
     }
     
-    /*
+    /**
+     * Method responsible for generating the report using the printImpl class
+     */
     public static void createReport() {
         try {
-            printImpl.printReport(brokerLogImpl, stockTradeLogImpl, );
+            printImpl.printReport(brokerLogImpl, stockTradeLogImpl, 
+                    "output/assn3cleanReport.txt");
         } catch (IOException ex) {
             System.out.println("I/O exception occurred");
         }
     }
-    */
-    
+
+    /**
+     * Method that reads through the go-kart input file and parses through each
+     * line. Calls processGoKartRequest and processGoKartReturn methods based on
+     * the first element in each line.
+     * 
+     * @throws FileNotFoundException - signals that file denoted by
+     * specific pathname has failed to open
+     */
     public static void processGoKartInfo() throws FileNotFoundException {
         final String INPUT_FILENAME = "input/gokartInfo3.txt";
 
@@ -307,6 +319,14 @@ public class CS310Zimmerman {
         }
     }
     
+    /**
+     * Method used to handle broker requests for go-karts. It determines who
+     * gets what kart and in what order based on the value of their portfolios
+     * and which karts are already being used. If all the karts are being used,
+     * brokers are placed into queues based on their total stock values.
+     * 
+     * @param line - passes in array of strings
+     */
     public static void processGoKartRequest(String[] line) {
         final double TOP_BROKER = 5000000.00;
         String basic = "basic";
@@ -367,6 +387,13 @@ public class CS310Zimmerman {
         }
     }
     
+    /**
+     * Method responsible for handling Brokers that are returning a go-kart. 
+     * After a broker returns the kart, it checks the queues and assigns the 
+     * returned kart to the first broker in the correct queue.
+     * 
+     * @param line - passes in array of strings
+     */
     public static void processGoKartReturn(String[] line) {
         String brokerLicense = line[1];
         final double TOP_BROKER = 5000000.00;
@@ -456,10 +483,5 @@ public class CS310Zimmerman {
                     + "-karts and cannot return them. Return ignored\n", 
                     brokerLicense);
         }
-        //first check to make sure broker is in the log
-        //create broker name and go kart number
-        //if number returned is -1, print something out cuz doesn't have go kart
-        //else, check which stack its in and return the kart.
-        //update the queues
     }
 }
