@@ -128,7 +128,9 @@ public class PrintImpl {
     }
     
     public void printGoKartReport(BrokerLogImpl brokerLogImpl, 
-            GoKartUsageImpl goKartUsageImpl, String fileName) throws IOException
+            GoKartUsageImpl goKartUsageImpl, BrokerQueueImpl 
+            brokerQueueImplStandard, BrokerQueueImpl brokerQueueImplTop, 
+            String fileName) throws IOException
     {
         
         final String OUTPUT_FILENAME = fileName;
@@ -155,6 +157,37 @@ public class PrintImpl {
         
         printWriter.printf("\nAVAILABLE GO-KARTS\n");
         printWriter.printf("\tBASIC GO-KARTS\n");
+        
+        boolean allBasicKartsTaken = false;
+        for (int i = 0; i < goKartUsage.length && i < 4; i++) {
+            if (goKartUsageImpl.getBrokerLicenseForGoKart(i).equals("")) {
+                allBasicKartsTaken = true;
+                    printWriter.printf("\t\tBasic go-kart number %d is "
+                            + "available\n", i + 1);
+            }  
+        }
+        if (!allBasicKartsTaken) {
+            printWriter.printf("\t\tNo basic go-karts are available\n");
+        }
+        
+        printWriter.printf("\n\tRACING GO-KARTS\n");
+        
+        boolean allRacingKartsTaken = false;
+        for (int i = 0; i < goKartUsage.length && i > 4; i++) {
+            if (goKartUsageImpl.getBrokerLicenseForGoKart(i).equals("")) {
+                allRacingKartsTaken = true;
+                printWriter.printf("\t\tRacing go-kart number %d is "
+                        + "available\n", i + 1);
+            }
+        }
+        if (!allRacingKartsTaken) {
+            printWriter.printf("\t\tNo racing go-karts are available\n");
+        }
+
+        
+        
+        
+        
         
         //GoKartStackImpl goKartStackImpl, 
             //BrokerQueueImpl brokerQueueImpl,
