@@ -58,88 +58,21 @@ public class BrokerLogImpl {
      * not
      */
     public boolean addBroker(Broker brokerObj) {
-       boolean successful = true;
-       boolean brokerAdded = false;
-       BrokerNode previous = null;
-       BrokerNode current = null;
-       BrokerNode newNode = new BrokerNode(brokerObj);
-       int compareToResult;
+       boolean isAdded = false;
        
-       if (isEmpty()) {
-           top = newNode;
-           return successful;
+       if (numBrokersInTable >= BROKER_TABLE_SIZE) {
+           return false;
+       }
+       int hashValue = brokerObj.hashCode();
+       
+       if (findBroker(hashValue) == null) {
+           int compressedHashValue = hashValue % BROKER_TABLE_SIZE;
+           brokerHashTable[compressedHashValue] = brokerObj;
+           numBrokersInTable++;
+           isAdded = true;
        }
        
-       previous = top;
-       
-       if (newNode.getData().getBrokerLicense().compareTo(previous.getData().
-        getBrokerLicense()) < 0) {
-           top = newNode;
-           top.setNext(previous);
-           return successful;
-       }
-       
-       current = previous.getNext();
-       
-       while (current != null) {
-           if (newNode.getData().getBrokerLicense().compareTo(current.getData().
-            getBrokerLicense()) < 0) {
-               newNode.setNext(current);
-               previous.setNext(newNode);
-               return successful;
-           }
-           else {
-               previous = current;
-               current = previous.getNext();
-           }
-       }
-       
-       previous.setNext(newNode);
-       
-       return successful;
-    }
-    
-    /**
-     * Method used to remove a broker object from the list of brokers if the
-     * desired license is found.
-     * 
-     * @param license - passes in a broker license
-     * @return - returns true or false based on if a broker object is removed or
-     * not
-     */
-    
-    public boolean removeBroker(String license) {
-        boolean successful = false;
-        BrokerNode previous = null;
-        BrokerNode current = top;
-        
-        while (current != null && current.getData().getBrokerLicense().
-        compareTo(license) != 0) {
-            previous = current;
-            current = current.getNext();
-        }
-        
-        if (top.getData().getBrokerLicense().compareTo(license) == 0) {
-            top = top.getNext();
-            successful = true;
-        }
-        
-        else if (current != null && current.getNext() != null) {
-            previous.setNext(current.getNext());
-            successful = true;
-        }
-        
-        else if (current != null && current.getNext() == null) {
-            previous.setNext(current.getNext());
-            successful = true;
-        }
-        
-        else if (current == null) {
-            successful = false;
-        }
-        
-        
-        return successful;
+       return isAdded;
     }
     
     /**
@@ -195,7 +128,7 @@ public class BrokerLogImpl {
                         previous.getData().getBrokerLicense() + " -- Deleting "
                         + "broker and stockTrades for that broker from logs");
                 //current = current.getNext();
-                removeBroker(previous.getData().getBrokerLicense());
+                //removeBroker(previous.getData().getBrokerLicense());
                 stockTradeLogImpl.removeStockTradeByBroker(
                         previous.getData().getBrokerLicense());
             }
