@@ -11,6 +11,14 @@ package cs310zimmerman;
 public class BrokerLogImpl {
 
     private BrokerNode top;
+    private Broker[] brokerHashTable;
+    private int numBrokersInTable;
+    private final int BROKER_TABLE_SIZE = 19;
+    
+    public BrokerLogImpl() {
+        brokerHashTable = new Broker[BROKER_TABLE_SIZE];
+        numBrokersInTable = 0;
+    }
     
     /**
      * Method to retrieve the head (reference to the first node)
@@ -200,7 +208,9 @@ public class BrokerLogImpl {
      * @param license - passes in broker license
      * @return - returns the brokerNode or null if it is not in the log
      */
-    public BrokerNode findBroker(String license) {
+    public Broker findBroker(int brokerHash) {
+    
+    /*
         BrokerNode brokerNode = null;
         for (BrokerNode seek = top; seek != null; seek = seek.getNext()) {
             if (seek.getData().getBrokerLicense().equals(license)) {
@@ -209,6 +219,25 @@ public class BrokerLogImpl {
         }
         
     return brokerNode;
+    */
+        
+        /*
+        String str = license;
+        String newString = str.substring(3);
+        int hashNumber = Integer.parseInt(newString);
+        */
+        
+        Broker foundBroker = null;
+        
+        int brokerCompressedHash = brokerHash % BROKER_TABLE_SIZE;
+        if (brokerHashTable[brokerCompressedHash] != null) {
+            foundBroker = brokerHashTable[brokerCompressedHash];
+        }
+        
+        return foundBroker;
+        
+        
     }
+
 }
 
