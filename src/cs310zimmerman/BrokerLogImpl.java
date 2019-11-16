@@ -69,6 +69,7 @@ public class BrokerLogImpl {
            int compressedHashValue = hashValue % BROKER_TABLE_SIZE;
            brokerHashTable[compressedHashValue] = brokerObj;
            numBrokersInTable++;
+           System.out.printf("ADDED: Broker with license %s\n", brokerObj.getBrokerLicense());
            isAdded = true;
        }
        
