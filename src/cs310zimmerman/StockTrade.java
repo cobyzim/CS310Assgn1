@@ -138,8 +138,14 @@ public class StockTrade {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        return hash;
+        int hash = 0;
+        for (int i = 0; i < stockSymbol.length(); i++) {
+            char c = stockSymbol.charAt(i);
+            int unicodeVal = Character.getNumericValue(c);
+            hash = hash + unicodeVal;
+        }
+        
+    return hash;
     }
 
     /**
