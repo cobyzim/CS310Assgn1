@@ -60,26 +60,31 @@ public class BrokerLogImpl {
     public boolean addBroker(Broker brokerObj) {
         boolean isAdded = false;
        
-        if (numBrokersInTable >= BROKER_TABLE_SIZE) {
-            return false;
-        }
+        //if (numBrokersInTable >= BROKER_TABLE_SIZE) {
+        //    return false;
+        //}
         int hashValue = brokerObj.hashCode();
         int compressedHashValue = hashValue % BROKER_TABLE_SIZE;
        
         while (!isAdded) {
             
-            if (findBroker(hashValue) == null) {
-                if (brokerHashTable[compressedHashValue] == null) {  
-                    brokerHashTable[compressedHashValue] = brokerObj;
-                    numBrokersInTable++;
-                    isAdded = true;
-                    System.out.printf("ADDED: Broker with license %s\n", brokerObj.getBrokerLicense());
+            if (numBrokersInTable < BROKER_TABLE_SIZE) {
+                if (findBroker(hashValue) == null) {
+                  if (brokerHashTable[compressedHashValue] == null) {  
+                        brokerHashTable[compressedHashValue] = brokerObj;
+                        numBrokersInTable++;
+                        isAdded = true;
+                        System.out.printf("ADDED: Broker with license %s\n", brokerObj.getBrokerLicense());
+                    }
+                    else {
+                        compressedHashValue++;
+                        if (compressedHashValue > brokerHashTable.length) {
+                            compressedHashValue = 0;
+                        }   
+                    }
                 }
                 else {
-                    compressedHashValue++;
-                    if (compressedHashValue > brokerHashTable.length) {
-                        compressedHashValue = 0;
-                    }   
+                    return false;
                 }
             }
             else {
