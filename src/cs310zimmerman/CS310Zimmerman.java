@@ -169,63 +169,8 @@ public class CS310Zimmerman {
      */
     public static void addStockTrade(String[] line) {
         StockTrade filledStockTrade = new StockTrade(line);
-        boolean hasStockErrors = false;
-
-        if (!filledStockTrade.isValidStockSymbol()) {
-            System.out.println(filledStockTrade.toString());
-            System.out.println("\tERROR: StockTrade with Stock symbol "
-                    + filledStockTrade.getStockSymbol() + " has an invalid "
-                    + "Stock symbol.");
-            hasStockErrors = true;
-        }
-        if (!filledStockTrade.isValidPrice()) {
-            System.out.println(filledStockTrade.toString());
-            System.out.println("\tERROR: StockTrade with Stock symbol "
-                    + filledStockTrade.getStockSymbol() + " has invalid price "
-                    + filledStockTrade.getPricePerShare());
-            hasStockErrors = true;
-        }
-        if (!filledStockTrade.isValidWholeShares()) {
-            System.out.println(filledStockTrade.toString());
-            System.out.println("\tERROR: StockTrade with Stock symbol "
-                    + filledStockTrade.getStockSymbol() + " has invalid "
-                    + "number of shares " + filledStockTrade.getWholeShares());
-            hasStockErrors = true;
-        }
-
-        String license = line[5];
-        String stockSymbol = line[2];
         
-        boolean brokerIsUnique = brokerLogImpl.isLicenseUnique(license);
-        boolean stockSymbolIsUnique = 
-                stockTradeLogImpl.isStockSymbolUnique(stockSymbol);
-        if (!brokerIsUnique && stockSymbolIsUnique) {
-        
-            stockTradeLogImpl.addStockTrade(filledStockTrade);
-            
-            if (hasStockErrors) {
-                System.out.println("ADDED: StockTrade with Stock symbol " + 
-                        stockSymbol + " listed by Broker " + line[5] + ", "
-                        + "regardless of data errors.");
-            }
-            else {
-                System.out.println("ADDED: StockTrade with Stock symbol "
-                    + stockSymbol + " listed by Broker " + license);
-            }
-            
-        } 
-        else if (brokerIsUnique && stockSymbolIsUnique) {
-            System.out.println("ADD ERROR: StockTrade with Stock Symbol "
-                    + stockSymbol + " has Broker with license " + license
-                    + ", but there is no such Broker license in the Broker"
-                    + " log. StockTrade " + stockSymbol + " will NOT be added to "
-                    + "StockTrade log.");
-        } 
-        else {
-            System.out.println("ADD ERROR: StockTrade has Stock Symbol "
-                    + "that already exists: " + stockSymbol + "It will NOT "
-                    + "be added to StockTrade log.");
-        }
+        stockTradeLogImpl.addStockTrade(filledStockTrade);
         
     }
     
