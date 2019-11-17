@@ -150,8 +150,8 @@ public class Broker {
 
     @Override
     public int hashCode() {
-        String str = brokerLicense;
-        String brokerNumber = brokerLicense.substring(3);
+        String license = this.brokerLicense;
+        String brokerNumber = license.substring(3);
         int hash = Integer.parseInt(brokerNumber);
         
         return hash;
