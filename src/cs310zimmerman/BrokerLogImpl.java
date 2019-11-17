@@ -68,31 +68,27 @@ public class BrokerLogImpl {
        
         while (!isAdded) {
             
-            if (numBrokersInTable < BROKER_TABLE_SIZE) {
-                if (findBroker(hashValue) == null) {
-                  if (brokerHashTable[compressedHashValue] == null) {  
-                        brokerHashTable[compressedHashValue] = brokerObj;
-                        numBrokersInTable++;
-                        isAdded = true;
-                        System.out.printf("ADDED: Broker with license %s\n", brokerObj.getBrokerLicense());
-                    }
-                    else {
-                        compressedHashValue++;
-                        if (compressedHashValue > brokerHashTable.length) {
-                            compressedHashValue = 0;
-                        }   
-                    }
+            if (numBrokersInTable <= BROKER_TABLE_SIZE) {
+                if (findBroker(compressedHashValue) == null) {
+                    //if (brokerHashTable[compressedHashValue] == null) {  
+                    brokerHashTable[compressedHashValue] = brokerObj;
+                    numBrokersInTable++;
+                    isAdded = true;
+                    System.out.printf("ADDED: Broker with license %s\n", brokerObj.getBrokerLicense());
                 }
+                    
                 else {
-                    return false;
+                    compressedHashValue++;
+                    if (compressedHashValue > brokerHashTable.length) {
+                        compressedHashValue = 0;
+                    }   
                 }
             }
             else {
                 return false;
             }
-        }
-       
-    return isAdded;
+        }      
+        return isAdded;
     }
     
     /**
@@ -161,7 +157,7 @@ public class BrokerLogImpl {
      * @param license - passes in broker license
      * @return - returns the brokerNode or null if it is not in the log
      */
-    public Broker findBroker(int brokerHash) {
+    public Broker findBroker(int brokerCompressedHash) {
     
     /*
         BrokerNode brokerNode = null;
@@ -182,7 +178,7 @@ public class BrokerLogImpl {
         
         Broker foundBroker = null;
         
-        int brokerCompressedHash = brokerHash % BROKER_TABLE_SIZE;
+        //int brokerCompressedHash = brokerHash % BROKER_TABLE_SIZE;
         if (brokerHashTable[brokerCompressedHash] != null) {
             foundBroker = brokerHashTable[brokerCompressedHash];
         }
