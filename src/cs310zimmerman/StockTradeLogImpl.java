@@ -16,6 +16,22 @@ public class StockTradeLogImpl {
     private int numStockTrades = 0;
     final int MAXIMUM_NUM_OBJECTS = 1000;
     LinkedList<StockTrade> stockTradeList = new LinkedList<StockTrade>();
+    
+    private int MAX_SIZE;
+    private int currSize;
+    private int numIndex;
+    private StockTradeNode[] stockTradeHashSet;
+    
+    public StockTradeLogImpl() {
+        MAX_SIZE = 17;
+        currSize = 0;
+        numIndex = 0;
+        stockTradeHashSet = new StockTradeNode[MAX_SIZE];
+        for (int index = 0; index < stockTradeHashSet.length; index++) {
+            stockTradeHashSet[index] = null;
+        }
+    }
+    
 
     /**
      * Method used to return the contents of the list of stock trades.
@@ -45,6 +61,7 @@ public class StockTradeLogImpl {
      * added to the list.
      */
     public boolean addStockTrade(StockTrade tradeObj) {
+        /*
         boolean successful = false;
         
         if (numStockTrades < MAXIMUM_NUM_OBJECTS) {
@@ -54,6 +71,49 @@ public class StockTradeLogImpl {
         }
         
         return successful;
+        */
+        boolean isAdded = false;
+        
+        StockTrade stockTrade = (StockTrade)tradeObj;
+        StockTradeNode newNode = new StockTradeNode(stockTrade);
+        int hashCode = tradeObj.hashCode();
+        int compressedHashCode = hashCode % MAX_SIZE;
+        
+        while (!isAdded) {
+            
+            if (currSize < MAX_SIZE) {
+                if (stockTradeHashSet[compressedHashCode] == null) {
+                    currSize++;
+                    numIndex++;
+                    stockTradeHashSet[compressedHashCode] = newNode;
+                    isAdded = true;
+                    System.out.printf("ADDED: StockTrade with stock symbol %s "
+                        + "listed by Broker %s\n", tradeObj.getStockSymbol(), 
+                        tradeObj.getBrokerLicense());
+                }
+                else {
+                    for (StockTradeNode currNode = 
+                        stockTradeHashSet[compressedHashCode]; 
+                        currNode != null; currNode = currNode.getNext()) {
+                        if (currNode.getNext() == null) {
+                            currNode.setNext(newNode);
+                            numIndex++;
+                            isAdded = true;
+                            System.out.printf("ADDED: StockTrade with stock "
+                                + "symbol %s listed by Broker %s\n", 
+                                tradeObj.getStockSymbol(), 
+                                tradeObj.getBrokerLicense());
+                        }
+                        
+                    }
+                }
+            }
+            else {
+                return false;
+            }
+        }
+    
+    return isAdded;
     }
     
     /**
