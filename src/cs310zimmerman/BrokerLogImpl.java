@@ -59,16 +59,13 @@ public class BrokerLogImpl {
      */
     public boolean addBroker(Broker brokerObj) {
         boolean isAdded = false;
-       
-        //if (numBrokersInTable >= BROKER_TABLE_SIZE) {
-        //    return false;
-        //}
+
         int hashValue = brokerObj.hashCode();
         int compressedHashValue = hashValue % BROKER_TABLE_SIZE;
        
         while (!isAdded) {
             
-            if (numBrokersInTable <= BROKER_TABLE_SIZE) {
+            if (numBrokersInTable < BROKER_TABLE_SIZE) {
                 if (findBroker(compressedHashValue) == null) {
                     //if (brokerHashTable[compressedHashValue] == null) {  
                     brokerHashTable[compressedHashValue] = brokerObj;
@@ -79,7 +76,7 @@ public class BrokerLogImpl {
                     
                 else {
                     compressedHashValue++;
-                    if (compressedHashValue > brokerHashTable.length) {
+                    if (compressedHashValue == brokerHashTable.length) {
                         compressedHashValue = 0;
                     }   
                 }
