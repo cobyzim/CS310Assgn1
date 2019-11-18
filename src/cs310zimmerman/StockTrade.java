@@ -141,7 +141,8 @@ public class StockTrade {
         int hash = 0;
         for (int i = 0; i < stockSymbol.length(); i++) {
             char c = stockSymbol.charAt(i);
-            int unicodeVal = Character.getNumericValue(c);
+            int unicodeVal = (int) c;
+            //int unicodeVal = Character.getNumericValue(c);
             hash = hash + unicodeVal;
         }
         
