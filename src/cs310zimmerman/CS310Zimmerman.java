@@ -35,6 +35,9 @@ public class CS310Zimmerman {
 
         processFile();
         System.out.println();
+        brokerLogImpl.displayHash();
+        stockTradeLogImpl.displayHash();
+        
         brokerLogImpl.traverse();
         stockTradeLogImpl.traverseDisplay();
         System.out.println();
@@ -44,6 +47,7 @@ public class CS310Zimmerman {
         System.out.println("Creating report...");
         System.out.println("Report is complete -- located in file: output/assn3initialReport.txt");
         
+        /*
         try {
             printImpl.printReport(brokerLogImpl, stockTradeLogImpl, "output/assn3initialReport.txt");
         } catch (IOException ex) {
@@ -65,6 +69,7 @@ public class CS310Zimmerman {
         } catch (IOException ex) {
             System.out.println("I/O exception occurred");
         }
+        */
         
         //createReport();
 
@@ -99,7 +104,7 @@ public class CS310Zimmerman {
                 }
                 if (arrOfStr[0].equals("TRADE")) {
                     if (arrOfStr[1].equals("BUY")) {
-                        //addStockTrade(arrOfStr);
+                        addStockTrade(arrOfStr);
                     }
                     if (arrOfStr[1].equals("SELL")) {
                         //deleteStockTrade(arrOfStr);
