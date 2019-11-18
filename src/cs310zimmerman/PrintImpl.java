@@ -1,23 +1,20 @@
 /*
  * Implementation Class containing a printReport method to generate a report
- * that shows the broker objects that have stocktrades. It also shows the number
- * of stock trade listings for each broker, the total value of the stock trade
- * listings for each broker, and both of the latter for all of the brokers.
+ * that shows the stockTrades associated with brokers and whether or not these
+ * stockTrades are taxable.
  */
 package cs310zimmerman;
 
 import java.util.LinkedList;
 import java.util.Iterator;
 import java.io.*;
+import java.util.Scanner;
 /**
  *
- * @author Coby
+ * @author Coby Zimmerman
  */
 
 public class PrintImpl {
-    private BrokerNode top;
-    private LinkedList<StockTrade> stockTradeList;
-    private  int numStockTrades;
     
     /**
      * Method used to generate the report using the broker and stock trade
@@ -29,93 +26,53 @@ public class PrintImpl {
      * generated
      * @throws IOException - throws exception if I/O operations fail or are
      * interrupted.
+     * @throws FileNotFoundException - signals that file denoted by
+     * specific pathname has failed to open
      */
     public void printReport(BrokerLogImpl brokerLogImpl, 
-            StockTradeLogImpl stockTradeLogImpl, String fileName) throws IOException {
+            StockTradeLogImpl stockTradeLogImpl, String fileName) throws IOException, FileNotFoundException {
         final String OUTPUT_FILENAME = fileName;
-       // top = brokerLogImpl.getTop();
-        //stockTradeList = stockTradeLogImpl.getStockTradeList();
-        //numStockTrades = stockTradeLogImpl.getNumStockTrades();
-
-        /*
-        String brokerLicense;
-        String firstName;
-        String lastName;
-        String dept;
-        double commissionRate;
-        String tradeLicense;
-        String stockSymbol;
-        double pricePerShare;
-        int wholeShares;
-        String taxable;
-        int numListings;
-        double totalListValue;
+        final String INPUT_FILENAME = "input/BrokerRequests.txt";
+        
+        File text = new File(INPUT_FILENAME);
+        Scanner scnr = new Scanner(text);
         
         FileWriter fileWriter = new FileWriter(OUTPUT_FILENAME);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         
-        BrokerNode current = top;
-        while (current != null) {
-            brokerLicense = current.getData().getBrokerLicense();
-            firstName = current.getData().getFirstName();
-            lastName = current.getData().getLastName();
-            dept = current.getData().getDept();
-            commissionRate = current.getData().getCommissionRate();
+        while (scnr.hasNext()) {
+            String str = scnr.nextLine();
+            String[] arrOfStr = str.split(" ");
             
-            if (stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense) >= 0) {
-              
-                    printWriter.printf("\n");
-                    printWriter.printf("%s  %s,  %s\n", brokerLicense, 
-                        lastName, firstName);
-            }
-
-            Iterator<StockTrade> iter = stockTradeList.iterator();
-            while (iter.hasNext()) {
-                StockTrade currentNode = iter.next();
-                tradeLicense = currentNode.getBrokerLicense();
-                stockSymbol = currentNode.getStockSymbol();
-                pricePerShare = currentNode.getPricePerShare();
-                wholeShares = currentNode.getWholeShares();
-                if (currentNode.isTaxable()) {
-                    taxable = "YES";
-                }
-                else {
-                    taxable = "NO";
-                }
-                numListings = numStockTrades;
-                totalListValue = 
-                       stockTradeLogImpl.totalStockTradeValue(brokerLicense);
+            if (brokerLogImpl.findBroker(arrOfStr[0]) != null) {
+                String brokerFirstName = brokerLogImpl.findBroker(arrOfStr[0]).getFirstName();
+                String brokerLastName = brokerLogImpl.findBroker(arrOfStr[0]).getLastName();
                 
-                if (brokerLicense.equals(tradeLicense)) {
-
-                    printWriter.printf("\n\t%s \t%.2f \t%d   %s\n", stockSymbol, 
-                            pricePerShare, wholeShares, taxable);
+                printWriter.printf("Broker %s, %s %s\n", arrOfStr[0], brokerFirstName, brokerLastName);
+                
+                for (int i = 1; i < arrOfStr.length; i++) {
+                    
+                    if (stockTradeLogImpl.findStockTrade(arrOfStr[i]) != null) {
+                        printWriter.printf("\tStockTrade %s is ", arrOfStr[i]);
+                        
+                        if (stockTradeLogImpl.findStockTrade(arrOfStr[i]).getData().isTaxable()) {
+                            printWriter.printf("TAXABLE\n");
+                        }
+                        else {
+                            printWriter.printf("NOT TAXABLE\n");
+                        }
+                    }
+                    else {
+                        printWriter.printf("\tStockTrade %s does not exist\n", arrOfStr[i]);
+                    }
                 }
-            }
-            
-            if (stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense) > 0) {
-            printWriter.printf("\n\tNumber of StockTrade Listings for "
-                            + "Broker: %d", stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense));
-                                                                                
-                    printWriter.printf("\n\tTotal sales value of "
-                            + "StockTradeListings" + " for Broker %s: $ %.2f\n",
-                          brokerLicense, stockTradeLogImpl.totalStockTradeValue(brokerLicense));
             }
             else {
-                printWriter.printf("\n\tNumber of StockTradeListings for Broker : 0");
-                printWriter.printf("\n\tTotal sales value of "
-                        + "StockTradeListings for Broker: $0.00\n");
+                printWriter.printf("Broker %s does not exist", arrOfStr[0]);
             }
-            current = current.getNext();
         }
-        printWriter.printf("\nTotal Number of StockTrade Listings for ALL "
-                + "Brokers = %d\n", stockTradeLogImpl.getNumStockTrades());
-        
-        printWriter.printf("Total sales value of StockTrade Listings for ALL "
-                + "Brokers = $ %.2f", stockTradeLogImpl.totalStockTradeValue());
-        
         fileWriter.close();
         printWriter.close();
-        */    
+       
     }
 }
