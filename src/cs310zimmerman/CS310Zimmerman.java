@@ -52,8 +52,8 @@ public class CS310Zimmerman {
         
         System.out.println();
         System.out.println("Cleaning up broker and stockTrade logs...");
-        brokerLogImpl.cleanList(stockTradeLogImpl);
-        stockTradeLogImpl.cleanList();
+        //brokerLogImpl.cleanList(stockTradeLogImpl);
+        //stockTradeLogImpl.cleanList();
         System.out.println();
         System.out.println("Creating clean report...");
         System.out.println();
@@ -99,7 +99,7 @@ public class CS310Zimmerman {
                 }
                 if (arrOfStr[0].equals("TRADE")) {
                     if (arrOfStr[1].equals("BUY")) {
-                        addStockTrade(arrOfStr);
+                        //addStockTrade(arrOfStr);
                     }
                     if (arrOfStr[1].equals("SELL")) {
                         //deleteStockTrade(arrOfStr);
