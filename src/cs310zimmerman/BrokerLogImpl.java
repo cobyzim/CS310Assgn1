@@ -101,14 +101,14 @@ public class BrokerLogImpl {
     }
 
     public void displayHash() {
-        System.out.println("Broker Hash Table:\n");
+        System.out.println("Broker Hash Table:");
         
         for (int i = 0; i < BROKER_TABLE_SIZE; i++) {
             if (brokerHashTable[i] == null) {
-                System.out.printf("Index %d is empty\n", i);
+                System.out.printf("\tIndex %d is empty\n", i);
             }
             else {
-                System.out.printf("Index %d contains Broker %s, %s %s\n", i, 
+                System.out.printf("\tIndex %d contains Broker %s, %s %s\n", i, 
                     brokerHashTable[i].getBrokerLicense(), 
                     brokerHashTable[i].getFirstName(), 
                     brokerHashTable[i].getLastName());
