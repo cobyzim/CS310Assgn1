@@ -1,6 +1,6 @@
 /*
- * Implementation class used to implement the list of brokers in a linked list. 
- * It creates / manages the ordered list of objects with nine methods.
+ * Implementation class used to implement a hashSet of broker objects. 
+ * It creates / manages the hashSet array of objects with four methods.
  */
 package cs310zimmerman;
 
@@ -14,13 +14,25 @@ public class BrokerLogImpl {
     private int numBrokersInTable;
     private final int BROKER_TABLE_SIZE = 19;
     
+    /**
+     * Constructor that initializes the hashTable size and provides a counter
+     */
     public BrokerLogImpl() {
         brokerHashTable = new Broker[BROKER_TABLE_SIZE];
         numBrokersInTable = 0;
     }
+    
+    public int getBrokerTableSize() {
+        return BROKER_TABLE_SIZE;
+    }
+    
+    public Broker[] getBrokerHashTable() {
+        return brokerHashTable;
+    }
 
     /**
-     * Method used to add brokers to list of brokers in ascending order.
+     * Method used to add brokers to hashSet of brokers if there is room and
+     * the brokerLicense is unique
      * 
      * @param brokerObj - passes in broker object
      * @return - returns true or false based on if a broker object is added or 
@@ -78,10 +90,12 @@ public class BrokerLogImpl {
     }
     
     /**
-     * Method that finds a broker if it is in the log given a certain license.
+     * Method that finds a broker if it is in the hashSet given a certain 
+     * license.
      * 
      * @param license - passes in broker license
-     * @return - returns the brokerNode or null if it is not in the log
+     * @return - returns reference to the broker object or null if it is not in 
+     * the hashSet
      */
     public Broker findBroker(String brokerLicense) {
         
@@ -100,6 +114,10 @@ public class BrokerLogImpl {
         }       
     }
 
+    /**
+     * Method that displays the contents of the broker hashTable
+     * 
+     */
     public void displayHash() {
         System.out.println("Broker Hash Table:");
         
