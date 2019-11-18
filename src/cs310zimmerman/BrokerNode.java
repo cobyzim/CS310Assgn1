@@ -8,7 +8,7 @@ import cs310zimmerman.*;
 
 /**
  *
- * @author cobyz
+ * @author Coby Zimmerman
  */
 public class BrokerNode {
     private BrokerNode next;
