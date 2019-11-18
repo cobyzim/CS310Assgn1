@@ -148,6 +148,11 @@ public class Broker {
         return commissionRate;
     }
 
+    /**
+     * Method that generates hashCode for brokers based on broker licenses
+     * 
+     * @return - returns the hashCode
+     */
     @Override
     public int hashCode() {
         String license = this.brokerLicense;
@@ -203,65 +208,5 @@ public class Broker {
                 ", firstName=" + firstName + ", lastName=" + lastName +
                 ", dept=" + dept + ", " + "commissionRate=" + commissionRate 
                 + '}';
-    }
-    
-    /**
-     * Method that checks the validity of a broker license number and returns
-     * true if it is valid, and false if it is invalid
-     * 
-     * @return - returns true or false
-     */
-    public boolean isValidLicense() {
-        boolean licenseValidity = true;
-        if (brokerLicense.length() == 8) {
-            if (Character.isLetter(brokerLicense.charAt(0)) && 
-                    Character.isLetter(brokerLicense.charAt(1)) && 
-                    Character.isLetter(brokerLicense.charAt(2))) {
-                for (int i = 3; i < 8; i++) {
-                    if (!Character.isDigit(brokerLicense.charAt(i))) {
-                        return false;
-                    }
-                 
-                }
-            }
-            else {
-                return false;
-            }
-        }
-        else {
-            return false;
-        }
-    return licenseValidity;      
-    }
-    
-    /**
-     * Method that checks the validity of broker department number and returns
-     * true or false based on this validity
-     * 
-     * @return - returns true or false
-     */
-    public boolean isValidDept() {
-        boolean deptValidity = true;
-        //char[] digitArray = new char[] {'1', '2', '3'};
-        String digit = "123";
-        if (dept.length() == 7) {
-            for (int i = 0; i < 3; i++) {
-                if (digit.indexOf(dept.charAt(i)) == -1) {
-                    return false;
-                }
-            }
-            if (dept.charAt(3) != '-') {
-                return false;
-            }
-            for (int j = 4; j < 7; j++) {
-                if (!Character.isDigit(dept.charAt(j))) {
-                    return false;
-                }
-            }
-        }
-        else {
-            return false;
-        }
-        return deptValidity;
     }
 }
