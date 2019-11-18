@@ -34,8 +34,6 @@ public class StockTrade {
      * 
      * @param stockTradeArray - passes in stock trade array of strings
      */
-  
-    
     public StockTrade(String[] stockTradeArray) {
         this.stockTradeArray = stockTradeArray;
         setStockSymbol(stockTradeArray[2]);
@@ -136,6 +134,11 @@ public class StockTrade {
         return taxable;
     }
 
+    /**
+     * Method used to create the hashCode for stockTrades based on the
+     * stockSymbols
+     * @return - returns the hashCode
+     */
     @Override
     public int hashCode() {
         int hash = 0;
@@ -196,59 +199,4 @@ public class StockTrade {
                 ", brokerLicense=" + brokerLicense + ", taxable=" + 
                 taxable + '}';
     }
-    
-    /**
-     * Method that checks the validity of a stock symbol, returning true if it 
-     * is valid and false if it is not
-     * 
-     * @return - returns true or false
-     */
-    public boolean isValidStockSymbol() {
-        boolean stockSymbolValidity = true;
-        if (stockSymbol.length() == 3 || stockSymbol.length() == 4) {
-            for (int i = 0; i < stockSymbol.length(); i++) {
-                if (!Character.isLetter(stockSymbol.charAt(i)) || 
-                        Character.isLowerCase(stockSymbol.charAt(i))) {
-                    return false;
-                }
-            }
-        }
-        else {
-            return false;
-        }
-    return stockSymbolValidity;
-    }
-    
-    /**
-     * Method that checks the validity of price per share, returning true if it
-     * is valid and false if it is not
-     * 
-     * @return - returns true or false
-     */
-    public boolean isValidPrice() {
-        boolean priceValidity = true;
-        double maxPricePerShare = 1000.00;
-        if (pricePerShare > maxPricePerShare) {
-            return false;
-        }
-        
-    return priceValidity;    
-    }
-    
-    /**
-     * Method that checks the validity of the number of shares, returning true
-     * if it is valid and false if it is not
-     * 
-     * @return - returns true or false
-     */
-    public boolean isValidWholeShares() {
-        boolean shareValidity = true;
-        int maxShares = 100000;
-        if (wholeShares > maxShares) {
-            return false;
-        }
-        
-    return shareValidity;
-    }
-     
 }
