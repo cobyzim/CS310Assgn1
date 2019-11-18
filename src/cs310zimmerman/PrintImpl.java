@@ -3,9 +3,6 @@
  * that shows the broker objects that have stocktrades. It also shows the number
  * of stock trade listings for each broker, the total value of the stock trade
  * listings for each broker, and both of the latter for all of the brokers.
- * Moreover, it includes the method that prints the go-kart report which
- * includes which brokers are using which karts, which karts are still 
- * available, and which brokers are in the queue.
  */
 package cs310zimmerman;
 
@@ -14,14 +11,13 @@ import java.util.Iterator;
 import java.io.*;
 /**
  *
- * @author Coby Zimmerman
+ * @author Coby
  */
 
 public class PrintImpl {
     private BrokerNode top;
     private LinkedList<StockTrade> stockTradeList;
-    private int numStockTrades;
-    private String[] goKartUsage;
+    private  int numStockTrades;
     
     /**
      * Method used to generate the report using the broker and stock trade
@@ -35,13 +31,13 @@ public class PrintImpl {
      * interrupted.
      */
     public void printReport(BrokerLogImpl brokerLogImpl, 
-            StockTradeLogImpl stockTradeLogImpl, String fileName) throws 
-            IOException {
+            StockTradeLogImpl stockTradeLogImpl, String fileName) throws IOException {
         final String OUTPUT_FILENAME = fileName;
-        top = brokerLogImpl.getTop();
-        stockTradeList = stockTradeLogImpl.getStockTradeList();
-        numStockTrades = stockTradeLogImpl.getNumStockTrades();
+       // top = brokerLogImpl.getTop();
+        //stockTradeList = stockTradeLogImpl.getStockTradeList();
+        //numStockTrades = stockTradeLogImpl.getNumStockTrades();
 
+        /*
         String brokerLicense;
         String firstName;
         String lastName;
@@ -66,12 +62,11 @@ public class PrintImpl {
             dept = current.getData().getDept();
             commissionRate = current.getData().getCommissionRate();
             
-            if (stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense) >= 0)
-            {
+            if (stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense) >= 0) {
               
-                printWriter.printf("\n");
-                printWriter.printf("%s  %s,  %s\n", brokerLicense, 
-                    lastName, firstName);
+                    printWriter.printf("\n");
+                    printWriter.printf("%s  %s,  %s\n", brokerLicense, 
+                        lastName, firstName);
             }
 
             Iterator<StockTrade> iter = stockTradeList.iterator();
@@ -89,7 +84,7 @@ public class PrintImpl {
                 }
                 numListings = numStockTrades;
                 totalListValue = 
-                        stockTradeLogImpl.totalStockTradeValue(brokerLicense);
+                       stockTradeLogImpl.totalStockTradeValue(brokerLicense);
                 
                 if (brokerLicense.equals(tradeLicense)) {
 
@@ -98,20 +93,16 @@ public class PrintImpl {
                 }
             }
             
-            if (stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense) > 0) 
-            {
+            if (stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense) > 0) {
             printWriter.printf("\n\tNumber of StockTrade Listings for "
-                + "Broker: %d", stockTradeLogImpl.
-                numberOfBrokerStockTrades(brokerLicense));
+                            + "Broker: %d", stockTradeLogImpl.numberOfBrokerStockTrades(brokerLicense));
                                                                                 
-            printWriter.printf("\n\tTotal sales value of "
-                + "StockTradeListings" + " for Broker %s: $ %.2f\n",
-                brokerLicense, stockTradeLogImpl.
-                totalStockTradeValue(brokerLicense));
+                    printWriter.printf("\n\tTotal sales value of "
+                            + "StockTradeListings" + " for Broker %s: $ %.2f\n",
+                          brokerLicense, stockTradeLogImpl.totalStockTradeValue(brokerLicense));
             }
             else {
-                printWriter.printf("\n\tNumber of StockTradeListings for Broker"
-                        + " : 0");
+                printWriter.printf("\n\tNumber of StockTradeListings for Broker : 0");
                 printWriter.printf("\n\tTotal sales value of "
                         + "StockTradeListings for Broker: $0.00\n");
             }
@@ -125,77 +116,6 @@ public class PrintImpl {
         
         fileWriter.close();
         printWriter.close();
-    }
-    
-    public void printGoKartReport(BrokerLogImpl brokerLogImpl, 
-            GoKartUsageImpl goKartUsageImpl, BrokerQueueImpl 
-            brokerQueueImplStandard, BrokerQueueImpl brokerQueueImplTop, 
-            String fileName) throws IOException
-    {
-        
-        final String OUTPUT_FILENAME = fileName;
-        FileWriter fileWriter = new FileWriter(OUTPUT_FILENAME);
-        PrintWriter printWriter = new PrintWriter(fileWriter);
-        
-        printWriter.printf("GO-KART USAGE REPORT\n");
-        
-        goKartUsage = goKartUsageImpl.getGoKartUsageArray();
-        
-        
-        for (int i = 0; i < goKartUsage.length; i++) {
-            if (!goKartUsageImpl.getBrokerLicenseForGoKart(i).equals("")) {
-                String brokerLicense = goKartUsageImpl.
-                    getBrokerLicenseForGoKart(i);
-                String brokerFirstName = brokerLogImpl.findBroker(brokerLicense).
-                    getData().getFirstName();
-                String brokerLastName = brokerLogImpl.findBroker(brokerLicense).
-                    getData().getLastName();
-                printWriter.printf("%s %s is using go-kart number %d\n", 
-                    brokerFirstName, brokerLastName, i + 1);
-            }
-        }
-        
-        printWriter.printf("\nAVAILABLE GO-KARTS\n");
-        printWriter.printf("\tBASIC GO-KARTS\n");
-        
-        boolean allBasicKartsTaken = false;
-        for (int i = 0; i < goKartUsage.length && i < 4; i++) {
-            if (goKartUsageImpl.getBrokerLicenseForGoKart(i).equals("")) {
-                allBasicKartsTaken = true;
-                    printWriter.printf("\t\tBasic go-kart number %d is "
-                            + "available\n", i + 1);
-            }  
-        }
-        if (!allBasicKartsTaken) {
-            printWriter.printf("\t\tNo basic go-karts are available\n");
-        }
-        
-        printWriter.printf("\n\tRACING GO-KARTS\n");
-        
-        boolean allRacingKartsTaken = false;
-        for (int i = 0; i < goKartUsage.length && i > 4; i++) {
-            if (goKartUsageImpl.getBrokerLicenseForGoKart(i).equals("")) {
-                allRacingKartsTaken = true;
-                printWriter.printf("\t\tRacing go-kart number %d is "
-                        + "available\n", i + 1);
-            }
-        }
-        if (!allRacingKartsTaken) {
-            printWriter.printf("\t\tNo racing go-karts are available\n");
-        }
-
-        
-        
-        
-        
-        
-        //GoKartStackImpl goKartStackImpl, 
-            //BrokerQueueImpl brokerQueueImpl,
-        //include which broker is using which cart
-        //which go karts are available in each stack
-        //which brokers are still in the queues
-        
-        fileWriter.close();
-        printWriter.close();
+        */    
     }
 }
