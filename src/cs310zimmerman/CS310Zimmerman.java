@@ -34,6 +34,7 @@ public class CS310Zimmerman {
         System.out.println();
         brokerLogImpl.displayHash();
         stockTradeLogImpl.displayHash();
+        System.out.println();
         
         System.out.println("Creating sales report using requests from file "
                 + "input/BrokerRequests.txt");
@@ -52,7 +53,7 @@ public class CS310Zimmerman {
      * specific pathname has failed to open
      */
     public static void processFile() throws FileNotFoundException {
-        final String INPUT_FILENAME = "input/assn3input3.txt";
+        final String INPUT_FILENAME = "input/assn5input3.txt";
 
         try {
             File text = new File(INPUT_FILENAME);
@@ -64,18 +65,11 @@ public class CS310Zimmerman {
                 if (arrOfStr[0].equals("BROKER")) {
                     if (arrOfStr[1].equals("ADD")) {
                         addBroker(arrOfStr);
-
-                    }
-                    if (arrOfStr[1].equals("DEL")) {
-                        //deleteBroker(arrOfStr);
                     }
                 }
                 if (arrOfStr[0].equals("TRADE")) {
                     if (arrOfStr[1].equals("BUY")) {
                         addStockTrade(arrOfStr);
-                    }
-                    if (arrOfStr[1].equals("SELL")) {
-                        //deleteStockTrade(arrOfStr);
                     }
                 }
 
@@ -107,8 +101,7 @@ public class CS310Zimmerman {
     public static void addStockTrade(String[] line) {
         StockTrade filledStockTrade = new StockTrade(line);
         
-        stockTradeLogImpl.addStockTrade(filledStockTrade);
-        
+        stockTradeLogImpl.addStockTrade(filledStockTrade);   
     }
     
     /**
