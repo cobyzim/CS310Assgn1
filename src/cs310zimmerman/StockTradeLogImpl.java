@@ -13,10 +13,6 @@ import java.util.Iterator;
  */
 public class StockTradeLogImpl {
     
-    private int numStockTrades = 0;
-    final int MAXIMUM_NUM_OBJECTS = 1000;
-    LinkedList<StockTrade> stockTradeList = new LinkedList<StockTrade>();
-    
     private final int MAX_SIZE;
     private int currSize;
     private int numNodes;
@@ -56,21 +52,23 @@ public class StockTradeLogImpl {
                         numNodes++;
                         stockTradeHashSet[compressedHashCode] = newNode;
                         isAdded = true;
-                        System.out.printf("ADDED: StockTrade with stock symbol %s "
-                            + "listed by Broker %s\n", tradeObj.getStockSymbol(), 
+                        System.out.printf("ADDED: StockTrade with stock symbol "
+                            + "%s listed by Broker %s\n", 
+                            tradeObj.getStockSymbol(), 
                             tradeObj.getBrokerLicense());
                     }
                     else {
                         //boolean nodeAdded = false;
                         for (StockTradeNode currNode = 
                             stockTradeHashSet[compressedHashCode]; 
-                            currNode != null && !isAdded; currNode = currNode.getNext()) {
+                            currNode != null && !isAdded; currNode = 
+                                currNode.getNext()) {
                             if (currNode.getNext() == null) {
                                 currNode.setNext(newNode);
                                 numNodes++;
                                 isAdded = true;
-                                System.out.printf("ADDED: StockTrade with stock "
-                                    + "symbol %s listed by Broker %s\n", 
+                                System.out.printf("ADDED: StockTrade with stock"
+                                    + " symbol %s listed by Broker %s\n", 
                                     tradeObj.getStockSymbol(), 
                                     tradeObj.getBrokerLicense());
                             }            
@@ -87,27 +85,6 @@ public class StockTradeLogImpl {
         }
     
     return isAdded;
-    }
-    
-    /**
-     * Method used to determine the number of trades for one broker object with 
-     * a certain license.
-     * 
-     * @param license - passes in a broker license as a string
-     * @return - returns the number of stock trades by one broker
-     */
-    public int numberOfBrokerStockTrades(String license) {
-        int numberOfTrades = 0;
-        Iterator<StockTrade> iter = stockTradeList.iterator();
-        
-        while (iter.hasNext()) {
-            StockTrade currentNode = iter.next();
-            if (currentNode.getBrokerLicense().equals(license)) {
-                numberOfTrades++;
-            }
-        }
-        
-        return numberOfTrades;
     }
     
     /**
@@ -153,8 +130,10 @@ public class StockTradeLogImpl {
             }
             else {
                 System.out.printf("\tIndex %d contains StockTrades: ", i);
-                for (StockTradeNode currNode = stockTradeHashSet[i]; currNode != null; currNode = currNode.getNext()) {
-                    System.out.printf("%s ", currNode.getData().getStockSymbol());
+                for (StockTradeNode currNode = stockTradeHashSet[i]; currNode !=
+                    null; currNode = currNode.getNext()) {
+                    System.out.printf("%s ", currNode.getData().
+                            getStockSymbol());
                 }
                 System.out.println();
             }
