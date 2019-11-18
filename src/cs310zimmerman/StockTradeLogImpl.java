@@ -50,30 +50,35 @@ public class StockTradeLogImpl {
         while (!isAdded) {
             
             if (currSize < MAX_SIZE) {
-                if (stockTradeHashSet[compressedHashCode] == null) {
-                    currSize++;
-                    numNodes++;
-                    stockTradeHashSet[compressedHashCode] = newNode;
-                    isAdded = true;
-                    System.out.printf("ADDED: StockTrade with stock symbol %s "
-                        + "listed by Broker %s\n", tradeObj.getStockSymbol(), 
-                        tradeObj.getBrokerLicense());
+                if (findStockTrade(tradeObj.getStockSymbol()) == null) {
+                    if (stockTradeHashSet[compressedHashCode] == null) {
+                        currSize++;
+                        numNodes++;
+                        stockTradeHashSet[compressedHashCode] = newNode;
+                        isAdded = true;
+                        System.out.printf("ADDED: StockTrade with stock symbol %s "
+                            + "listed by Broker %s\n", tradeObj.getStockSymbol(), 
+                            tradeObj.getBrokerLicense());
+                    }
+                    else {
+                        //boolean nodeAdded = false;
+                        for (StockTradeNode currNode = 
+                            stockTradeHashSet[compressedHashCode]; 
+                            currNode != null && !isAdded; currNode = currNode.getNext()) {
+                            if (currNode.getNext() == null) {
+                                currNode.setNext(newNode);
+                                numNodes++;
+                                isAdded = true;
+                                System.out.printf("ADDED: StockTrade with stock "
+                                    + "symbol %s listed by Broker %s\n", 
+                                    tradeObj.getStockSymbol(), 
+                                    tradeObj.getBrokerLicense());
+                            }            
+                        }
+                    }
                 }
                 else {
-                    //boolean nodeAdded = false;
-                    for (StockTradeNode currNode = 
-                        stockTradeHashSet[compressedHashCode]; 
-                        currNode != null && !isAdded; currNode = currNode.getNext()) {
-                        if (currNode.getNext() == null) {
-                            currNode.setNext(newNode);
-                            numNodes++;
-                            isAdded = true;
-                            System.out.printf("ADDED: StockTrade with stock "
-                                + "symbol %s listed by Broker %s\n", 
-                                tradeObj.getStockSymbol(), 
-                                tradeObj.getBrokerLicense());
-                        }            
-                    }
+                    return false;
                 }
             }
             else {
@@ -111,6 +116,7 @@ public class StockTradeLogImpl {
      * 
      */
     public void traverseDisplay() {
+        /*
         Iterator<StockTrade> iter = stockTradeList.iterator();
         System.out.println("StockTrade Log: ");
         
@@ -118,16 +124,40 @@ public class StockTradeLogImpl {
             StockTrade currentNode = iter.next();
             System.out.println(currentNode.toString());
         }
+        */
     }
     
-    public StockTrade findStockTrade(String stockSymbol) {
+    public StockTradeNode findStockTrade(String stockSymbol) {
         
-        StockTrade foundStockTrade = null;
+        StockTrade dummyStockTrade = new StockTrade();
+        dummyStockTrade.setStockSymbol(stockSymbol);
+        int hashCode = dummyStockTrade.hashCode();
+        int compressedHashCode = hashCode % MAX_SIZE;
         
-        if (stockTradeHashSet[stockTradeCompressedHash] != null) {
-            
+        if (stockTradeHashSet[compressedHashCode] != null && 
+            stockTradeHashSet[compressedHashCode].getData().getStockSymbol().
+                equals(stockSymbol)) {
+            return stockTradeHashSet[compressedHashCode];
         }
-          
-        return foundStockTrade;
+        else {
+            return null;
+        }
+    }
+    
+    public void displayHash() {
+        System.out.println("\nStockTrade Hash Table:\n");
+        
+        for (int i = 0; i < MAX_SIZE; i++) {
+            if (stockTradeHashSet[i] == null) {
+                System.out.printf("\tIndex %d is empty\n", i);
+            }
+            else {
+                System.out.printf("\tIndex %d contains StockTrades: ", i);
+                for (StockTradeNode currNode = stockTradeHashSet[i]; currNode != null; currNode = currNode.getNext()) {
+                    System.out.printf("%s ", currNode.getData().getStockSymbol());
+                }
+                System.out.println();
+            }
+        }
     }
 }
