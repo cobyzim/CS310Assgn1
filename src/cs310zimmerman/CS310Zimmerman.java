@@ -1,11 +1,8 @@
 /*
  * Program to manage information regarding brokers and their stock trades.
  * Data is read from particular files containing information on brokers and
- * stocks, and the program determines whether this info is valid or not, while 
- * also adding or deleting Broker/Stock Trade objects to lists based on the 
- * broker license and stock symbol uniqueness. The broker list contains broker 
- * objects in an ordered linked list while the stock trade list contains stock
- * trade objects in an unordered linked list.
+ * stocks, and the program adds brokers and stockTrades to a hash set and hash
+ * map respectively.
  */
 package cs310zimmerman;
 
@@ -38,47 +35,18 @@ public class CS310Zimmerman {
         brokerLogImpl.displayHash();
         stockTradeLogImpl.displayHash();
         
-        brokerLogImpl.traverse();
-        stockTradeLogImpl.traverseDisplay();
-        System.out.println();
-        
-        System.out.println("Creating initial report...");
-        System.out.println();
-        System.out.println("Creating report...");
-        System.out.println("Report is complete -- located in file: output/assn3initialReport.txt");
-        
-        /*
-        try {
-            printImpl.printReport(brokerLogImpl, stockTradeLogImpl, "output/assn3initialReport.txt");
-        } catch (IOException ex) {
-            System.out.println("I/O exception occurred");
-        }
-        
-        System.out.println();
-        System.out.println("Cleaning up broker and stockTrade logs...");
-        //brokerLogImpl.cleanList(stockTradeLogImpl);
-        //stockTradeLogImpl.cleanList();
-        System.out.println();
-        System.out.println("Creating clean report...");
-        System.out.println();
-        System.out.println("Creating report...");
-        System.out.println("Report is complete -- located in file: output/assn3cleanReport.txt");
-        
-        try {
-            printImpl.printReport(brokerLogImpl, stockTradeLogImpl, "output/assn3cleanReport.txt");
-        } catch (IOException ex) {
-            System.out.println("I/O exception occurred");
-        }
-        */
-        
-        //createReport();
+        System.out.println("Creating sales report using requests from file "
+                + "input/BrokerRequests.txt");
+        createReport();
+        System.out.println("Sales report is complete -- located in file:"
+                + " output/assn5salesReport.txt");
 
     }
 
     /**
      * Method used to read from the input file(s) and parse through each line
-     * Also calls addBroker, deleteBroker, addStockTrade, and deleteStockTrade
-     * based on the first two elements in a file line.
+     * Also calls addBroker and addStockTrade based on the first two elements in
+     * each line
      *
      * @throws FileNotFoundException - signals that file denoted by
      * specific pathname has failed to open
@@ -119,10 +87,8 @@ public class CS310Zimmerman {
     }
 
     /**
-     * Method used to add a new broker object to the list based on the uniqueness
-     * of the broker license. Also checks if the broker object has a valid
-     * license and a valid department number, printing an error message if
-     * either are invalid. Will still add the object to the list regardless.
+     * Method used to add a new broker object to hashSet. Calls addBroker
+     * method from BrokerLogImpl class.
      *
      * @param line - passes in array of strings from input file
      */
@@ -130,45 +96,11 @@ public class CS310Zimmerman {
         Broker filledBroker = new Broker(line);
         
         brokerLogImpl.addBroker(filledBroker);
-        /*
-        boolean hasBrokerErrors = false;
-       
-        if (!filledBroker.isValidLicense()) {
-            System.out.println("\tERROR: Broker with license "
-                    + filledBroker.getBrokerLicense() + " has invalid license");
-            hasBrokerErrors = true;
-        }
-        if (!filledBroker.isValidDept()) {
-            System.out.println("\tERROR: Broker with license "
-                    + filledBroker.getBrokerLicense() + " has invalid "
-                    + "department " + filledBroker.getDept());
-            hasBrokerErrors = true;
-        }
-        
-        if (!brokerLogImpl.isLicenseUnique(line[2])) {
-            System.out.println("\tERROR: Broker with license " + line[2]
-                    + " is not unique and will NOT be added to the log.");
-        }
-        if (brokerLogImpl.isLicenseUnique(line[2])) {
-            if (brokerLogImpl.addBroker(filledBroker)) {
-                 if (hasBrokerErrors) {
-                   System.out.println("ADDED: Broker with license " + line[2]
-                 + ", regardless of data errors.");
-                 }
-                 else {
-                   System.out.println("ADDED: Broker with license " + line[2]);
-                 }
-            }
-        }
-        */
     }
 
     /**
-     * Method used to add a new stock trade object to the list of stock trade
-     * objects based on the broker license not being unique and the stock symbol
-     * being unique. Also checks if the stock trade object has a valid stock
-     * symbol, a valid price per share, and a valid number of shares. If these
-     * are not valid, it will still add the object to the list.
+     * Method used to add a new stock trade object to hashMap. Calls
+     * addStockTrade method from StockTradeLogImpl class.
      *
      * @param line - passes in array of strings from input file
      */
@@ -179,13 +111,17 @@ public class CS310Zimmerman {
         
     }
     
-    /*
+    /**
+     * Method used to create the report of taxable/not taxable stockTrades by
+     * calling the printReport method in the printImpl class
+     * 
+     */
     public static void createReport() {
         try {
-            printImpl.printReport(brokerLogImpl, stockTradeLogImpl, );
+            printImpl.printReport(brokerLogImpl, stockTradeLogImpl, "output/assn5salesReport.txt");
         } catch (IOException ex) {
             System.out.println("I/O exception occurred");
         }
     }
-    */
+    
 }
