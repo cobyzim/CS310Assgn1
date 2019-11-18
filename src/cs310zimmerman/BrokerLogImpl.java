@@ -90,7 +90,9 @@ public class BrokerLogImpl {
         int hashCode = dummyBroker.hashCode();
         int compressedHashCode = hashCode % BROKER_TABLE_SIZE;
 
-        if (brokerHashTable[compressedHashCode] != null) {
+        if (brokerHashTable[compressedHashCode] != null && 
+            brokerHashTable[compressedHashCode].getBrokerLicense().
+                equals(brokerLicense)) {
             return brokerHashTable[compressedHashCode];
         }
         else {
@@ -106,7 +108,7 @@ public class BrokerLogImpl {
                 System.out.printf("Index %d is empty\n", i);
             }
             else {
-                System.out.printf("Index %d contains Broker %s, %s %s", i, 
+                System.out.printf("Index %d contains Broker %s, %s %s\n", i, 
                     brokerHashTable[i].getBrokerLicense(), 
                     brokerHashTable[i].getFirstName(), 
                     brokerHashTable[i].getLastName());
