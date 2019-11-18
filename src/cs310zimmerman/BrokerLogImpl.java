@@ -10,7 +10,6 @@ package cs310zimmerman;
  */
 public class BrokerLogImpl {
 
-    private BrokerNode top;
     private Broker[] brokerHashTable;
     private int numBrokersInTable;
     private final int BROKER_TABLE_SIZE = 19;
@@ -19,37 +18,7 @@ public class BrokerLogImpl {
         brokerHashTable = new Broker[BROKER_TABLE_SIZE];
         numBrokersInTable = 0;
     }
-    
-    /**
-     * Method to retrieve the head (reference to the first node)
-     * 
-     * @return - returns top (head)
-     */
-    public BrokerNode getTop() {
-        return this.top;
-    }
-    
-    /**
-     * Method used to set the value of the first node
-     * 
-     * @param top - passes in the node to be set to top
-     */
-    public void setTop(BrokerNode top) {
-        this.top = top;
-    }
-    
-    /**
-     * Method used to determine if the linked list has any nodes or not
-     * 
-     * @return - returns true if the list is empty, false if it is not
-     */
-    public boolean isEmpty() {
-        if (top == null) {
-            return true;
-        }
-        return false;
-    }
-    
+
     /**
      * Method used to add brokers to list of brokers in ascending order.
      * 
@@ -66,20 +35,24 @@ public class BrokerLogImpl {
         while (!isAdded) {
             
             if (numBrokersInTable < BROKER_TABLE_SIZE) {
-                if (findBroker(compressedHashValue) == null) {
-                    //if (brokerHashTable[compressedHashValue] == null) {  
-                    brokerHashTable[compressedHashValue] = brokerObj;
-                    numBrokersInTable++;
-                    isAdded = true;
-                    System.out.printf("ADDED: Broker with license %s\n", brokerObj.getBrokerLicense());
-                }
+                if (findBroker(brokerObj.getBrokerLicense()) == null) {
+                    if (brokerHashTable[compressedHashValue] == null) {  
+                        brokerHashTable[compressedHashValue] = brokerObj;
+                        numBrokersInTable++;
+                        isAdded = true;
+                        System.out.printf("ADDED: Broker with license %s\n", brokerObj.getBrokerLicense());
+                    }
                     
-                else {
-                    compressedHashValue++;
-                    if (compressedHashValue == brokerHashTable.length) {
-                        compressedHashValue = 0;
-                    }   
+                    else {
+                        compressedHashValue++;
+                        if (compressedHashValue == brokerHashTable.length) {
+                            compressedHashValue = 0;
+                        }   
+                    }
                 }
+                else {
+                    return false;     
+                } 
             }
             else {
                 return false;
@@ -89,30 +62,11 @@ public class BrokerLogImpl {
     }
     
     /**
-     * Method used to test if a broker with a specific license exists in list
-     * of brokers already.
-     * 
-     * @param license - passes in a broker license 
-     * @return - returns true or false based on whether or not the license
-     * exists in the log.
-     */
-    
-    public boolean isLicenseUnique(String license) {
-        boolean licenseUnique = true;
-
-        for (BrokerNode seek = top; seek != null; seek = seek.getNext()) {
-            if (seek.getData().getBrokerLicense().equals(license)) {
-                  licenseUnique = false;
-            }
-        }
-        return licenseUnique;
-    }
-    
-    /**
      * Method used to iterate through the linked list of brokers and display
      * each one using the toString method.
      */
     public void traverse() {
+        /*
         BrokerNode current = top;
         System.out.println("Broker Log: ");
         
@@ -120,32 +74,7 @@ public class BrokerLogImpl {
             System.out.println(current.getData().toString());
             current = current.getNext();
         }    
-    }
-    
-    /**
-     * Method used to clean up the list of brokers based on whether they have
-     * valid licenses or not
-     * 
-     * @param stockTradeLogImpl - passes in stockTradeLogImpl
-     */
-    public void cleanList(StockTradeLogImpl stockTradeLogImpl) {
-        BrokerNode previous = null;
-        BrokerNode current = top;
-        
-        while (current != null) { //&& current.getData().isValidLicense()) {
-            previous = current;
-            current = current.getNext();
-            
-            if (!previous.getData().isValidLicense()) {
-                System.out.println("Invalid license for broker " + 
-                        previous.getData().getBrokerLicense() + " -- Deleting "
-                        + "broker and stockTrades for that broker from logs");
-                //current = current.getNext();
-                //removeBroker(previous.getData().getBrokerLicense());
-                stockTradeLogImpl.removeStockTradeByBroker(
-                        previous.getData().getBrokerLicense());
-            }
-        }
+        */
     }
     
     /**
@@ -154,7 +83,7 @@ public class BrokerLogImpl {
      * @param license - passes in broker license
      * @return - returns the brokerNode or null if it is not in the log
      */
-    public Broker findBroker(int brokerCompressedHash) {
+    public Broker findBroker(String brokerLicense) {
     
     /*
         BrokerNode brokerNode = null;
@@ -173,16 +102,20 @@ public class BrokerLogImpl {
         int hashNumber = Integer.parseInt(newString);
         */
         
-        Broker foundBroker = null;
+        Broker dummyBroker = new Broker();
+        dummyBroker.setBrokerLicense(brokerLicense);
+        int hashCode = dummyBroker.hashCode();
+        int compressedHashCode = hashCode % BROKER_TABLE_SIZE;
+        
+        //Broker foundBroker = null;
         
         //int brokerCompressedHash = brokerHash % BROKER_TABLE_SIZE;
-        if (brokerHashTable[brokerCompressedHash] != null) {
-            foundBroker = brokerHashTable[brokerCompressedHash];
+        if (brokerHashTable[compressedHashCode] != null) {
+            return brokerHashTable[compressedHashCode];
         }
-        
-        return foundBroker;
-        
-        
+        else {
+            return null;
+        }       
     }
 
 }
