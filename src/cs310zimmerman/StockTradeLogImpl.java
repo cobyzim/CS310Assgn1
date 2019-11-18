@@ -1,7 +1,6 @@
 /*
- * Implementation class used to implement the list of stock trades in an 
- * unordered linked list. It creates and manages these objects using eleven 
- * methods.
+ * Implementation class used to implement the hashMap of stock trades. It 
+ * creates and manages these objects using four methods.
  */
 package cs310zimmerman;
 import java.util.LinkedList;
@@ -18,6 +17,11 @@ public class StockTradeLogImpl {
     private int numNodes;
     private StockTradeNode[] stockTradeHashSet;
     
+    /**
+     * Constructor that initializes data fields including the hashTable for
+     * stockTradeNodes
+     *  
+     */
     public StockTradeLogImpl() {
         MAX_SIZE = 17;
         currSize = 0;
@@ -28,9 +32,17 @@ public class StockTradeLogImpl {
         }
     }
     
+    public int getCurrentSize() {
+        return currSize;
+    }
+    
+    public StockTradeNode[] getStockTradeHashSet() {
+        return stockTradeHashSet;
+    }
+    
     /**
-     * Method used to add a stock trade object to the list of stock trades if
-     * there is room.
+     * Method used to add a stock trade object to the hashMap of stockTrades
+     * if there is room and if the stockSymbol is unique.
      * 
      * @param tradeObj - passes in stock trade object
      * @return - returns true or false based on whether or not a stock trade was
@@ -104,6 +116,14 @@ public class StockTradeLogImpl {
         */
     }
     
+    /**
+     * Method that finds a stockTrade if it is in the hashMap given a certain
+     * stockSymbol
+     *  
+     * @param stockSymbol - passes in stockSymbol
+     * @return - returns reference to the stockTrade object or null if it is
+     * not in the hashMap.
+     */
     public StockTradeNode findStockTrade(String stockSymbol) {
         
         StockTrade dummyStockTrade = new StockTrade();
@@ -121,8 +141,12 @@ public class StockTradeLogImpl {
         }
     }
     
+    /**
+     * Method that displays the contents of the stockTrade hashMap
+     *  
+     */
     public void displayHash() {
-        System.out.println("\nStockTrade Hash Table:\n");
+        System.out.println("\nStockTrade Hash Table:");
         
         for (int i = 0; i < MAX_SIZE; i++) {
             if (stockTradeHashSet[i] == null) {
