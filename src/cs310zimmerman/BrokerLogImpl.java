@@ -84,32 +84,12 @@ public class BrokerLogImpl {
      * @return - returns the brokerNode or null if it is not in the log
      */
     public Broker findBroker(String brokerLicense) {
-    
-    /*
-        BrokerNode brokerNode = null;
-        for (BrokerNode seek = top; seek != null; seek = seek.getNext()) {
-            if (seek.getData().getBrokerLicense().equals(license)) {
-                brokerNode = seek;
-            }
-        }
-        
-    return brokerNode;
-    */
-        
-        /*
-        String str = license;
-        String newString = str.substring(3);
-        int hashNumber = Integer.parseInt(newString);
-        */
         
         Broker dummyBroker = new Broker();
         dummyBroker.setBrokerLicense(brokerLicense);
         int hashCode = dummyBroker.hashCode();
         int compressedHashCode = hashCode % BROKER_TABLE_SIZE;
-        
-        //Broker foundBroker = null;
-        
-        //int brokerCompressedHash = brokerHash % BROKER_TABLE_SIZE;
+
         if (brokerHashTable[compressedHashCode] != null) {
             return brokerHashTable[compressedHashCode];
         }
@@ -118,5 +98,20 @@ public class BrokerLogImpl {
         }       
     }
 
+    public void displayHash() {
+        System.out.println("Broker Hash Table:\n");
+        
+        for (int i = 0; i < BROKER_TABLE_SIZE; i++) {
+            if (brokerHashTable[i] == null) {
+                System.out.printf("Index %d is empty\n", i);
+            }
+            else {
+                System.out.printf("Index %d contains Broker %s, %s %s", i, 
+                    brokerHashTable[i].getBrokerLicense(), 
+                    brokerHashTable[i].getFirstName(), 
+                    brokerHashTable[i].getLastName());
+            }
+        }
+    }
 }
 
