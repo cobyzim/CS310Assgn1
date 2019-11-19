@@ -30,7 +30,8 @@ public class PrintImpl {
      * specific pathname has failed to open
      */
     public void printReport(BrokerLogImpl brokerLogImpl, 
-            StockTradeLogImpl stockTradeLogImpl, String fileName) throws IOException, FileNotFoundException {
+            StockTradeLogImpl stockTradeLogImpl, String fileName) throws 
+            IOException, FileNotFoundException {
         final String OUTPUT_FILENAME = fileName;
         final String INPUT_FILENAME = "input/BrokerRequests.txt";
         
@@ -43,19 +44,24 @@ public class PrintImpl {
         while (scnr.hasNext()) {
             String str = scnr.nextLine();
             String[] arrOfStr = str.split(" ");
+            String brokerLicense = arrOfStr[0];
             
-            if (brokerLogImpl.findBroker(arrOfStr[0]) != null) {
-                String brokerFirstName = brokerLogImpl.findBroker(arrOfStr[0]).getFirstName();
-                String brokerLastName = brokerLogImpl.findBroker(arrOfStr[0]).getLastName();
+            if (brokerLogImpl.findBroker(brokerLicense) != null) {
+                String brokerFirstName = brokerLogImpl.findBroker(brokerLicense)
+                    .getFirstName();
+                String brokerLastName = brokerLogImpl.findBroker(brokerLicense).
+                    getLastName();
                 
-                printWriter.printf("Broker %s, %s %s\n", arrOfStr[0], brokerFirstName, brokerLastName);
+                printWriter.printf("Broker %s, %s %s\n", brokerLicense, 
+                    brokerFirstName, brokerLastName);
                 
                 for (int i = 1; i < arrOfStr.length; i++) {
                     
                     if (stockTradeLogImpl.findStockTrade(arrOfStr[i]) != null) {
                         printWriter.printf("\tStockTrade %s is ", arrOfStr[i]);
                         
-                        if (stockTradeLogImpl.findStockTrade(arrOfStr[i]).getData().isTaxable()) {
+                        if (stockTradeLogImpl.findStockTrade(arrOfStr[i]).
+                            getData().isTaxable()) {
                             printWriter.printf("TAXABLE\n");
                         }
                         else {
@@ -63,12 +69,13 @@ public class PrintImpl {
                         }
                     }
                     else {
-                        printWriter.printf("\tStockTrade %s does not exist\n", arrOfStr[i]);
+                        printWriter.printf("\tStockTrade %s does not exist\n", 
+                            arrOfStr[i]);
                     }
                 }
             }
             else {
-                printWriter.printf("Broker %s does not exist", arrOfStr[0]);
+                printWriter.printf("Broker %s does not exist", brokerLicense);
             }
         }
         fileWriter.close();
