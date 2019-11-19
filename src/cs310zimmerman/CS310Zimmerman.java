@@ -111,7 +111,8 @@ public class CS310Zimmerman {
      */
     public static void createReport() {
         try {
-            printImpl.printReport(brokerLogImpl, stockTradeLogImpl, "output/assn5salesReport.txt");
+            printImpl.printReport(brokerLogImpl, stockTradeLogImpl, 
+                "output/assn5salesReport.txt");
         } catch (IOException ex) {
             System.out.println("I/O exception occurred");
         }
