@@ -21,14 +21,6 @@ public class BrokerLogImpl {
         brokerHashTable = new Broker[BROKER_TABLE_SIZE];
         numBrokersInTable = 0;
     }
-    
-    public int getBrokerTableSize() {
-        return BROKER_TABLE_SIZE;
-    }
-    
-    public Broker[] getBrokerHashTable() {
-        return brokerHashTable;
-    }
 
     /**
      * Method used to add brokers to hashSet of brokers if there is room and
@@ -71,22 +63,6 @@ public class BrokerLogImpl {
             }
         }      
         return isAdded;
-    }
-    
-    /**
-     * Method used to iterate through the linked list of brokers and display
-     * each one using the toString method.
-     */
-    public void traverse() {
-        /*
-        BrokerNode current = top;
-        System.out.println("Broker Log: ");
-        
-        while (current != null) {
-            System.out.println(current.getData().toString());
-            current = current.getNext();
-        }    
-        */
     }
     
     /**
