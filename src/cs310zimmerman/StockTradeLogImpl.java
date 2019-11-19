@@ -32,14 +32,6 @@ public class StockTradeLogImpl {
         }
     }
     
-    public int getCurrentSize() {
-        return currSize;
-    }
-    
-    public StockTradeNode[] getStockTradeHashSet() {
-        return stockTradeHashSet;
-    }
-    
     /**
      * Method used to add a stock trade object to the hashMap of stockTrades
      * if there is room and if the stockSymbol is unique.
@@ -97,23 +89,6 @@ public class StockTradeLogImpl {
         }
     
     return isAdded;
-    }
-    
-    /**
-     * Method used to iterate throughout the list of stock trades and display 
-     * them using the toString method.
-     * 
-     */
-    public void traverseDisplay() {
-        /*
-        Iterator<StockTrade> iter = stockTradeList.iterator();
-        System.out.println("StockTrade Log: ");
-        
-        while (iter.hasNext()) {
-            StockTrade currentNode = iter.next();
-            System.out.println(currentNode.toString());
-        }
-        */
     }
     
     /**
