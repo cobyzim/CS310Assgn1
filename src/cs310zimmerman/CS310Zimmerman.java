@@ -32,13 +32,13 @@ public class CS310Zimmerman {
 
         processFile();
         System.out.println();
-        brokerLogImpl.displayHash();
+        brokerLogImpl.traverseDisplay();
         stockTradeLogImpl.displayHash();
         System.out.println();
         
         System.out.println("Creating sales report using requests from file "
                 + "input/BrokerRequests.txt");
-        createReport();
+        //createReport();
         System.out.println("Sales report is complete -- located in file:"
                 + " output/assn5salesReport.txt");
 
@@ -53,7 +53,7 @@ public class CS310Zimmerman {
      * specific pathname has failed to open
      */
     public static void processFile() throws FileNotFoundException {
-        final String INPUT_FILENAME = "input/assn5input3.txt";
+        final String INPUT_FILENAME = "input/assn5input1.txt";
 
         try {
             File text = new File(INPUT_FILENAME);
@@ -89,7 +89,7 @@ public class CS310Zimmerman {
     public static void addBroker(String[] line) {
         Broker filledBroker = new Broker(line);
         
-        brokerLogImpl.addBroker(filledBroker);
+        brokerLogImpl.addBroker(brokerLogImpl.getRoot(), filledBroker);
     }
 
     /**
