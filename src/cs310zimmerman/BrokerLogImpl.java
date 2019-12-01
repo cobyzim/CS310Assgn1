@@ -11,65 +11,28 @@ import java.io.*;
  * @author Coby Zimmerman
  */
 public class BrokerLogImpl {
-    
-    protected static class BrokeNode {
-        protected Broker data;
-        protected BrokeNode left;
-        protected BrokeNode right;
-        
-        public BrokeNode(Broker data) {
-            this.data = data;
-            left = null;
-            right = null;
-        }
-    
-        public String toString() {
-            return data.toString();
-        }
-   
-    }
 
-    protected BrokeNode root;
-    protected boolean addReturn; //I think this is right but im not sure
+    private BrokerNode root;
+    private boolean addReturn; //I think this is right but im not sure
+    
     
     /**
      * Constructor that initializes the hashTable size and provides a counter
      */
     public BrokerLogImpl() {
-        
         root = null;
-        
     }
     
-    protected BrokerLogImpl(BrokeNode root) {
-        
+    public BrokerLogImpl(BrokerNode root) {
         this.root = root;
-        
     }
     
-    public BrokerLogImpl(Broker data, BrokerLogImpl leftTree, BrokerLogImpl rightTree) {
-        
-        root = new BrokeNode(data);
-        
-        if (leftTree != null) {
-            root.left = leftTree.root;
-        }
-        else {
-            root.left = null;
-        }
-        
-        if (rightTree != null) {
-            root.right = rightTree.root;
-        }
-        else {
-            root.right = null;
-        }
-        
+    public BrokerNode getRoot() {
+        return root;
     }
-
-    public boolean addBroker(Broker broker) {
-        root = addBroker(root, broker);
-        return addReturn;
+    
+    public void setRoot(BrokerNode brokerNode) {
+        root = brokerNode;
     }
     
     /**
@@ -81,45 +44,34 @@ public class BrokerLogImpl {
      * not
      */
     
-    private BrokeNode addBroker(BrokeNode localRoot, Broker broker) {
-        
+    public void addBroker(BrokerNode root, Broker broker) {
         
         //if tree empty, return new node
-        if (localRoot == null) {
-            
-            //item not in tree - insert it
-            addReturn = true;
-            System.out.printf("Added broker with license %s\n", broker.getBrokerLicense());
-            
-            return new BrokeNode(broker);
+        if (root != null) {
+            if (broker.getBrokerLicense().compareTo(root.getData().getBrokerLicense()) < 0) {  //less than root
+                if (root.getLeft() != null) {
+                    addBroker(root.getLeft(), broker);
+                }
+                else {
+                    BrokerNode newNode = new BrokerNode(broker);
+                    root.setLeft(newNode);
+                }
+            }
+            else {
+                if (root.getRight() != null) {
+                    addBroker(root.getRight(), broker);
+                }
+                else {
+                    BrokerNode newNode = new BrokerNode(broker);
+                    root.setRight(newNode);
+                }
+            }
         }
-        
-        else if (broker.getBrokerLicense().compareTo(localRoot.data.getBrokerLicense()) == 0) {
-            
-            //target license is equal to localRoot brokerLicense - do not add it
-            addReturn = false;
-            
-            return localRoot;
-        }
-        
-        else if (broker.getBrokerLicense().compareTo(localRoot.data.getBrokerLicense()) < 0) {
-            
-            //target license is less than localRoot brokerLicense - add it
-            localRoot.left = addBroker(localRoot.left, broker);
-            System.out.printf("Added broker with license %s to left subtree\n", broker.getBrokerLicense());
-            
-            return localRoot;
-        }
-        
         else {
+            BrokerNode newNode = new BrokerNode(broker);
+            root = newNode;
             
-            //item is greater than localRoot brokerLicense - add it
-            localRoot.right = addBroker(localRoot.right, broker);
-            System.out.printf("Added broker with license %s to right subtree\n", broker.getBrokerLicense());
-            
-            return localRoot;
         }
-        
         /*
         boolean isAdded = false;
 
@@ -169,21 +121,21 @@ public class BrokerLogImpl {
         return findBroker(root, target);
     }
     
-    private Broker findBroker(BrokeNode localRoot, Broker target) {
+    private Broker findBroker(BrokerNode localRoot, Broker target) {
         if (localRoot == null) {
             return null;
         }
         
         //Below compares target with data field at the root
-        int compResult = target.getBrokerLicense().compareTo(localRoot.data.getBrokerLicense());
+        int compResult = target.getBrokerLicense().compareTo(localRoot.getData().getBrokerLicense());
         if (compResult == 0) {
-            return localRoot.data;
+            return localRoot.getData();
         }
         else if (compResult < 0) {
-            return findBroker(localRoot.left, target);
+            return findBroker(localRoot.getLeft(), target);
         }
         else {
-            return findBroker(localRoot.right, target);
+            return findBroker(localRoot.getRight(), target);
         }
         
         /*
@@ -202,6 +154,18 @@ public class BrokerLogImpl {
         }
         */
         
+    }
+    
+    public void traverseDisplay() {
+        traverseDisplay(root);
+    }
+    
+    private void traverseDisplay(BrokerNode node) {
+        if (node != null) {
+            traverseDisplay(node.getLeft());
+            System.out.println(node.getData().toString());
+            traverseDisplay(node.getRight());
+        }
     }
     
 }
