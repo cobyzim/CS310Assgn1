@@ -11,17 +11,24 @@ import cs310zimmerman.*;
  * @author Coby Zimmerman
  */
 public class BrokerNode {
-    private BrokerNode next;
-    private Broker data;
 
+    private Broker data;
+    private BrokerNode left;
+    private BrokerNode right;
+    
     /**
      * Method used to create a broker node using a broker object
      * 
      * @param broker - passes in broker object
      */
-    public BrokerNode(Broker broker) {
-        next = null;
-        data = broker;
+    public BrokerNode(Broker data) {
+        this.data = data;
+        left = null;
+        right = null;
+    }
+    
+    public String toString() {
+        return data.toString();
     }
     
     /**
@@ -29,8 +36,8 @@ public class BrokerNode {
      * 
      * @return - returns the next node
      */
-    public BrokerNode getNext() {
-        return next;
+    public BrokerNode getLeft() {
+        return left;
     }
     
     /**
@@ -38,8 +45,16 @@ public class BrokerNode {
      * 
      * @param brokerNode - passes in a broker node
      */
-    public void setNext(BrokerNode brokerNode) {
-        next = brokerNode;
+    public void setLeft(BrokerNode brokerNode) {
+        left = brokerNode;
+    }
+    
+    public BrokerNode getRight() {
+        return right;
+    }
+    
+    public void setRight(BrokerNode brokerNode) {
+        right = brokerNode;
     }
     
     /**
@@ -61,5 +76,4 @@ public class BrokerNode {
     }
     
 }
-    
     
