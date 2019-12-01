@@ -13,8 +13,6 @@ import java.io.*;
 public class BrokerLogImpl {
 
     private BrokerNode root;
-    private boolean addReturn; //I think this is right but im not sure
-    
     
     /**
      * Constructor that initializes the hashTable size and provides a counter
@@ -68,44 +66,8 @@ public class BrokerLogImpl {
         }
         else {
             BrokerNode newNode = new BrokerNode(broker);
-            setRoot(newNode);
-            
+            setRoot(newNode);    
         }
-        /*
-        boolean isAdded = false;
-
-        int hashValue = brokerObj.hashCode();
-        int compressedHashValue = hashValue % BROKER_TABLE_SIZE;
-       
-        while (!isAdded) {
-            
-            if (numBrokersInTable < BROKER_TABLE_SIZE) {
-                if (findBroker(brokerObj.getBrokerLicense()) == null) {
-                    if (brokerHashTable[compressedHashValue] == null) {  
-                        brokerHashTable[compressedHashValue] = brokerObj;
-                        numBrokersInTable++;
-                        isAdded = true;
-                        System.out.printf("ADDED: Broker with license %s\n", brokerObj.getBrokerLicense());
-                    }
-                    
-                    else {
-                        compressedHashValue++;
-                        if (compressedHashValue == brokerHashTable.length) {
-                            compressedHashValue = 0;
-                        }   
-                    }
-                }
-                else {
-                    return false;     
-                } 
-            }
-            else {
-                return false;
-            }
-        }      
-        return isAdded;
-    }
-    */
     }
     
     /**
@@ -136,22 +98,6 @@ public class BrokerLogImpl {
         else {
             return findBroker(localRoot.getRight(), target);
         }
-        
-        /*
-        Broker dummyBroker = new Broker();
-        dummyBroker.setBrokerLicense(brokerLicense);
-        int hashCode = dummyBroker.hashCode();
-        int compressedHashCode = hashCode % BROKER_TABLE_SIZE;
-
-        if (brokerHashTable[compressedHashCode] != null && 
-            brokerHashTable[compressedHashCode].getBrokerLicense().
-                equals(brokerLicense)) {
-            return brokerHashTable[compressedHashCode];
-        }
-        else {
-            return null;
-        }
-        */
         
     }
     
