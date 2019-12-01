@@ -46,9 +46,8 @@ public class BrokerLogImpl {
     
     public void addBroker(BrokerNode root, Broker broker) {
         
-        //if tree empty, return new node
         if (root != null) {
-            if (broker.getBrokerLicense().compareTo(root.getData().getBrokerLicense()) < 0) {  //less than root
+            if (broker.getBrokerLicense().compareTo(root.getData().getBrokerLicense()) < 0) {
                 if (root.getLeft() != null) {
                     addBroker(root.getLeft(), broker);
                 }
@@ -69,7 +68,7 @@ public class BrokerLogImpl {
         }
         else {
             BrokerNode newNode = new BrokerNode(broker);
-            root = newNode;
+            setRoot(newNode);
             
         }
         /*
