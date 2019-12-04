@@ -28,27 +28,6 @@ public class Broker {
     public Broker() {
     }
     
-    /**
-     *
-     * @param brokerLicense - passes in brokerLicense as a string parameter
-     * @param firstName - passes in broker first name as a string parameter
-     * @param lastName - passes in broker last name as a string parameter
-     * @param dept - passes in department number as a string parameter
-     * @param commissionRate - passes in commission rate as a double parameter
-     * 
-     * Constructor with parameters used for broker objects with hard-coded 
-     * attributes
-     */
-    /*public Broker(String brokerLicense, String firstName, String lastName, 
-            String dept, double commissionRate) {
-        setBrokerLicense(brokerLicense);
-        setFirstName(firstName);
-        setLastName(lastName);
-        setDept(dept);
-        setCommissionRate(commissionRate);
-    }
-    */
-    
     public Broker(String[] brokerArray) {
         this.brokerArray = brokerArray;
         setBrokerLicense(brokerArray[2]);
