@@ -32,15 +32,18 @@ public class CS310Zimmerman {
 
         processFile();
         System.out.println();
+        System.out.println("Broker List:\n");
         brokerLogImpl.traverseDisplay();
-        stockTradeLogImpl.displayHash();
+        System.out.println();
+        System.out.println("StockTrade List:\n");
+        stockTradeLogImpl.traverseDisplay();
         System.out.println();
         
         System.out.println("Creating sales report using requests from file "
                 + "input/BrokerRequests.txt");
-        //createReport();
+        createReport();
         System.out.println("Sales report is complete -- located in file:"
-                + " output/assn5salesReport.txt");
+                + " output/assn6salesReport.txt");
 
     }
 
@@ -53,7 +56,7 @@ public class CS310Zimmerman {
      * specific pathname has failed to open
      */
     public static void processFile() throws FileNotFoundException {
-        final String INPUT_FILENAME = "input/assn5input1.txt";
+        final String INPUT_FILENAME = "input/assn6input3.txt";
 
         try {
             File text = new File(INPUT_FILENAME);
@@ -112,7 +115,7 @@ public class CS310Zimmerman {
     public static void createReport() {
         try {
             printImpl.printReport(brokerLogImpl, stockTradeLogImpl, 
-                "output/assn5salesReport.txt");
+                "output/assn6salesReport.txt");
         } catch (IOException ex) {
             System.out.println("I/O exception occurred");
         }
