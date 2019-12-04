@@ -46,6 +46,7 @@ public class PrintImpl {
             String[] arrOfStr = str.split(" ");
             String brokerLicense = arrOfStr[0];
             
+            
             if (brokerLogImpl.findBroker(brokerLicense) != null) {
                 String brokerFirstName = brokerLogImpl.findBroker(brokerLicense)
                     .getFirstName();
@@ -61,7 +62,8 @@ public class PrintImpl {
                         printWriter.printf("\tStockTrade %s is ", arrOfStr[i]);
                         
                         if (stockTradeLogImpl.findStockTrade(arrOfStr[i]).
-                            getData().isTaxable()) {
+                                isTaxable()) {
+                            
                             printWriter.printf("TAXABLE\n");
                         }
                         else {
@@ -75,8 +77,9 @@ public class PrintImpl {
                 }
             }
             else {
-                printWriter.printf("Broker %s does not exist", brokerLicense);
+                printWriter.printf("Broker %s does not exist\n", brokerLicense);
             }
+            
         }
         fileWriter.close();
         printWriter.close();
