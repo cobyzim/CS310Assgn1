@@ -1,11 +1,9 @@
 /*
- * Implementation class used to implement a hashSet of broker objects. 
- * It creates / manages the hashSet array of objects with four methods.
+ * Implementation class used to implement a binary search tree of broker objects 
+ * It creates/manages the tree of objects with eight methods.
  */
 package cs310zimmerman;
 
-
-import java.io.*;
 /**
  *
  * @author Coby Zimmerman
@@ -15,29 +13,36 @@ public class BrokerLogImpl {
     private BrokerNode root;
     
     /**
-     * Constructor that initializes the hashTable size and provides a counter
+     * Constructor that initializes the root data field to null
      */
     public BrokerLogImpl() {
         root = null;
     }
     
+    /**
+     * Getter method used to get the root of the tree
+     * 
+     * @return - returns the root of the tree
+     */
     public BrokerNode getRoot() {
         return root;
     }
     
+    /**
+     * Setter method used to set the root of the tree
+     * 
+     * @param brokerNode - passes in a BrokerNode
+     */
     public void setRoot(BrokerNode brokerNode) {
         root = brokerNode;
     }
     
     /**
-     * Method used to add brokers to hashSet of brokers if there is room and
-     * the brokerLicense is unique
+     * Method used to recursively add brokers to binary search tree of brokers
      * 
-     * @param brokerObj - passes in broker object
-     * @return - returns true or false based on if a broker object is added or 
-     * not
+     * @param root - passes in the root of the tree
+     * @param broker - passes in broker object
      */
-    
     public void addBroker(BrokerNode root, Broker broker) {
         
         if (root != null) {
@@ -69,11 +74,10 @@ public class BrokerLogImpl {
     }
     
     /**
-     * Method that finds a broker if it is in the hashSet given a certain 
-     * license.
+     * Method that recursively finds a broker if it is in the tree given a 
+     * certain license.
      * 
-     * @param target
-     * @param license - passes in broker license
+     * @param targetLicense - passes in broker license
      * @return - returns reference to the broker object or null if it is not in 
      * the hashSet
      */
@@ -100,6 +104,11 @@ public class BrokerLogImpl {
         } 
     }
     
+    /**
+     * Method used to recursively traverse through the BrokerNodes of the 
+     * binary search tree and display them using an in-order traversal
+     * 
+     */
     public void traverseDisplay() {
         traverseDisplay(root);
     }
@@ -111,6 +120,5 @@ public class BrokerLogImpl {
             traverseDisplay(node.getRight());
         }
     }
-    
 }
 
