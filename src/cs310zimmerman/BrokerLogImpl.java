@@ -21,10 +21,6 @@ public class BrokerLogImpl {
         root = null;
     }
     
-    public BrokerLogImpl(BrokerNode root) {
-        this.root = root;
-    }
-    
     public BrokerNode getRoot() {
         return root;
     }
@@ -45,7 +41,9 @@ public class BrokerLogImpl {
     public void addBroker(BrokerNode root, Broker broker) {
         
         if (root != null) {
-            if (broker.getBrokerLicense().compareTo(root.getData().getBrokerLicense()) < 0) {
+            if (broker.getBrokerLicense().compareTo(root.getData().
+                    getBrokerLicense()) < 0) {
+                
                 if (root.getLeft() != null) {
                     addBroker(root.getLeft(), broker);
                 }
@@ -74,31 +72,32 @@ public class BrokerLogImpl {
      * Method that finds a broker if it is in the hashSet given a certain 
      * license.
      * 
+     * @param target
      * @param license - passes in broker license
      * @return - returns reference to the broker object or null if it is not in 
      * the hashSet
      */
-    public Broker findBroker(Broker target) {
-        return findBroker(root, target);
+    public Broker findBroker(String targetLicense) {
+        return findBroker(root, targetLicense);
     }
     
-    private Broker findBroker(BrokerNode localRoot, Broker target) {
+    private Broker findBroker(BrokerNode localRoot, String license) {
         if (localRoot == null) {
             return null;
         }
-        
         //Below compares target with data field at the root
-        int compResult = target.getBrokerLicense().compareTo(localRoot.getData().getBrokerLicense());
+        int compResult = license.compareTo(localRoot.getData().
+                getBrokerLicense());
+        
         if (compResult == 0) {
             return localRoot.getData();
         }
         else if (compResult < 0) {
-            return findBroker(localRoot.getLeft(), target);
+            return findBroker(localRoot.getLeft(), license);
         }
         else {
-            return findBroker(localRoot.getRight(), target);
-        }
-        
+            return findBroker(localRoot.getRight(), license);
+        } 
     }
     
     public void traverseDisplay() {
