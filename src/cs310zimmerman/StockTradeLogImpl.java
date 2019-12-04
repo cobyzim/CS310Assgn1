@@ -1,6 +1,6 @@
 /*
- * Implementation class used to implement the hashMap of stock trades. It 
- * creates and manages these objects using four methods.
+ * Implementation class used to implement the treeMap of stock trades. It 
+ * creates and manages these objects using three methods.
  */
 package cs310zimmerman;
 import java.util.Iterator;
@@ -20,12 +20,9 @@ public class StockTradeLogImpl {
     private StockTrade[] stockTradeArray = new StockTrade[MAXIMUM_NUM_OBJECTS];
     
     /**
-     * Method used to add a stock trade object to the hashMap of stockTrades
-     * if there is room and if the stockSymbol is unique.
+     * Method used to add a stock trade object to the treeMap of stockTrades
      * 
      * @param tradeObj - passes in stock trade object
-     * @return - returns true or false based on whether or not a stock trade was
-     * added to the list.
      */
     public void addStockTrade(StockTrade tradeObj) {
         
@@ -36,16 +33,15 @@ public class StockTradeLogImpl {
             
             treeMap.put(stockSymbol, tradeObj);
         }
-        
     }
     
     /**
-     * Method that finds a stockTrade if it is in the hashMap given a certain
+     * Method that finds a stockTrade if it is in the treeMap given a certain
      * stockSymbol
      *  
      * @param stockSymbol - passes in stockSymbol
      * @return - returns reference to the stockTrade object or null if it is
-     * not in the hashMap.
+     * not in the treeMap.
      */
     public StockTrade findStockTrade(String stockSymbol) {
         
@@ -57,6 +53,11 @@ public class StockTradeLogImpl {
         }
     }
     
+    /**
+     * Method used to iterate through the treeMap and display the elements using
+     * the toString method.
+     * 
+     */
     public void traverseDisplay() {
         Set set = treeMap.entrySet();
         
