@@ -5,8 +5,6 @@
  */
 package cs310zimmerman;
 
-import java.util.LinkedList;
-import java.util.Iterator;
 import java.io.*;
 import java.util.Scanner;
 /**
