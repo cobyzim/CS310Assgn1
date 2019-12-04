@@ -1,14 +1,13 @@
 /*
  * Program to manage information regarding brokers and their stock trades.
  * Data is read from particular files containing information on brokers and
- * stocks, and the program adds brokers and stockTrades to a hash set and hash
- * map respectively.
+ * stocks, and the program adds brokers and stockTrades to a binary search tree
+ * and treeMap respectively
  */
 package cs310zimmerman;
 
 import java.util.Scanner;
 import java.io.*;
-import java.util.Arrays;
 
 /**
  *
@@ -22,7 +21,9 @@ public class CS310Zimmerman {
     static PrintImpl printImpl = new PrintImpl();
 
     /**
-     * Main method that calls the processFile method and the printReport method
+     * Main method that calls the processFile method, printReport method, and
+     * both traverse display methods from the brokerLogImpl and 
+     * stockTradeImpl classes
      *
      * @param args the command line arguments
      * @throws java.io.FileNotFoundException - signals that file denoted by
@@ -84,8 +85,8 @@ public class CS310Zimmerman {
     }
 
     /**
-     * Method used to add a new broker object to hashSet. Calls addBroker
-     * method from BrokerLogImpl class.
+     * Method used to add a new broker object to binary search tree. Calls 
+     * addBroker method from BrokerLogImpl class.
      *
      * @param line - passes in array of strings from input file
      */
@@ -96,7 +97,7 @@ public class CS310Zimmerman {
     }
 
     /**
-     * Method used to add a new stock trade object to hashMap. Calls
+     * Method used to add a new stock trade object to treeMap. Calls
      * addStockTrade method from StockTradeLogImpl class.
      *
      * @param line - passes in array of strings from input file
