@@ -19,7 +19,7 @@ public class BrokerNode {
     /**
      * Method used to create a broker node using a broker object
      * 
-     * @param broker - passes in broker object
+     * @param data - passes in broker data object
      */
     public BrokerNode(Broker data) {
         this.data = data;
@@ -27,21 +27,22 @@ public class BrokerNode {
         right = null;
     }
     
+    @Override
     public String toString() {
         return data.toString();
     }
     
     /**
-     * Method used to retrieve the next node in the list
+     * Method used to retrieve the left node in the binary search tree
      * 
-     * @return - returns the next node
+     * @return - returns the left node
      */
     public BrokerNode getLeft() {
         return left;
     }
     
     /**
-     * Method used to set a broker node's next to another node
+     * Method used to set a broker node's left node to another node
      * 
      * @param brokerNode - passes in a broker node
      */
@@ -49,16 +50,26 @@ public class BrokerNode {
         left = brokerNode;
     }
     
+    /**
+     * Method used to retrieve the right node in the binary search tree
+     * 
+     * @return - returns the right node
+     */
     public BrokerNode getRight() {
         return right;
     }
     
+    /**
+     * Method used to set a broker node's left node to another node
+     * 
+     * @param brokerNode - passes in a broker node
+     */
     public void setRight(BrokerNode brokerNode) {
         right = brokerNode;
     }
     
     /**
-     * Method that gives a node the value of a broker object
+     * Method that sets the data of a broker object
      * 
      * @param broker - passes in broker object
      */
@@ -67,7 +78,7 @@ public class BrokerNode {
     }
     
     /**
-     * Method used to retrieve the data from a node
+     * Method used to retrieve the data from a broker object
      * 
      * @return - returns the data
      */
