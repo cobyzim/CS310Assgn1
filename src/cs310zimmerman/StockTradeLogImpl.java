@@ -13,34 +13,11 @@ import java.util.Map;
  * @author Coby Zimmerman
  */
 public class StockTradeLogImpl {
-    /*
-    private final int MAX_SIZE;
-    private int currSize;
-    private int numNodes;
-    private StockTradeNode[] stockTradeHashSet;
-    */
     
     TreeMap treeMap = new TreeMap();
     private int numStockTrades = 0;
     final int MAXIMUM_NUM_OBJECTS = 1000;
     private StockTrade[] stockTradeArray = new StockTrade[MAXIMUM_NUM_OBJECTS];
-    
-    /**
-     * Constructor that initializes data fields including the hashTable for
-     * stockTradeNodes
-     *  
-     */
-    public StockTradeLogImpl() {
-        /*
-        MAX_SIZE = 17;
-        currSize = 0;
-        numNodes = 0;
-        stockTradeHashSet = new StockTradeNode[MAX_SIZE];
-        for (int index = 0; index < stockTradeHashSet.length; index++) {
-            stockTradeHashSet[index] = null;
-        }
-        */
-    }
     
     /**
      * Method used to add a stock trade object to the hashMap of stockTrades
