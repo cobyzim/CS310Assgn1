@@ -1,0 +1,192 @@
+  public class XmlTemplateBuilder {                                                                                                                                               
+                                                                                                                                                                                  
+      private final String rootElement;                                                                                                                                           
+      private final List<ElementSpec> elementSpecs;                                                                                                                               
+                                                                                                                                                                                  
+      private XmlTemplateBuilder(String rootElement, List<ElementSpec> elementSpecs) {                                                                                            
+          this.rootElement = rootElement;                                                                                                                                         
+          this.elementSpecs = elementSpecs;                                                                                                                                       
+      }                                                                                                                                                                           
+                                                                                                                                                                                  
+      // Immutable spec for each element in your strict hierarchy                                                                                                                 
+      public static class ElementSpec {                                                                                                                                           
+          private final String tagName;                                                                                                                                           
+          private final int order;                                                                                                                                                
+          private final String attributeSource;  // flow file attribute name, or null if static                                                                                   
+          private final String staticValue;      // used when attributeSource is null                                                                                             
+          private final List<ElementSpec> children;                                                                                                                               
+                                                                                                                                                                                  
+          private ElementSpec(Builder builder) {                                                                                                                                  
+              this.tagName = builder.tagName;                                                                                                                                     
+              this.order = builder.order;                                                                                                                                         
+              this.attributeSource = builder.attributeSource;                                                                                                                     
+              this.staticValue = builder.staticValue;                                                                                                                             
+              this.children = List.copyOf(builder.children);                                                                                                                      
+          }                                                                                                                                                                       
+                                                                                                                                                                                  
+          public static class Builder {                                                                                                                                           
+              private final String tagName;                                                                                                                                       
+              private int order;                                                                                                                                                  
+              private String attributeSource;                                                                                                                                     
+              private String staticValue;                                                                                                                                         
+              private List<ElementSpec> children = new ArrayList<>();                                                                                                             
+                                                                                                                                                                                  
+              public Builder(String tagName) {                                                                                                                                    
+                  this.tagName = tagName;                                                                                                                                         
+              }                                                                                                                                                                   
+                                                                                                                                                                                  
+              public Builder order(int order) {                                                                                                                                   
+                  this.order = order;                                                                                                                                             
+                  return this;                                                                                                                                                    
+              }                                                                                                                                                                   
+                                                                                                                                                                                  
+              public Builder fromAttribute(String attributeName) {                                                                                                                
+                  this.attributeSource = attributeName;                                                                                                                           
+                  return this;                                                                                                                                                    
+              }                                                                                                                                                                   
+                                                                                                                                                                                  
+              public Builder staticValue(String value) {                                                                                                                          
+                  this.staticValue = value;                                                                                                                                       
+                  return this;                                                                                                                                                    
+              }                                                                                                                                                                   
+                                                                                                                                                                                  
+              public Builder child(ElementSpec child) {                                                                                                                           
+                  this.children.add(child);                                                                                                                                       
+                  return this;                                                                                                                                                    
+              }                                                                                                                                                                   
+                                                                                                                                                                                  
+              public ElementSpec build() {                                                                                                                                        
+                  return new ElementSpec(this);                                                                                                                                   
+              }                                                                                                                                                                   
+          }                                                                                                                                                                       
+      }                                                                                                                                                                           
+                                                                                                                                                                                  
+      // Template builder                                                                                                                                                         
+      public static class TemplateBuilder {                                                                                                                                       
+          private String rootElement;                                                                                                                                             
+          private List<ElementSpec> specs = new ArrayList<>();                                                                                                                    
+                                                                                                                                                                                  
+          public TemplateBuilder root(String rootElement) {                                                                                                                       
+              this.rootElement = rootElement;                                                                                                                                     
+              return this;                                                                                                                                                        
+          }                                                                                                                                                                       
+                                                                                                                                                                                  
+          public TemplateBuilder element(ElementSpec spec) {                                                                                                                      
+              this.specs.add(spec);                                                                                                                                               
+              return this;                                                                                                                                                        
+          }                                                                                                                                                                       
+                                                                                                                                                                                  
+          public XmlTemplateBuilder build() {                                                                                                                                     
+              // Sort by order to enforce strict hierarchy                                                                                                                        
+              List<ElementSpec> sorted = specs.stream()                                                                                                                           
+                  .sorted(Comparator.comparingInt(s -> s.order))                                                                                                                  
+                  .collect(Collectors.toList());                                                                                                                                  
+              return new XmlTemplateBuilder(rootElement, sorted);                                                                                                                 
+          }                                                                                                                                                                       
+      }                                                                                                                                                                           
+                                                                                                                                                                                  
+      // Called during OnTrigger - produces XML from template + flow file attributes                                                                                              
+      public String render(Map<String, String> attributes) {                                                                                                                      
+          StringBuilder xml = new StringBuilder();                                                                                                                                
+          xml.append("<").append(rootElement).append(">");                                                                                                                        
+                                                                                                                                                                                  
+          for (ElementSpec spec : elementSpecs) {                                                                                                                                 
+              renderElement(xml, spec, attributes);                                                                                                                               
+          }                                                                                                                                                                       
+                                                                                                                                                                                  
+          xml.append("</").append(rootElement).append(">");                                                                                                                       
+          return xml.toString();                                                                                                                                                  
+      }                                                                                                                                                                           
+                                                                                                                                                                                  
+      private void renderElement(StringBuilder xml, ElementSpec spec, Map<String, String> attributes) {                                                                           
+          String value = spec.attributeSource != null                                                                                                                             
+              ? attributes.getOrDefault(spec.attributeSource, "")                                                                                                                 
+              : spec.staticValue;                                                                                                                                                 
+                                                                                                                                                                                  
+          xml.append("<").append(spec.tagName).append(">");                                                                                                                       
+                                                                                                                                                                                  
+          if (!spec.children.isEmpty()) {                                                                                                                                         
+              for (ElementSpec child : spec.children) {                                                                                                                           
+                  renderElement(xml, child, attributes);                                                                                                                          
+              }                                                                                                                                                                   
+          } else if (value != null) {                                                                                                                                             
+              xml.append(escapeXml(value));                                                                                                                                       
+          }                                                                                                                                                                       
+                                                                                                                                                                                  
+          xml.append("</").append(spec.tagName).append(">");                                                                                                                      
+      }                                                                                                                                                                           
+                                                                                                                                                                                  
+      private String escapeXml(String value) {                                                                                                                                    
+          // Your XML escaping logic                                                                                                                                              
+          return value.replace("&", "&amp;")                                                                                                                                      
+                      .replace("<", "&lt;")                                                                                                                                       
+                      .replace(">", "&gt;");                                                                                                                                      
+      }                                                                                                                                                                           
+  }                                                                                                                                                                               
+                                                                                                                                                                                  
+  And in your processor:                                                                                                                                                          
+                                                                                                                                                                                  
+  @Tags({"json", "xml", "convert"})                                                                                                                                               
+  @CapabilityDescription("Converts JSON to XML with strict element ordering")                                                                                                     
+  public class JsonToStrictXmlProcessor extends AbstractProcessor {                                                                                                               
+                                                                                                                                                                                  
+      private volatile XmlTemplateBuilder template;                                                                                                                               
+                                                                                                                                                                                  
+      @OnScheduled                                                                                                                                                                
+      public void onScheduled(ProcessContext context) {                                                                                                                           
+          // Build immutable template once at startup                                                                                                                             
+          this.template = new XmlTemplateBuilder.TemplateBuilder()                                                                                                                
+              .root("Document")                                                                                                                                                   
+              .element(new ElementSpec.Builder("Header")                                                                                                                          
+                  .order(1)                                                                                                                                                       
+                  .child(new ElementSpec.Builder("Timestamp")                                                                                                                     
+                      .order(1)                                                                                                                                                   
+                      .fromAttribute("record.timestamp")                                                                                                                          
+                      .build())                                                                                                                                                   
+                  .child(new ElementSpec.Builder("Source")                                                                                                                        
+                      .order(2)                                                                                                                                                   
+                      .fromAttribute("record.source")                                                                                                                             
+                      .build())                                                                                                                                                   
+                  .build())                                                                                                                                                       
+              .element(new ElementSpec.Builder("Body")                                                                                                                            
+                  .order(2)                                                                                                                                                       
+                  .child(new ElementSpec.Builder("Type")                                                                                                                          
+                      .order(1)                                                                                                                                                   
+                      .fromAttribute("record.type")                                                                                                                               
+                      .build())                                                                                                                                                   
+                  .child(new ElementSpec.Builder("Payload")                                                                                                                       
+                      .order(2)                                                                                                                                                   
+                      .fromAttribute("record.payload")                                                                                                                            
+                      .build())                                                                                                                                                   
+                  .build())                                                                                                                                                       
+              .element(new ElementSpec.Builder("Footer")                                                                                                                          
+                  .order(3)                                                                                                                                                       
+                  .staticValue("END")                                                                                                                                             
+                  .build())                                                                                                                                                       
+              .build();                                                                                                                                                           
+      }                                                                                                                                                                           
+                                                                                                                                                                                  
+      @Override                                                                                                                                                                   
+      public void onTrigger(ProcessContext context, ProcessSession session) {                                                                                                     
+          FlowFile flowFile = session.get();                                                                                                                                      
+          if (flowFile == null) return;                                                                                                                                           
+                                                                                                                                                                                  
+          // Template is immutable, render() is thread-safe                                                                                                                       
+          Map<String, String> attributes = flowFile.getAttributes();                                                                                                              
+          String xml = template.render(attributes);                                                                                                                               
+                                                                                                                                                                                  
+          flowFile = session.write(flowFile, out -> out.write(xml.getBytes(StandardCharsets.UTF_8)));                                                                             
+          session.transfer(flowFile, REL_SUCCESS);                                                                                                                                
+      }                                                                                                                                                                           
+  }     
+
+-------------------------------------------------
+
+❯ Does OnScheduled run everytime a flow file comes in, or just when the processor is set to run?                                                                                  
+                                                                                                                                                                                  
+⏺ @OnScheduled runs once when the processor is started (transitions from stopped to running state), not per flow file. 
+
+So for your use case, building the template in @OnScheduled means:                                                                                                              
+  - It builds once when you start the processor                                                                                                                                   
+  - @OnTrigger gets called thousands/millions of times reusing that same template                                                                                                 
+  - If you stop and restart the processor, @OnScheduled runs again (useful if properties changed)  
