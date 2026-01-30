@@ -291,3 +291,37 @@ So for your use case, building the template in @OnScheduled means:
   3. Only has fields that are themselves immutable (or primitives)                                                                                                                
                                                                                                                                                                                   
   If you need to "change" something, you create a new object rather than modifying the existing one.
+
+
+----------------------------------------------------
+
+❯ Could I use a synchronzied block instead of volatile                                                                                                                            
+                                                                                                                                                                                  
+⏺ Yes, but it would be overkill for this situation. Here's the difference:                                                                                                        
+                                                                                                                                                                                  
+  What Each Provides                                                                                                                                                              
+  ┌───────────────────────────────────────┬──────────┬──────────────┐                                                                                                             
+  │                Feature                │ volatile │ synchronized │                                                                                                             
+  ├───────────────────────────────────────┼──────────┼──────────────┤                                                                                                             
+  │ Visibility (threads see latest value) │ Yes      │ Yes          │                                                                                                             
+  ├───────────────────────────────────────┼──────────┼──────────────┤                                                                                                             
+  │ Atomicity (only one thread at a time) │ No       │ Yes          │                                                                                                             
+  └───────────────────────────────────────┴──────────┴──────────────┘                                                                                                             
+  Your Situation                                                                                                                                                                  
+                                                                                                                                                                                  
+  You have a write-once, read-many pattern:                                                                                                                                       
+                                                                                                                                                                                  
+  @OnScheduled  // One thread, one time                                                                                                                                           
+  public void onScheduled(...) {                                                                                                                                                  
+      this.template = buildTemplate();  // Single write                                                                                                                           
+  }                                                                                                                                                                               
+                                                                                                                                                                                  
+  @OnTrigger  // Many threads, many times                                                                                                                                         
+  public void onTrigger(...) {                                                                                                                                                    
+      template.render(attributes);  // Many reads                                                                                                                                 
+  }                                                                                                                                                                               
+                                                                                                                                                                                  
+  You don't need atomicity because:                                                                                                                                               
+  - There's only one write (during @OnScheduled)                                                                                                                                  
+  - All other access is reads                                                                                                                                                     
+  - Reads don't conflict with each other  
