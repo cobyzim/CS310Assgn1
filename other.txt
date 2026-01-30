@@ -190,3 +190,104 @@ So for your use case, building the template in @OnScheduled means:
   - It builds once when you start the processor                                                                                                                                   
   - @OnTrigger gets called thousands/millions of times reusing that same template                                                                                                 
   - If you stop and restart the processor, @OnScheduled runs again (useful if properties changed)  
+
+
+---------------------------------------------------
+
+❯ Can you explain how this is thread safe? I have trouble wrapping my head around that                                                                                            
+                                                                                                                                                                                  
+⏺ The core principle is: if nothing changes, nothing can conflict.                                                                                                                
+                                                                                                                                                                                  
+  The Problem with Mutable State                                                                                                                                                  
+                                                                                                                                                                                  
+  Imagine a mutable approach where multiple threads share one object:                                                                                                             
+                                                                                                                                                                                  
+  // DANGEROUS - shared mutable state                                                                                                                                             
+  public class MutableXmlBuilder {                                                                                                                                                
+      private String currentValue;  // shared field                                                                                                                               
+                                                                                                                                                                                  
+      public void setValue(String val) {                                                                                                                                          
+          this.currentValue = val;  // Thread A writes                                                                                                                            
+      }                                                                                                                                                                           
+                                                                                                                                                                                  
+      public String render() {                                                                                                                                                    
+          return "<tag>" + currentValue + "</tag>";  // Thread B reads                                                                                                            
+      }                                                                                                                                                                           
+  }                                                                                                                                                                               
+                                                                                                                                                                                  
+  With two concurrent @OnTrigger calls:                                                                                                                                           
+                                                                                                                                                                                  
+  Thread A: setValue("apple")                                                                                                                                                     
+  Thread B: setValue("banana")                                                                                                                                                    
+  Thread A: render()  → returns "<tag>banana</tag>" ← WRONG!                                                                                                                      
+                                                                                                                                                                                  
+  Thread A got Thread B's value because they're mutating the same object.                                                                                                         
+                                                                                                                                                                                  
+  Why Immutable is Safe                                                                                                                                                           
+                                                                                                                                                                                  
+  In the pattern I showed:                                                                                                                                                        
+                                                                                                                                                                                  
+  // The template itself never changes after construction                                                                                                                         
+  private volatile XmlTemplateBuilder template;                                                                                                                                   
+                                                                                                                                                                                  
+  @OnScheduled                                                                                                                                                                    
+  public void onScheduled(ProcessContext context) {                                                                                                                               
+      // Built once, then NEVER modified                                                                                                                                          
+      this.template = new XmlTemplateBuilder.TemplateBuilder()                                                                                                                    
+          .root("Document")                                                                                                                                                       
+          // ... build structure ...                                                                                                                                              
+          .build();                                                                                                                                                               
+  }                                                                                                                                                                               
+                                                                                                                                                                                  
+  @OnTrigger                                                                                                                                                                      
+  public void onTrigger(ProcessContext context, ProcessSession session) {                                                                                                         
+      Map<String, String> attributes = flowFile.getAttributes();  // Local variable                                                                                               
+      String xml = template.render(attributes);  // Pure function                                                                                                                 
+  }                                                                                                                                                                               
+                                                                                                                                                                                  
+  The render() method only:                                                                                                                                                       
+  1. Reads from the immutable template (never writes)                                                                                                                             
+  2. Reads from attributes (a local variable, each thread has its own)                                                                                                            
+  3. Writes to a local StringBuilder (each thread has its own)                                                                                                                    
+                                                                                                                                                                                  
+  public String render(Map<String, String> attributes) {                                                                                                                          
+      StringBuilder xml = new StringBuilder();  // Local - each thread gets its own                                                                                               
+                                                                                                                                                                                  
+      // Only READS from this.elementSpecs, never modifies it                                                                                                                     
+      for (ElementSpec spec : elementSpecs) {                                                                                                                                     
+          renderElement(xml, spec, attributes);                                                                                                                                   
+      }                                                                                                                                                                           
+                                                                                                                                                                                  
+      return xml.toString();                                                                                                                                                      
+  }                                                                                                                                                                               
+                                                                                                                                                                                  
+  Visual Example                                                                                                                                                                  
+                                                                                                                                                                                  
+  Thread A calls render({"name": "apple"})                                                                                                                                        
+    → creates its own StringBuilder                                                                                                                                               
+    → reads template specs (shared, but immutable)                                                                                                                                
+    → returns "<doc><name>apple</name></doc>"                                                                                                                                     
+                                                                                                                                                                                  
+  Thread B calls render({"name": "banana"})       ← simultaneously                                                                                                                
+    → creates its own StringBuilder                                                                                                                                               
+    → reads template specs (same shared specs, still immutable)                                                                                                                   
+    → returns "<doc><name>banana</name></doc>"                                                                                                                                    
+                                                                                                                                                                                  
+  Both threads read the same template, but since neither can modify it, they can't interfere with each other. Each thread's local variables (StringBuilder, attributes map) are   
+  isolated.                                                                                                                                                                       
+                                                                                                                                                                                  
+  The volatile Keyword                                                                                                                                                            
+                                                                                                                                                                                  
+  private volatile XmlTemplateBuilder template;                                                                                                                                   
+                                                                                                                                                                                  
+  This ensures that when @OnScheduled writes the template reference, all @OnTrigger threads see the updated value. Without it, a thread might see a stale null reference due to   
+  CPU caching.                                                                                                                                                                    
+                                                                                                                                                                                  
+  Rule of Thumb                                                                                                                                                                   
+                                                                                                                                                                                  
+  Thread-safe if your shared object:                                                                                                                                              
+  1. Is fully constructed before any thread uses it                                                                                                                               
+  2. Has no setters or mutating methods                                                                                                                                           
+  3. Only has fields that are themselves immutable (or primitives)                                                                                                                
+                                                                                                                                                                                  
+  If you need to "change" something, you create a new object rather than modifying the existing one.
