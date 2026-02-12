@@ -1,327 +1,75 @@
-  public class XmlTemplateBuilder {                                                                                                                                               
-                                                                                                                                                                                  
-      private final String rootElement;                                                                                                                                           
-      private final List<ElementSpec> elementSpecs;                                                                                                                               
-                                                                                                                                                                                  
-      private XmlTemplateBuilder(String rootElement, List<ElementSpec> elementSpecs) {                                                                                            
-          this.rootElement = rootElement;                                                                                                                                         
-          this.elementSpecs = elementSpecs;                                                                                                                                       
-      }                                                                                                                                                                           
-                                                                                                                                                                                  
-      // Immutable spec for each element in your strict hierarchy                                                                                                                 
-      public static class ElementSpec {                                                                                                                                           
-          private final String tagName;                                                                                                                                           
-          private final int order;                                                                                                                                                
-          private final String attributeSource;  // flow file attribute name, or null if static                                                                                   
-          private final String staticValue;      // used when attributeSource is null                                                                                             
-          private final List<ElementSpec> children;                                                                                                                               
-                                                                                                                                                                                  
-          private ElementSpec(Builder builder) {                                                                                                                                  
-              this.tagName = builder.tagName;                                                                                                                                     
-              this.order = builder.order;                                                                                                                                         
-              this.attributeSource = builder.attributeSource;                                                                                                                     
-              this.staticValue = builder.staticValue;                                                                                                                             
-              this.children = List.copyOf(builder.children);                                                                                                                      
-          }                                                                                                                                                                       
-                                                                                                                                                                                  
-          public static class Builder {                                                                                                                                           
-              private final String tagName;                                                                                                                                       
-              private int order;                                                                                                                                                  
-              private String attributeSource;                                                                                                                                     
-              private String staticValue;                                                                                                                                         
-              private List<ElementSpec> children = new ArrayList<>();                                                                                                             
-                                                                                                                                                                                  
-              public Builder(String tagName) {                                                                                                                                    
-                  this.tagName = tagName;                                                                                                                                         
-              }                                                                                                                                                                   
-                                                                                                                                                                                  
-              public Builder order(int order) {                                                                                                                                   
-                  this.order = order;                                                                                                                                             
-                  return this;                                                                                                                                                    
-              }                                                                                                                                                                   
-                                                                                                                                                                                  
-              public Builder fromAttribute(String attributeName) {                                                                                                                
-                  this.attributeSource = attributeName;                                                                                                                           
-                  return this;                                                                                                                                                    
-              }                                                                                                                                                                   
-                                                                                                                                                                                  
-              public Builder staticValue(String value) {                                                                                                                          
-                  this.staticValue = value;                                                                                                                                       
-                  return this;                                                                                                                                                    
-              }                                                                                                                                                                   
-                                                                                                                                                                                  
-              public Builder child(ElementSpec child) {                                                                                                                           
-                  this.children.add(child);                                                                                                                                       
-                  return this;                                                                                                                                                    
-              }                                                                                                                                                                   
-                                                                                                                                                                                  
-              public ElementSpec build() {                                                                                                                                        
-                  return new ElementSpec(this);                                                                                                                                   
-              }                                                                                                                                                                   
-          }                                                                                                                                                                       
-      }                                                                                                                                                                           
-                                                                                                                                                                                  
-      // Template builder                                                                                                                                                         
-      public static class TemplateBuilder {                                                                                                                                       
-          private String rootElement;                                                                                                                                             
-          private List<ElementSpec> specs = new ArrayList<>();                                                                                                                    
-                                                                                                                                                                                  
-          public TemplateBuilder root(String rootElement) {                                                                                                                       
-              this.rootElement = rootElement;                                                                                                                                     
-              return this;                                                                                                                                                        
-          }                                                                                                                                                                       
-                                                                                                                                                                                  
-          public TemplateBuilder element(ElementSpec spec) {                                                                                                                      
-              this.specs.add(spec);                                                                                                                                               
-              return this;                                                                                                                                                        
-          }                                                                                                                                                                       
-                                                                                                                                                                                  
-          public XmlTemplateBuilder build() {                                                                                                                                     
-              // Sort by order to enforce strict hierarchy                                                                                                                        
-              List<ElementSpec> sorted = specs.stream()                                                                                                                           
-                  .sorted(Comparator.comparingInt(s -> s.order))                                                                                                                  
-                  .collect(Collectors.toList());                                                                                                                                  
-              return new XmlTemplateBuilder(rootElement, sorted);                                                                                                                 
-          }                                                                                                                                                                       
-      }                                                                                                                                                                           
-                                                                                                                                                                                  
-      // Called during OnTrigger - produces XML from template + flow file attributes                                                                                              
-      public String render(Map<String, String> attributes) {                                                                                                                      
-          StringBuilder xml = new StringBuilder();                                                                                                                                
-          xml.append("<").append(rootElement).append(">");                                                                                                                        
-                                                                                                                                                                                  
-          for (ElementSpec spec : elementSpecs) {                                                                                                                                 
-              renderElement(xml, spec, attributes);                                                                                                                               
-          }                                                                                                                                                                       
-                                                                                                                                                                                  
-          xml.append("</").append(rootElement).append(">");                                                                                                                       
-          return xml.toString();                                                                                                                                                  
-      }                                                                                                                                                                           
-                                                                                                                                                                                  
-      private void renderElement(StringBuilder xml, ElementSpec spec, Map<String, String> attributes) {                                                                           
-          String value = spec.attributeSource != null                                                                                                                             
-              ? attributes.getOrDefault(spec.attributeSource, "")                                                                                                                 
-              : spec.staticValue;                                                                                                                                                 
-                                                                                                                                                                                  
-          xml.append("<").append(spec.tagName).append(">");                                                                                                                       
-                                                                                                                                                                                  
-          if (!spec.children.isEmpty()) {                                                                                                                                         
-              for (ElementSpec child : spec.children) {                                                                                                                           
-                  renderElement(xml, child, attributes);                                                                                                                          
-              }                                                                                                                                                                   
-          } else if (value != null) {                                                                                                                                             
-              xml.append(escapeXml(value));                                                                                                                                       
-          }                                                                                                                                                                       
-                                                                                                                                                                                  
-          xml.append("</").append(spec.tagName).append(">");                                                                                                                      
-      }                                                                                                                                                                           
-                                                                                                                                                                                  
-      private String escapeXml(String value) {                                                                                                                                    
-          // Your XML escaping logic                                                                                                                                              
-          return value.replace("&", "&amp;")                                                                                                                                      
-                      .replace("<", "&lt;")                                                                                                                                       
-                      .replace(">", "&gt;");                                                                                                                                      
-      }                                                                                                                                                                           
-  }                                                                                                                                                                               
-                                                                                                                                                                                  
-  And in your processor:                                                                                                                                                          
-                                                                                                                                                                                  
-  @Tags({"json", "xml", "convert"})                                                                                                                                               
-  @CapabilityDescription("Converts JSON to XML with strict element ordering")                                                                                                     
-  public class JsonToStrictXmlProcessor extends AbstractProcessor {                                                                                                               
-                                                                                                                                                                                  
-      private volatile XmlTemplateBuilder template;                                                                                                                               
-                                                                                                                                                                                  
-      @OnScheduled                                                                                                                                                                
-      public void onScheduled(ProcessContext context) {                                                                                                                           
-          // Build immutable template once at startup                                                                                                                             
-          this.template = new XmlTemplateBuilder.TemplateBuilder()                                                                                                                
-              .root("Document")                                                                                                                                                   
-              .element(new ElementSpec.Builder("Header")                                                                                                                          
-                  .order(1)                                                                                                                                                       
-                  .child(new ElementSpec.Builder("Timestamp")                                                                                                                     
-                      .order(1)                                                                                                                                                   
-                      .fromAttribute("record.timestamp")                                                                                                                          
-                      .build())                                                                                                                                                   
-                  .child(new ElementSpec.Builder("Source")                                                                                                                        
-                      .order(2)                                                                                                                                                   
-                      .fromAttribute("record.source")                                                                                                                             
-                      .build())                                                                                                                                                   
-                  .build())                                                                                                                                                       
-              .element(new ElementSpec.Builder("Body")                                                                                                                            
-                  .order(2)                                                                                                                                                       
-                  .child(new ElementSpec.Builder("Type")                                                                                                                          
-                      .order(1)                                                                                                                                                   
-                      .fromAttribute("record.type")                                                                                                                               
-                      .build())                                                                                                                                                   
-                  .child(new ElementSpec.Builder("Payload")                                                                                                                       
-                      .order(2)                                                                                                                                                   
-                      .fromAttribute("record.payload")                                                                                                                            
-                      .build())                                                                                                                                                   
-                  .build())                                                                                                                                                       
-              .element(new ElementSpec.Builder("Footer")                                                                                                                          
-                  .order(3)                                                                                                                                                       
-                  .staticValue("END")                                                                                                                                             
-                  .build())                                                                                                                                                       
-              .build();                                                                                                                                                           
-      }                                                                                                                                                                           
-                                                                                                                                                                                  
-      @Override                                                                                                                                                                   
-      public void onTrigger(ProcessContext context, ProcessSession session) {                                                                                                     
-          FlowFile flowFile = session.get();                                                                                                                                      
-          if (flowFile == null) return;                                                                                                                                           
-                                                                                                                                                                                  
-          // Template is immutable, render() is thread-safe                                                                                                                       
-          Map<String, String> attributes = flowFile.getAttributes();                                                                                                              
-          String xml = template.render(attributes);                                                                                                                               
-                                                                                                                                                                                  
-          flowFile = session.write(flowFile, out -> out.write(xml.getBytes(StandardCharsets.UTF_8)));                                                                             
-          session.transfer(flowFile, REL_SUCCESS);                                                                                                                                
-      }                                                                                                                                                                           
-  }     
+# GitLab (self-hosted)                                                                                                                                                          
+  source = "git@gitlab.yourcompany.com:team/tf-modules.git//modules/api_gateway?ref=v0.0.9"                                                                                       
 
--------------------------------------------------
+  # GitLab.com (SaaS)
+  source = "git@gitlab.com:username/tf-modules.git//modules/api_gateway?ref=v0.0.9"
 
-❯ Does OnScheduled run everytime a flow file comes in, or just when the processor is set to run?                                                                                  
-                                                                                                                                                                                  
-⏺ @OnScheduled runs once when the processor is started (transitions from stopped to running state), not per flow file. 
-
-So for your use case, building the template in @OnScheduled means:                                                                                                              
-  - It builds once when you start the processor                                                                                                                                   
-  - @OnTrigger gets called thousands/millions of times reusing that same template                                                                                                 
-  - If you stop and restart the processor, @OnScheduled runs again (useful if properties changed)  
+  The format is the same because Terraform uses Git SSH under the hood — it doesn't care whether it's GitHub, GitLab, Bitbucket, or any other Git host. The ?ref= parameter works
+  the same way (tags, branches, or commit SHAs).
 
 
----------------------------------------------------
+⏺ GitLab has a built-in Terraform Module Registry. The syntax changes to:                                                                                                         
+                           
+  # Git SSH (what you do now)                                                                                                                                                     
+  source = "git@gitlab.com:team/tf-modules.git//modules/api_gateway?ref=v0.0.9"
+                                                                                                                                                                                  
+  # GitLab Module Registry                                                                                                                                                        
+  source = "gitlab.com/team/tf-modules/api_gateway"
+  version = "0.0.9"
 
-❯ Can you explain how this is thread safe? I have trouble wrapping my head around that                                                                                            
-                                                                                                                                                                                  
-⏺ The core principle is: if nothing changes, nothing can conflict.                                                                                                                
-                                                                                                                                                                                  
-  The Problem with Mutable State                                                                                                                                                  
-                                                                                                                                                                                  
-  Imagine a mutable approach where multiple threads share one object:                                                                                                             
-                                                                                                                                                                                  
-  // DANGEROUS - shared mutable state                                                                                                                                             
-  public class MutableXmlBuilder {                                                                                                                                                
-      private String currentValue;  // shared field                                                                                                                               
-                                                                                                                                                                                  
-      public void setValue(String val) {                                                                                                                                          
-          this.currentValue = val;  // Thread A writes                                                                                                                            
-      }                                                                                                                                                                           
-                                                                                                                                                                                  
-      public String render() {                                                                                                                                                    
-          return "<tag>" + currentValue + "</tag>";  // Thread B reads                                                                                                            
-      }                                                                                                                                                                           
-  }                                                                                                                                                                               
-                                                                                                                                                                                  
-  With two concurrent @OnTrigger calls:                                                                                                                                           
-                                                                                                                                                                                  
-  Thread A: setValue("apple")                                                                                                                                                     
-  Thread B: setValue("banana")                                                                                                                                                    
-  Thread A: render()  → returns "<tag>banana</tag>" ← WRONG!                                                                                                                      
-                                                                                                                                                                                  
-  Thread A got Thread B's value because they're mutating the same object.                                                                                                         
-                                                                                                                                                                                  
-  Why Immutable is Safe                                                                                                                                                           
-                                                                                                                                                                                  
-  In the pattern I showed:                                                                                                                                                        
-                                                                                                                                                                                  
-  // The template itself never changes after construction                                                                                                                         
-  private volatile XmlTemplateBuilder template;                                                                                                                                   
-                                                                                                                                                                                  
-  @OnScheduled                                                                                                                                                                    
-  public void onScheduled(ProcessContext context) {                                                                                                                               
-      // Built once, then NEVER modified                                                                                                                                          
-      this.template = new XmlTemplateBuilder.TemplateBuilder()                                                                                                                    
-          .root("Document")                                                                                                                                                       
-          // ... build structure ...                                                                                                                                              
-          .build();                                                                                                                                                               
-  }                                                                                                                                                                               
-                                                                                                                                                                                  
-  @OnTrigger                                                                                                                                                                      
-  public void onTrigger(ProcessContext context, ProcessSession session) {                                                                                                         
-      Map<String, String> attributes = flowFile.getAttributes();  // Local variable                                                                                               
-      String xml = template.render(attributes);  // Pure function                                                                                                                 
-  }                                                                                                                                                                               
-                                                                                                                                                                                  
-  The render() method only:                                                                                                                                                       
-  1. Reads from the immutable template (never writes)                                                                                                                             
-  2. Reads from attributes (a local variable, each thread has its own)                                                                                                            
-  3. Writes to a local StringBuilder (each thread has its own)                                                                                                                    
-                                                                                                                                                                                  
-  public String render(Map<String, String> attributes) {                                                                                                                          
-      StringBuilder xml = new StringBuilder();  // Local - each thread gets its own                                                                                               
-                                                                                                                                                                                  
-      // Only READS from this.elementSpecs, never modifies it                                                                                                                     
-      for (ElementSpec spec : elementSpecs) {                                                                                                                                     
-          renderElement(xml, spec, attributes);                                                                                                                                   
-      }                                                                                                                                                                           
-                                                                                                                                                                                  
-      return xml.toString();                                                                                                                                                      
-  }                                                                                                                                                                               
-                                                                                                                                                                                  
-  Visual Example                                                                                                                                                                  
-                                                                                                                                                                                  
-  Thread A calls render({"name": "apple"})                                                                                                                                        
-    → creates its own StringBuilder                                                                                                                                               
-    → reads template specs (shared, but immutable)                                                                                                                                
-    → returns "<doc><name>apple</name></doc>"                                                                                                                                     
-                                                                                                                                                                                  
-  Thread B calls render({"name": "banana"})       ← simultaneously                                                                                                                
-    → creates its own StringBuilder                                                                                                                                               
-    → reads template specs (same shared specs, still immutable)                                                                                                                   
-    → returns "<doc><name>banana</name></doc>"                                                                                                                                    
-                                                                                                                                                                                  
-  Both threads read the same template, but since neither can modify it, they can't interfere with each other. Each thread's local variables (StringBuilder, attributes map) are   
-  isolated.                                                                                                                                                                       
-                                                                                                                                                                                  
-  The volatile Keyword                                                                                                                                                            
-                                                                                                                                                                                  
-  private volatile XmlTemplateBuilder template;                                                                                                                                   
-                                                                                                                                                                                  
-  This ensures that when @OnScheduled writes the template reference, all @OnTrigger threads see the updated value. Without it, a thread might see a stale null reference due to   
-  CPU caching.                                                                                                                                                                    
-                                                                                                                                                                                  
-  Rule of Thumb                                                                                                                                                                   
-                                                                                                                                                                                  
-  Thread-safe if your shared object:                                                                                                                                              
-  1. Is fully constructed before any thread uses it                                                                                                                               
-  2. Has no setters or mutating methods                                                                                                                                           
-  3. Only has fields that are themselves immutable (or primitives)                                                                                                                
-                                                                                                                                                                                  
-  If you need to "change" something, you create a new object rather than modifying the existing one.
+  ---
+  How to Publish to GitLab's Registry
+
+  1. Structure your module following the standard naming convention:
+  terraform-<PROVIDER>-<NAME>
+  2. Publish via CI pipeline or API:
+  # In .gitlab-ci.yml
+  curl --header "PRIVATE-TOKEN: ${CI_JOB_TOKEN}" \
+    --upload-file module.tar.gz \
+    "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/terraform/modules/api-gateway/aws/0.0.9/file"
+  3. Reference in Terraform:
+  terraform {
+    required_providers {
+      aws = { source = "hashicorp/aws" }
+    }
+  }
+
+  module "api_gateway" {
+    source  = "gitlab.com/team/api-gateway/aws"
+    version = "0.0.9"
+  }
+
+  ---
+  Authentication
+
+  You'll need to configure credentials for the registry:
+
+  # ~/.terraformrc or terraform.rc
+  credentials "gitlab.com" {
+    token = "your-gitlab-token"
+  }
+
+  ---
+  Git SSH vs Module Registry
+  ┌─────────────────────┬──────────────────────────────┬───────────────────────────────────────┐
+  │       Aspect        │           Git SSH            │            Module Registry            │
+  ├─────────────────────┼──────────────────────────────┼───────────────────────────────────────┤
+  │ Setup               │ Just needs SSH key           │ Need to publish packages + auth token │
+  ├─────────────────────┼──────────────────────────────┼───────────────────────────────────────┤
+  │ Versioning          │ ?ref= (tags, branches, SHAs) │ Semantic versioning enforced          │
+  ├─────────────────────┼──────────────────────────────┼───────────────────────────────────────┤
+  │ Discoverability     │ Browse the repo              │ Browsable registry UI with docs       │
+  ├─────────────────────┼──────────────────────────────┼───────────────────────────────────────┤
+  │ Subdirectories      │ //path/to/module supported   │ Each module published separately      │
+  ├─────────────────────┼──────────────────────────────┼───────────────────────────────────────┤
+  │ Version constraints │ Exact ref only               │ Supports ~> 0.0.9, >= 1.0.0           │
+  └─────────────────────┴──────────────────────────────┴───────────────────────────────────────┘
+  ---
+  ★ Insight ─────────────────────────────────────
+  The biggest advantage of a module registry is version constraints. With Git SSH, you pin to an exact ref (?ref=v0.0.9). With a registry, you can use version = "~> 0.0" to
+  automatically pick up patch updates while blocking breaking changes. The tradeoff is more infrastructure to maintain (publishing pipeline, auth tokens).
+  ─────────────────────────────────────────────────
 
 
-----------------------------------------------------
 
-❯ Could I use a synchronzied block instead of volatile                                                                                                                            
-                                                                                                                                                                                  
-⏺ Yes, but it would be overkill for this situation. Here's the difference:                                                                                                        
-                                                                                                                                                                                  
-  What Each Provides                                                                                                                                                              
-  ┌───────────────────────────────────────┬──────────┬──────────────┐                                                                                                             
-  │                Feature                │ volatile │ synchronized │                                                                                                             
-  ├───────────────────────────────────────┼──────────┼──────────────┤                                                                                                             
-  │ Visibility (threads see latest value) │ Yes      │ Yes          │                                                                                                             
-  ├───────────────────────────────────────┼──────────┼──────────────┤                                                                                                             
-  │ Atomicity (only one thread at a time) │ No       │ Yes          │                                                                                                             
-  └───────────────────────────────────────┴──────────┴──────────────┘                                                                                                             
-  Your Situation                                                                                                                                                                  
-                                                                                                                                                                                  
-  You have a write-once, read-many pattern:                                                                                                                                       
-                                                                                                                                                                                  
-  @OnScheduled  // One thread, one time                                                                                                                                           
-  public void onScheduled(...) {                                                                                                                                                  
-      this.template = buildTemplate();  // Single write                                                                                                                           
-  }                                                                                                                                                                               
-                                                                                                                                                                                  
-  @OnTrigger  // Many threads, many times                                                                                                                                         
-  public void onTrigger(...) {                                                                                                                                                    
-      template.render(attributes);  // Many reads                                                                                                                                 
-  }                                                                                                                                                                               
-                                                                                                                                                                                  
-  You don't need atomicity because:                                                                                                                                               
-  - There's only one write (during @OnScheduled)                                                                                                                                  
-  - All other access is reads                                                                                                                                                     
-  - Reads don't conflict with each other  
+USE Git SSH because its simpler and handles monorepo tf modules more elegantly. Would be a cicd nightmare with the module registry and naturally supports subdirectories. Just unfortunate that I won't be able to tag specific modules since I'll have unnecessary versions that exist for unchanged modules, but oh well.
