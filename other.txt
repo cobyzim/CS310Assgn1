@@ -1,341 +1,67 @@
-# GitLab (self-hosted)                                                                                                                                                          
-  source = "git@gitlab.yourcompany.com:team/tf-modules.git//modules/api_gateway?ref=v0.0.9"                                                                                       
-
-  # GitLab.com (SaaS)
-  source = "git@gitlab.com:username/tf-modules.git//modules/api_gateway?ref=v0.0.9"
-
-  The format is the same because Terraform uses Git SSH under the hood — it doesn't care whether it's GitHub, GitLab, Bitbucket, or any other Git host. The ?ref= parameter works
-  the same way (tags, branches, or commit SHAs).
-
-
-⏺ GitLab has a built-in Terraform Module Registry. The syntax changes to:                                                                                                         
-                           
-  # Git SSH (what you do now)                                                                                                                                                     
-  source = "git@gitlab.com:team/tf-modules.git//modules/api_gateway?ref=v0.0.9"
+Good context. Let me walk through what I see before suggesting anything.                                                                                                        
+                                   
+  What the Code is Currently Doing                                                                                                                                                
                                                                                                                                                                                   
-  # GitLab Module Registry                                                                                                                                                        
-  source = "gitlab.com/team/tf-modules/api_gateway"
-  version = "0.0.9"
+  The convert() method processes lines sequentially:                                                                                                                              
+  line 1 → parseLine() → doStuff() → transform() → out.write()                                                                                                                    
+  line 2 → parseLine() → doStuff() → transform() → out.write()                                                                                                                    
+  ...
+  line 1000 → ...
+
+  One line at a time, single thread, for every file.
+
+  Where Parallelism Could Help
+
+  transform() is the interesting one — it does a lot of work (building lists, constructing objects) and touches no shared state. It takes inputs and produces an output. That's
+  the ideal candidate for parallelization.
+
+  The problem is out.write(). That output stream is shared, so multiple threads writing to it simultaneously would corrupt the output.
+
+  The Two Realistic Options
+
+  Option 1 — Parallel stream, synchronized write
+
+  Java's parallelStream() is a low-effort switch, but you'd need to synchronize the write:
+  reader.lines()
+        .map(line -> parseLine(line))
+        .parallel()                           // transform() runs on multiple threads
+        .forEach(jsonObj -> {
+            synchronized (outStream) {        // serialize the writes
+                doStuff(jsonObj, outStream);
+            }
+        });
+  The tradeoff: threads could finish transforms out of order, so output order is not guaranteed.
+
+  Option 2 — Parallel transform, sequential write (cleaner)
+  reader.lines()
+        .map(line -> parseLine(line))
+        .parallel()                           // transform() on multiple threads
+        .map(jsonObj -> transform(jsonObj, template, otherObjFactory))
+        .sequential()                         // switch back to single thread
+        .forEach(obj -> outStream.write(obj)); // one thread writes
+  This keeps output ordered and avoids locking entirely.
 
   ---
-  How to Publish to GitLab's Registry
+  The Bigger Win: File-Level Parallelism
 
-  1. Structure your module following the standard naming convention:
-  terraform-<PROVIDER>-<NAME>
-  2. Publish via CI pipeline or API:
-  # In .gitlab-ci.yml
-  curl --header "PRIVATE-TOKEN: ${CI_JOB_TOKEN}" \
-    --upload-file module.tar.gz \
-    "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/packages/terraform/modules/api-gateway/aws/0.0.9/file"
-  3. Reference in Terraform:
-  terraform {
-    required_providers {
-      aws = { source = "hashicorp/aws" }
-    }
+  You mentioned "tons of JSON files." If each file is processed by a single thread right now, you're leaving a lot of performance on the table. An ExecutorService lets you
+  process multiple files concurrently:
+
+  ExecutorService pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+  for (File file : files) {
+      pool.submit(() -> convert(file.inputStream(), file.outputStream()));
   }
 
-  module "api_gateway" {
-    source  = "gitlab.com/team/api-gateway/aws"
-    version = "0.0.9"
-  }
+  pool.shutdown();
+  pool.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+
+  Each file gets its own input/output stream, so there's no shared state between files — no synchronization needed. This is likely the biggest speedup.
 
   ---
-  Authentication
+  Before Parallelizing, One Question
 
-  You'll need to configure credentials for the registry:
+  Is otherObjFactory thread-safe? If createOtherObj() has any internal mutable state (counters, caches), multiple threads calling it simultaneously could race. template looks
+  read-only but worth verifying too. If either has mutable state, you'd either need to synchronize access or give each thread its own instance.
 
-  # ~/.terraformrc or terraform.rc
-  credentials "gitlab.com" {
-    token = "your-gitlab-token"
-  }
-
-  ---
-  Git SSH vs Module Registry
-  ┌─────────────────────┬──────────────────────────────┬───────────────────────────────────────┐
-  │       Aspect        │           Git SSH            │            Module Registry            │
-  ├─────────────────────┼──────────────────────────────┼───────────────────────────────────────┤
-  │ Setup               │ Just needs SSH key           │ Need to publish packages + auth token │
-  ├─────────────────────┼──────────────────────────────┼───────────────────────────────────────┤
-  │ Versioning          │ ?ref= (tags, branches, SHAs) │ Semantic versioning enforced          │
-  ├─────────────────────┼──────────────────────────────┼───────────────────────────────────────┤
-  │ Discoverability     │ Browse the repo              │ Browsable registry UI with docs       │
-  ├─────────────────────┼──────────────────────────────┼───────────────────────────────────────┤
-  │ Subdirectories      │ //path/to/module supported   │ Each module published separately      │
-  ├─────────────────────┼──────────────────────────────┼───────────────────────────────────────┤
-  │ Version constraints │ Exact ref only               │ Supports ~> 0.0.9, >= 1.0.0           │
-  └─────────────────────┴──────────────────────────────┴───────────────────────────────────────┘
-  ---
-  ★ Insight ─────────────────────────────────────
-  The biggest advantage of a module registry is version constraints. With Git SSH, you pin to an exact ref (?ref=v0.0.9). With a registry, you can use version = "~> 0.0" to
-  automatically pick up patch updates while blocking breaking changes. The tradeoff is more infrastructure to maintain (publishing pipeline, auth tokens).
-  ─────────────────────────────────────────────────
-
-USE Git SSH because its simpler and handles monorepo tf modules more elegantly. Would be a cicd nightmare with the module registry and naturally supports subdirectories. Just unfortunate that I won't be able to tag specific modules since I'll have unnecessary versions that exist for unchanged modules, but oh well.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Let's say I have an application that will retrieving data from .json files. The size of these files will vary from fairly small (around 100 bytes) containing one whole         
-  json object, to very large (100s of megabytes) with millions of json objects and one per line. What should I keep in mind when deciding which implementation of input          
-  stream I use?                                                                                                                                                                   
-                                                                                                                                                                                  
-⏺ Great real-world scenario. Here are the key considerations:                                                                                                                     
-                  
-  ---                                                                                                                                                                             
-  1. File Size & Memory
-                                                                                                                                                                                  
-  The most critical factor for your use case.                                                                                                                                     
-
-  - Small files (100 bytes): Safe to read the entire file into memory at once
-  - Large files (100s of MB): You cannot load the whole file into memory — you must stream line by line
-
-  // Fine for small files — loads everything into memory
-  byte[] bytes = Files.readAllBytes(Paths.get("small.json"));
-
-  // Required for large files — never holds more than one line in memory
-  try (BufferedReader reader = new BufferedReader(new FileReader("large.json"))) {
-      String line;
-      while ((line = reader.readLine()) != null) {
-          // parse and process one JSON object at a time
-      }
-  }
-
-  ---
-  2. Byte Stream vs Character Stream
-
-  Since JSON is text, prefer character streams over raw byte streams:
-
-  // Prefer this for JSON — handles character encoding properly
-  new BufferedReader(new InputStreamReader(new FileInputStream("file.json"), StandardCharsets.UTF_8))
-
-  // Or simpler in Java 8+
-  Files.newBufferedReader(Paths.get("file.json"), StandardCharsets.UTF_8)
-
-  Always explicitly specify UTF-8 — JSON is almost always UTF-8 and relying on the system default charset can cause bugs on different machines.
-
-  ---
-  3. Buffering Strategy
-
-  Since your file sizes vary widely, consider adapting your buffer size:
-
-  // Small file — default buffer is fine, or skip buffering entirely
-  Files.newBufferedReader(path)
-
-  // Large file — larger buffer reduces I/O syscalls
-  new BufferedReader(new FileReader("large.json"), 65536) // 64KB buffer
-
-  The default 8KB buffer is fine in most cases, but for 100MB+ files a larger buffer can meaningfully improve throughput.
-
-  ---
-  4. JSON Parsing Strategy
-
-  Your streaming approach should match how you parse:
-
-  ┌─────────────────────────────────┬────────────────────────────────────────────────────────┐
-  │            File Type            │                        Strategy                        │
-  ├─────────────────────────────────┼────────────────────────────────────────────────────────┤
-  │ Small, one JSON object          │ Read fully into memory, parse at once                  │
-  ├─────────────────────────────────┼────────────────────────────────────────────────────────┤
-  │ Large, one JSON object per line │ Stream line by line, parse each line                   │
-  ├─────────────────────────────────┼────────────────────────────────────────────────────────┤
-  │ Large, one giant JSON object    │ Use a streaming JSON parser (e.g., Jackson JsonParser) │
-  └─────────────────────────────────┴────────────────────────────────────────────────────────┘
-
-  // One JSON object per line (your large file case)
-  try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-      reader.lines()                          // Stream<String> — lazy
-            .map(line -> parseJson(line))     // parse each line
-            .forEach(obj -> process(obj));
-  }
-
-  // One giant JSON object — use Jackson's streaming API
-  JsonFactory factory = new JsonFactory();
-  try (JsonParser parser = factory.createParser(new File("large.json"))) {
-      while (parser.nextToken() != null) {
-          // process token by token — minimal memory usage
-      }
-  }
-
-  ---
-  5. The Files API (Java 8) — Convenience vs Control
-
-  // Convenient but loads ALL lines into memory — dangerous for large files
-  List<String> lines = Files.readAllLines(path); // AVOID for large files
-
-  // Safe — lazy, only reads one line at a time
-  Stream<String> lines = Files.lines(path);      // USE for large files
-
-  Files.lines() returns a lazy stream — it does not read the whole file upfront. Always close it with try-with-resources.
-
-
-
-
-
-
-
-
-
-
-Can you show me how to use @Benchmark to check my code for where a slowdown is occurring? I'm very new to optimization                                                          
-                                                                                                                            
-⏺ @Benchmark is part of JMH (Java Microbenchmark Harness) — the standard tool for benchmarking Java code. It's made by the same team that builds the JVM, so it handles a lot of  
-  tricky performance measurement pitfalls for you.                                                                                                                                
-                                                                                                                                                                                  
-  ---                                                                                                                                                                             
-  Setup                                                                                                                                                                           
-                                                                                                                                                                                  
-  Add JMH to your pom.xml:
-
-  <dependency>
-      <groupId>org.openjdk.jmh</groupId>
-      <artifactId>jmh-core</artifactId>
-      <version>1.37</version>
-  </dependency>
-  <dependency>
-      <groupId>org.openjdk.jmh</groupId>
-      <artifactId>jmh-generator-annprocess</artifactId>
-      <version>1.37</version>
-  </dependency>
-
-  ---
-  Basic Structure
-
-  import org.openjdk.jmh.annotations.*;
-  import java.util.concurrent.TimeUnit;
-
-  @State(Scope.Benchmark)        // shared state across benchmark methods
-  @BenchmarkMode(Mode.AverageTime)
-  @OutputTimeUnit(TimeUnit.MILLISECONDS)
-  @Warmup(iterations = 3)        // run 3 warmup rounds before measuring
-  @Measurement(iterations = 5)   // measure 5 rounds
-  @Fork(1)                       // run in 1 separate JVM process
-  public class JsonBenchmark {
-
-      private File smallFile;
-      private File largeFile;
-
-      @Setup                     // runs before benchmarks — initialize your state here
-      public void setup() {
-          smallFile = new File("small.json");
-          largeFile = new File("large.json");
-      }
-
-      @Benchmark
-      public void parseSmallFile() throws Exception {
-          // your small file parsing logic here
-      }
-
-      @Benchmark
-      public void parseLargeFile() throws Exception {
-          // your large file parsing logic here
-      }
-  }
-
-  ---
-  Key Annotations Explained
-
-  ┌─────────────────┬───────────────────────────────────────────────────────────────────────────┐
-  │   Annotation    │                                  Purpose                                  │
-  ├─────────────────┼───────────────────────────────────────────────────────────────────────────┤
-  │ @Benchmark      │ Marks a method to be measured                                             │
-  ├─────────────────┼───────────────────────────────────────────────────────────────────────────┤
-  │ @State          │ Holds shared data (files, parsers, etc.) — not recreated each call        │
-  ├─────────────────┼───────────────────────────────────────────────────────────────────────────┤
-  │ @Setup          │ Runs once before benchmarks — good for opening files, creating parsers    │
-  ├─────────────────┼───────────────────────────────────────────────────────────────────────────┤
-  │ @TearDown       │ Runs once after benchmarks — good for closing resources                   │
-  ├─────────────────┼───────────────────────────────────────────────────────────────────────────┤
-  │ @Warmup         │ JVM needs to warm up before measurements are accurate                     │
-  ├─────────────────┼───────────────────────────────────────────────────────────────────────────┤
-  │ @Measurement    │ How many timed rounds to run                                              │
-  ├─────────────────┼───────────────────────────────────────────────────────────────────────────┤
-  │ @Fork           │ Runs in a fresh JVM — prevents previous benchmarks from affecting results │
-  ├─────────────────┼───────────────────────────────────────────────────────────────────────────┤
-  │ @BenchmarkMode  │ What to measure (AverageTime, Throughput, SampleTime)                     │
-  ├─────────────────┼───────────────────────────────────────────────────────────────────────────┤
-  │ @OutputTimeUnit │ Unit for results (MILLISECONDS, MICROSECONDS, etc.)                       │
-  └─────────────────┴───────────────────────────────────────────────────────────────────────────┘
-
-  ---
-  Why Warmup Matters
-
-  The JVM optimizes code as it runs (JIT compilation). Without warmup, your first measurements are artificially slow:
-
-  Iteration 1 (warmup): 45ms  ← JVM still compiling
-  Iteration 2 (warmup): 12ms  ← getting faster
-  Iteration 3 (warmup):  8ms  ← JIT fully optimized
-  --- warmup done ---
-  Iteration 1 (measure): 7ms  ← accurate measurement
-  Iteration 2 (measure): 7ms
-
-  ---
-  For Your Use Case
-
-  Benchmark the parts you suspect are slow:
-
-  @State(Scope.Benchmark)
-  @BenchmarkMode(Mode.AverageTime)
-  @OutputTimeUnit(TimeUnit.MILLISECONDS)
-  @Warmup(iterations = 3)
-  @Measurement(iterations = 5)
-  @Fork(1)
-  public class JsonBenchmark {
-
-      private JsonFactory factory;
-      private File file;
-
-      @Setup
-      public void setup() {
-          factory = new JsonFactory();
-          file = new File("large.json");
-      }
-
-      @Benchmark
-      public void streamingParser() throws Exception {
-          try (JsonParser parser = factory.createParser(file)) {
-              while (parser.nextToken() != null) {
-                  if ("fieldIWant".equals(parser.getCurrentName())) {
-                      parser.nextToken();
-                      parser.getText(); // extract value
-                  } else {
-                      parser.skipChildren();
-                  }
-              }
-          }
-      }
-  }
-
-  ---
-  Running It
-
-  mvn clean install
-  java -jar target/benchmarks.jar
-
-  Output looks like:
-
-  Benchmark                      Mode  Cnt   Score   Error  Units
-  JsonBenchmark.streamingParser  avgt    5   142.3 ± 4.2    ms/op
-
-  ---
-  A Word Of Caution For Beginners
-
-  Before reaching for benchmarks, first find where the slowdown actually is using simple timing:
-
-  long start = System.currentTimeMillis();
-  // code you suspect is slow
-  long end = System.currentTimeMillis();
-  System.out.println("Took: " + (end - start) + "ms");
-
-  Use JMH when you've narrowed down the suspect code and need precise, reliable measurements to compare two approaches. Running a full benchmark suite on code you haven't
-  narrowed down yet is like checking every room for a leak before you've noticed where the water is coming from.
+  What does otherObjFactory actually do under the hood?
