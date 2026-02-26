@@ -65,3 +65,41 @@ Good context. Let me walk through what I see before suggesting anything.
   read-only but worth verifying too. If either has mutable state, you'd either need to synchronize access or give each thread its own instance.
 
   What does otherObjFactory actually do under the hood?
+
+
+
+
+
+
+
+
+
+ If the factory is cheap to construct and its state is per-conversion (not global), you can instantiate one per thread:
+
+  reader.lines()
+        .map(line -> parseLine(line))
+        .parallel()
+        .map(jsonObj -> {
+            OtherObjFactory localFactory = new OtherObjFactory(); // no sharing
+            return transform(jsonObj, template, localFactory);
+        })
+        .sequential()
+        .forEach(obj -> outStream.write(obj));
+
+  Option 2 — Synchronize access to the factory
+
+  If constructing the factory is expensive, share it but lock around it:
+
+  synchronized (otherObjFactory) {
+      otherObjFactory.createOtherObj(1, false, "someName", "someVal");
+  }
+
+  The downside is that this serializes all factory calls, potentially negating the benefit of parallelism if factory calls are a significant portion of the work.
+
+  Option 3 — Make the factory stateless
+
+  The cleanest long-term fix. If the ordering check used the first argument to validate against the list being built locally in transform() rather than state stored inside the
+  factory, the factory would have nothing to share between threads. Whether this is feasible depends on how deeply the ordering logic is embedded in the factory.
+
+  ---
+  Do you know if the factory's internal state resets between calls to convert(), or does it accumulate state across the entire lifetime of the object?
